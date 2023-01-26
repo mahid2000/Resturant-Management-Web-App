@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/menuStyle.css') }}">
+		<title>Menu</title>
+	</head>
+	<body>
+		<h1>Menu</h1>
+
+        <ul>
+            <li><a href="{{ url_for('addMenuItem') }}">Add Menu Item</a></li>
+            <li><a href="{{ url_for('editMenuItem') }}">Edit Menu</a></li>
+        </ul>
+
+        {% for row in rows %}
+        <h2>{{ row[1] }}</h2>
+        <p>£{{ row[2] }}</p>
+        <p>{{ row[3] }}kcal / <b>{{ row[4] }}</b></p>
+        <hr>
+        {% endfor %}
+
+        <p>Allergens: </p>
+        <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
+        <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
+        <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
+        <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
+
+	</body>
+</html>
