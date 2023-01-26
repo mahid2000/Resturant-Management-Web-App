@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>css.CSS Template</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="format.css">
+  <style>
+    body,
+    html {
+      height: 100%
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: 'Courier New', monospace;
+    }
+
+    .menu {
+      display: none
+    }
+
+    .bgimg {
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: ("customerMenuCover.jpg");
+      min-height: 90%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top navigation bar -->
+  <div class="css-top css-hide-small">
+    <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
+      <a href="#" class="css-bar-item css-button">HOME</a>
+      <a href="#menu" class="css-bar-item css-button">MENU</a>
+      <a href="#about" class="css-bar-item css-button">ABOUT</a>
+      <a href="#myMap" class="css-bar-item css-button">CONTACT</a>
+    </div>
+  </div>
+
+  <!-- The Menu -->
+  <div class="css-container css-black css-padding-64 css-xxlarge" id="menu">
+    <div class="css-content">
+
+      <h1 class="css-center css-jumbo" style="margin-bottom:64px">MENU</h1>
+      <div class="css-row css-center css-border css-border-dark-grey">
+
+        <!-- Source : "https://www.pexels.com/zh-tw/photo/4968307/"-->
+        <img src="customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
+
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Pizza');" id="myLink">
+          <div class="css-col s4 tablink css-padding-large css-hover-blue">Pizza</div>
+        </a>
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Pasta');">
+          <div class="css-col s4 tablink css-padding-large css-hover-blue">Salads</div>
+        </a>
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Starter');">
+          <div class="css-col s4 tablink css-padding-large css-hover-blue">Starter</div>
+        </a>
+      </div>
+
+      <div id="Pizza" class="css-container menu css-padding-32 css-white">
+
+        <h1><b>Margherita</b> <span class="css-right css-tag css-dark-grey css-round">£12.50</span></h1>
+        <p class="css-text-grey">Fresh tomatoes, fresh mozzarella, fresh basil</p>
+      <hr>
+
+      <h1><b>Formaggio</b> <span class="css-right css-tag css-dark-grey css-round">£15.50</span></h1>
+      <p class="css-text-grey">Four cheeses (mozzarella, parmesan, pecorino, jarlsberg)</p>
+      <hr>
+
+      <h1><b>Chicken</b> <span class="css-right css-tag css-dark-grey css-round">£17.00</span></h1>
+      <p class="css-text-grey">Fresh tomatoes, mozzarella, chicken, onions</p>
+      <hr>
+
+      <h1><b>Pineapple'o'clock</b> <span class="css-right css-tag css-dark-grey css-round">£16.50</span></h1>
+      <p class="css-text-grey">Fresh tomatoes, mozzarella, fresh pineapple, bacon, fresh basil</p>
+      <hr>
+
+      <h1><b>Meat Town</b> <span class="css-tag css-red css-round">Hot!</span><span
+          class="css-right css-tag css-dark-grey css-round">£20.00</span></h1>
+      <p class="css-text-grey">Fresh tomatoes, mozzarella, hot pepporoni, hot sausage, beef, chicken</p>
+      <hr>
+
+      <h1><b>Parma</b> <span class="css-tag css-grey css-round">New</span><span
+          class="css-right css-tag css-dark-grey css-round">£21.50</span></h1>
+      <p class="css-text-grey">Fresh tomatoes, mozzarella, parma, bacon, fresh arugula</p>
+    </div>
+
+    <div id="Pasta" class="css-container menu css-padding-32 css-white">
+      <h1><b>Lasagna</b> <span class="css-tag css-grey css-round">Popular</span> <span
+          class="css-right css-tag css-dark-grey css-round">£13.50</span></h1>
+      <p class="css-text-grey">Special sauce, mozzarella, parmesan, ground beef</p>
+      <hr>
+
+      <h1><b>Ravioli</b> <span class="css-right css-tag css-dark-grey css-round">£14.50</span></h1>
+      <p class="css-text-grey">Ravioli filled with cheese</p>
+      <hr>
+
+      <h1><b>Spaghetti Classica</b> <span class="css-right css-tag css-dark-grey css-round">£11.00</span></h1>
+      <p class="css-text-grey">Fresh tomatoes, onions, ground beef</p>
+      <hr>
+
+      <h1><b>Seafood pasta</b> <span class="css-right css-tag css-dark-grey css-round">£25.50</span></h1>
+      <p class="css-text-grey">Salmon, shrimp, lobster, garlic</p>
+    </div>
+
+
+    <div id="Starter" class="css-container menu css-padding-32 css-white">
+      <h1><b>Today's Soup</b> <span class="css-tag css-grey css-round">Seasonal</span><span
+          class="css-right css-tag css-dark-grey css-round">£5.50</span></h1>
+      <p class="css-text-grey">Ask the waiter</p>
+      <hr>
+
+      <h1><b>Bruschetta</b> <span class="css-right css-tag css-dark-grey css-round">£8.50</span></h1>
+      <p class="css-text-grey">Bread with pesto, tomatoes, onion, garlic</p>
+      <hr>
+
+      <h1><b>Garlic bread</b> <span class="css-right css-tag css-dark-grey css-round">£9.50</span></h1>
+      <p class="css-text-grey">Grilled ciabatta, garlic butter, onions</p>
+      <hr>
+
+      <h1><b>Tomozzarella</b> <span class="css-right css-tag css-dark-grey css-round">£10.50</span></h1>
+      <p class="css-text-grey">Tomatoes and mozzarella</p>
+    </div><br>
+
+  </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="css-center css-black css-padding-48 css-xxlarge">
+    <p>Customer Menu by Steven</p>
+  </footer>
+
+  <script>
+    // Tabbed Menu
+    function openMenu(evt, menuName) {
+      var i, x, tablinks;
+      x = document.getElementsByClassName("menu");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
+      }
+      document.getElementById(menuName).style.display = "block";
+      evt.currentTarget.firstElementChild.className += " css-blue";
+    }
+    document.getElementById("myLink").click();
+  </script>
+
+</body>
+
+</html>
