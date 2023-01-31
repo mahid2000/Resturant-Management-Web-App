@@ -9,28 +9,33 @@ class DBManager:
         self.db = self._create_db(app)
         self.cursor = self.db.cursor()
 
-    def _close_db(self):
-        if self.db is not None:
-            self.db.close()
-            self.db = None
-
     def get_db(self):
+        """Gets the database connection."""
         return self.db
 
-    def get_cursor(self):
+    def get_connection(self):
+        """Gets a cursor to communicate to the database with."""
         return self.cursor
+
+    def close(self):
+        """Close the cursor and the connection."""
+        self._close_cursor()
+        self._close_db()
 
     def _close_cursor(self):
         if self.cursor is not None:
             self.cursor.close()
             self.cursor = None
 
-    def close(self):
-        self._close_cursor()
-        self._close_db()
+    def _close_db(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
 
     @staticmethod
     def _create_db(app):
+        """Connects to the database and returns the connection. Creates the database if it hasn't been created since
+        starting the program."""
         db = sqlite3.connect("database.db")
 
         # If the database hasn't been created yet, create it

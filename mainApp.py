@@ -19,50 +19,45 @@ def create_app():
 app = create_app()
 
 
-# Route for /.
 @app.route('/')
 def index():
+    """Navigate to the home page."""
     return redirect('/home')
 
 
-# Route for the /home page.
 @app.route('/home')
 def home():
+    """Render the home page."""
     return render_template('home.html')
 
 
-# Route for the /menu page.
 @app.route('/menu')
 def menu():
-
-    # Creates a connection to the database and a cursor.
+    """Render the menu page. Get menu items from the database."""
     db_manager = DBManager(app)
-    cursor = db_manager.get_cursor()
+    sql_connection = db_manager.get_connection()
 
-    # Cursor executes a statement returning all the rows in menu and stores results in a list.
-    cursor.execute("SELECT * FROM menu;")
-    rows = cursor.fetchall()
+    # Gets all the rows from menu.
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
 
-    # Close the cursor and the connection.
     db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
     return render_template('menu.html', rows=rows)
 
 
-# Route for /addMenuItem page.
 @app.route('/addMenuItem')
 def add_menu_item():
+    """Render the page to add a menu item."""
     return render_template('addMenuItem.html')
 
 
-# Route when submitting a new menu item.
 @app.route('/addToMenu', methods=['POST'])
 def add_to_menu():
-
-    # Creates a connection to the database and cursor.
+    """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
     db_manager = DBManager(app)
-    cursor = db_manager.get_cursor()
+    sql_connection = db_manager.get_connection()
 
     # Stores the items from the form in addMenuItem.html.
     name = request.form['name']
@@ -70,60 +65,49 @@ def add_to_menu():
     calories = int(request.form['calories'])
     allergens = request.form['allergens']
 
-    # Executes a SQL statement adding a row to the menu table.
-    cursor.execute("INSERT INTO menu (name, price, calories, allergens)"
+    # Add an item to the menu table.
+    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
                    " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
 
-    # Commit the changes to the databases.
     db_manager.get_db().commit()
-
-    # Close the cursor and the connection.
     db_manager.close()
 
-    # Return to the /menu page.
     return redirect('/menu')
 
 
-# Route for the /editMenuItem page.
 @app.route('/editMenuItem')
 def edit_menu_item():
-
-    # Creates a connection to the database and cursor.
+    """Renders the page to edit the menu."""
     db_manager = DBManager(app)
-    cursor = db_manager.get_cursor()
+    sql_connection = db_manager.get_connection()
 
-    # Cursor executes a statement returning all the rows in menu and stores results in a list.
-    cursor.execute("SELECT * FROM menu;")
-    rows = cursor.fetchall()
+    # Gets all the rows in menu.
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
 
-    # Close the cursor and the connection.
     db_manager.close()
 
-    # Passes the rows of the table to the pages .html file.
+    # Passes the rows of the table to editMenuItem.html.
     return render_template('editMenuItem.html', rows=rows)
 
 
-# Route when removing a menu item.
 @app.route('/removeMenuItem', methods=['POST'])
 def remove_menu_item():
-
-    # Creates a connection to the database and cursor.
+    """Renders the page to remove an item from the menu."""
     db_manager = DBManager(app)
-    cursor = db_manager.get_cursor()
+    sql_connection = db_manager.get_connection()
 
-    # Iterate over the form data provided in editMenuItem.html.
+    # Iterate over data from the form in editMenuItem.html.
     for key, value in request.form.items():
 
-        # Check if the checkbox was checked.
+        # Is the checkbox checked.
         if value == 'on':
 
-            # Executes a SQL statement deleting rows in menu that have been selected.
-            cursor.execute("DELETE FROM menu WHERE itemID = ?", key)
+            # Delete selected rows.
+            sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
             db_manager.get_db().commit()
 
-    # Close the cursor and the connection.
     db_manager.close()
 
-    # Returns to the /menu page.
     return redirect('/menu')
 
