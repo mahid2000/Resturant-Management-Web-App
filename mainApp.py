@@ -128,4 +128,3 @@ def removeMenuItem():
 
     # Returns to the /menu page.
     return redirect('/menu')
-

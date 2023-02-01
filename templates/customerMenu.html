@@ -5,7 +5,7 @@
   <title>css.CSS Template</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="format.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/customerMenu.css') }}">
   <style>
     body,
     html {
@@ -55,7 +55,7 @@
       <div class="css-row css-center css-border css-border-dark-grey">
 
         <!-- Source : "https://www.pexels.com/zh-tw/photo/4968307/"-->
-        <img src="customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
+        <img src="static/customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
 
         <a href="javascript:void(0)" onclick="openMenu(event, 'Pizza');" id="myLink">
           <div class="css-col s4 tablink css-padding-large css-hover-blue">Pizza</div>
