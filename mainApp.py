@@ -1,67 +1,63 @@
-import psycopg2
+import os
 from flask import Flask, render_template, redirect, request
+from init_db import DBManager
 
 
-# Method for connecting to the database.
-def databaseConnection():
+def create_app():
+    # Create and configure the flask app
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        # This is used by Flask and extensions to keep data safe.
+        # Should be overridden with a random value when deploying
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'sqlite3')
+    )
 
-    # !!! - DATABASE NAME, USER AND PASSWORD WILL NEED TO BE CHANGED TO YOUR LOCAL DB AND DETAILS.
-    connection = psycopg2.connect(database="rms",
-                                  host="localhost",
-                                  user="oliver",
-                                  password="test",
-                                  port="5432")
-    return connection
-
-
-app = Flask(__name__)
+    return app
 
 
-# Route for /.
+app = create_app()
+
+
 @app.route('/')
 def index():
+    """Navigate to the home page."""
     return redirect('/home')
 
 
-# Route for the /home page.
 @app.route('/home')
 def home():
+    """Render the home page."""
     return render_template('home.html')
 
 
-# Route for the /menu page.
 @app.route('/menu')
 def menu():
+    """Render the menu page. Get menu items from the database."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-    # Creates a connection to the database and cursor.
-    connection = databaseConnection()
-    cursor = connection.cursor()
+    # Gets all the rows from menu.
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
 
-    # Cursor executes a statement returning all of the rows in menu and stores results in a list.
-    cursor.execute("SELECT * FROM menu;")
-    rows = cursor.fetchall()
-
-    # Close the connection and the cursor.
-    cursor.close()
-    connection.close()
+    db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
     return render_template('menu.html', rows=rows)
 
 
-# Route for /addMenuItem page.
 @app.route('/addMenuItem')
-def addMenuItem():
+def add_menu_item():
+    """Render the page to add a menu item."""
     return render_template('addMenuItem.html')
 
 
-# Route when submitting a new menu item.
 @app.route('/addToMenu', methods=['POST'])
-def addToMenu():
-
-    # Creates a connection to the database and cursor.
-    connection = databaseConnection()
-    cursor = connection.cursor()
+def add_to_menu():
+    """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
     # Stores the items from the form in addMenuItem.html.
     name = request.form['name']
@@ -69,63 +65,49 @@ def addToMenu():
     calories = int(request.form['calories'])
     allergens = request.form['allergens']
 
-    # Executes a SQL statement adding a row to the menu table.
-    cursor.execute("INSERT INTO menu (name, price, calories, allergens)"
-                   " VALUES (%s, %s, %s, %s)", (name, price, calories, allergens))
+    # Add an item to the menu table.
+    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
+                   " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
 
-    # Commit the changes to the databases.
-    connection.commit()
+    db_manager.get_db().commit()
+    db_manager.close()
 
-    # Close the connection and the cursor.
-    cursor.close()
-    connection.close()
-
-    # Return to the /menu page.
     return redirect('/menu')
 
 
-# Route for the /editMenuItem page.
 @app.route('/editMenuItem')
-def editMenuItem():
+def edit_menu_item():
+    """Renders the page to edit the menu."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-    # Creates a connection to the database and cursor.
-    connection = databaseConnection()
-    cursor = connection.cursor()
+    # Gets all the rows in menu.
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
 
-    # Cursor executes a statement returning all the rows in menu and stores results in a list.
-    cursor.execute("SELECT * FROM menu;")
-    rows = cursor.fetchall()
+    db_manager.close()
 
-    # Close the connection and the cursor.
-    cursor.close()
-    connection.close()
-
-    # Passes the rows of the table to the pages .html file.
+    # Passes the rows of the table to editMenuItem.html.
     return render_template('editMenuItem.html', rows=rows)
 
 
-# Route when removing a menu item.
 @app.route('/removeMenuItem', methods=['POST'])
-def removeMenuItem():
+def remove_menu_item():
+    """Renders the page to remove an item from the menu."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-    # Creates a connection to the database and cursor.
-    connection = databaseConnection()
-    cursor = connection.cursor()
-
-    # Iterate over the form data provided in editMenuItem.html.
+    # Iterate over data from the form in editMenuItem.html.
     for key, value in request.form.items():
 
-        # Check if the checkbox was checked.
+        # Is the checkbox checked.
         if value == 'on':
 
-            # Executes a SQL statement deleting rows in menu that have been selected.
-            cursor.execute("DELETE FROM menu WHERE itemID = %s", key)
-            connection.commit()
+            # Delete selected rows.
+            sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
+            db_manager.get_db().commit()
 
-    # Close the connection and the cursor.
-    cursor.close()
-    connection.close()
+    db_manager.close()
 
-    # Returns to the /menu page.
     return redirect('/menu')
 
