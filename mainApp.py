@@ -112,6 +112,17 @@ def remove_menu_item():
     return redirect('/menu')
 
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    return render_template('login.html')
+    if request.method == "GET":
+        return render_template('login.html')
+    elif request.method == "POST":
+        return redirect('/home')
+
+
+@app.route('/createLogin', methods=["GET", "POST"])
+def create_login():
+    if request.method == "GET":
+        return render_template('createLogin.html')
+    elif request.method == "POST":
+        return redirect('/home')

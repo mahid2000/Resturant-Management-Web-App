@@ -7,7 +7,7 @@
 <body>
     <header>
         <h1>Restaurant Name</h1>
-        <h2>Login</h2>
+        <h2>Create Login</h2>
             <nav>
                 <ul>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -18,13 +18,16 @@
     </header>
     <br>
     <main>
-        <a href="{{ url_for('create_login') }}">Create Login</a>
-        <form action="{{ url_for('login') }}" method="POST">
+        <form action="{{ url_for('create_login') }}" method="POST">
                 <label for="username">Username</label>
                 <input type="text" id="username">
                 <br>
                 <label for="password">Password</label>
                 <input type="text" id="password">
+                <br>
+                <label for="userlevel">Userlevel</label>
+                <input type="text" id="userlevel">
+                <br>
                 <input type="submit" value="Log-In">
         </form>
     </main>
