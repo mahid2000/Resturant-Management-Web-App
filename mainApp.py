@@ -61,8 +61,8 @@ def add_to_menu():
 
     # Stores the items from the form in addMenuItem.html.
     name = request.form['name']
-    price = int(request.form['price'])
-    calories = int(request.form['calories'])
+    price = request.form['price']
+    calories = request.form['calories']
     allergens = request.form['allergens']
 
     # Add an item to the menu table.
@@ -111,3 +111,7 @@ def remove_menu_item():
 
     return redirect('/menu')
 
+
+@app.route('/login')
+def login():
+    return render_template('login.html')

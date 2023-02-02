@@ -2,29 +2,43 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/addMenuItemStyle.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
 		<title>Add Menu Item</title>
 	</head>
 	<body>
-		<h1>Add Menu Item</h1>
-        <a href="{{ url_for('menu') }}">Back</a>
+        <header>
+        <h1>Restaurant Name</h1>
+        <h2>Add Menu Item</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
 
-        <form action="{{ url_for('add_to_menu') }}" method="POST">
+            <a href="{{ url_for('menu') }}">Back</a>
 
-        <label>Name:</label>
-        <input type="text" name="name"><br>
+            <form action="{{ url_for('add_to_menu') }}" method="POST">
 
-        <label>Price:</label>
-        <input type="number" name="price" min="0" max="100"><br>
+                <label>Name:</label>
+                <input type="text" name="name"><br>
 
-        <label>Calories:</label>
-        <input type="number" name="calories" min="0" max="2000"><br>
+                <label>Price:</label>
+                <input type="text" name="price"><br>
 
-        <label>Allergens:</label>
-        <input type="text" name="allergens"><br>
+                <label>Calories:</label>
+                <input type="text" name="calories"><br>
 
-        <input type="submit" value="Update">
+                <label>Allergens:</label>
+                <input type="text" name="allergens"><br>
 
-</form>
+                <input type="submit" value="Update">
+
+            </form>
+        </main>
 	</body>
 </html>
