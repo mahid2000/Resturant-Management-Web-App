@@ -2,26 +2,38 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/editMenuItemStyle.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
 		<title>Edit Menu Item</title>
 	</head>
 	<body>
-		<h1>Edit Menu Item</h1>
-        <a href="{{ url_for('menu') }}">Back</a><br>
+        <header>
+        <h1>Restaurant Name</h1>
+        <h2>Edit Menu Item</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+            <a href="{{ url_for('menu') }}">Back</a><br>
 
-        <form action="{{ url_for('removeMenuItem') }}" method="POST">
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Calories</th>
-                        <th>Allergens</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in rows %}
+            <form action="{{ url_for('remove_menu_item') }}" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Calories</th>
+                            <th>Allergens</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
                         <tr>
                             <td>
                                 <input type="checkbox" name="{{ row[0] }}" value="on">
@@ -31,10 +43,11 @@
                             <td>{{ row[3] }}</td>
                             <td>{{ row[4] }}</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <input type="submit" value="Delete Selected Rows">
-        </form>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <input type="submit" value="Delete Selected Rows">
+            </form>
+        </main>
 	</body>
 </html>

@@ -2,29 +2,41 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/menuStyle.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
 		<title>Menu</title>
 	</head>
 	<body>
-		<h1>Menu</h1>
-
+    <header>
+        <h1>Restaurant Name</h1>
+        <h2>Menu</h2>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <main>
         <ul>
-            <li><a href="{{ url_for('addMenuItem') }}">Add Menu Item</a></li>
-            <li><a href="{{ url_for('editMenuItem') }}">Edit Menu</a></li>
+            <li><a href="{{ url_for('add_menu_item') }}">Add Menu Item</a></li>
+            <li><a href="{{ url_for('edit_menu_item') }}">Edit Menu</a></li>
         </ul>
 
+        <p>-</p>
         {% for row in rows %}
         <h2>{{ row[1] }}</h2>
         <p>£{{ row[2] }}</p>
         <p>{{ row[3] }}kcal / <b>{{ row[4] }}</b></p>
-        <hr>
+        <p>-</p>
         {% endfor %}
 
-        <p>Allergens: </p>
+        <p><b>Allergens: </b></p>
         <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
         <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
         <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
         <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
-
+    </main>
 	</body>
 </html>

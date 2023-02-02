@@ -2,13 +2,20 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/homeStyle.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
 		<title>Home</title>
 	</head>
 	<body>
-		<h1>Home</h1>
-        <ul>
-            <li><a href="{{ url_for('menu') }}">Menu</a></li>
-        </ul>
+        <header>
+            <h1>Restaurant Name</h1>
+            <h2>Home</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+        </header>
 	</body>
 </html>
