@@ -10,3 +10,7 @@
 */database.db
 # PyCharm IDE files
 /.idea/
+# instance folder
+/instance/
+# __pycache__ folder
+/__pycache__/
