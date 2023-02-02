@@ -8,3 +8,5 @@
 /dataSources.local.xml
 # Database file
 */database.db
+# Ignore virtual environments
+*/venv/
