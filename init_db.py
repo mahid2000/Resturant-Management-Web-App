@@ -43,7 +43,7 @@ class DBManager:
         # and we don't want to re-create the database every time we reload or change page
         if not DBManager._created:
             with app.app_context():
-                with current_app.open_resource('schema.sql') as file:
+                with current_app.open_resource('static/schema.sql') as file:
                     db.executescript(file.read().decode('utf8'))
                     DBManager._created = True
 
