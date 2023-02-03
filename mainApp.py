@@ -61,7 +61,8 @@ def add_menu_item():
         name = request.form['name']
         price = request.form['price']
         calories = request.form['calories']
-        allergens = request.form['allergens']
+        allergensList = request.form.getlist('options')
+        allergens = ', '.join(allergensList)
 
         # Add an item to the menu table.
         sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
@@ -107,32 +108,6 @@ def edit_menu_item():
         return redirect('/menu')
 
 
-<<<<<<< Updated upstream
-@app.route('/removeMenuItem', methods=['POST'])
-def remove_menu_item():
-    """Renders the page to remove an item from the menu."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Iterate over data from the form in editMenuItem.html.
-    for key, value in request.form.items():
-
-        # Is the checkbox checked.
-        if value == 'on':
-
-            # Delete selected rows.
-            sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
-            db_manager.get_db().commit()
-
-    db_manager.close()
-
-    return redirect('/menu')
-
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-=======
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -147,4 +122,3 @@ def create_login():
         return render_template('createLogin.html')
     elif request.method == 'POST':
         return redirect('/home')
->>>>>>> Stashed changes
