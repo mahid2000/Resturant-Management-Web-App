@@ -47,50 +47,67 @@ def menu():
     return render_template('menu.html', rows=rows)
 
 
-@app.route('/addMenuItem')
+@app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
-    """Render the page to add a menu item."""
-    return render_template('addMenuItem.html')
+    if request.method == 'GET':
+        """Render the page to add a menu item."""
+        return render_template('addMenuItem.html')
+    elif request.method == 'POST':
+        """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Stores the items from the form in addMenuItem.html.
+        name = request.form['name']
+        price = request.form['price']
+        calories = request.form['calories']
+        allergens = request.form['allergens']
+
+        # Add an item to the menu table.
+        sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
+                               " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
+
+        db_manager.get_db().commit()
+        db_manager.close()
+
+        return redirect('/menu')
 
 
-@app.route('/addToMenu', methods=['POST'])
-def add_to_menu():
-    """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Stores the items from the form in addMenuItem.html.
-    name = request.form['name']
-    price = request.form['price']
-    calories = request.form['calories']
-    allergens = request.form['allergens']
-
-    # Add an item to the menu table.
-    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
-                   " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
-
-    db_manager.get_db().commit()
-    db_manager.close()
-
-    return redirect('/menu')
-
-
-@app.route('/editMenuItem')
+@app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
-    """Renders the page to edit the menu."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
+    if request.method == 'GET':
+        """Renders the page to edit the menu."""
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
 
-    # Gets all the rows in menu.
-    sql_connection.execute("SELECT * FROM menu;")
-    rows = sql_connection.fetchall()
+        # Gets all the rows in menu.
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
 
-    db_manager.close()
+        db_manager.close()
 
-    # Passes the rows of the table to editMenuItem.html.
-    return render_template('editMenuItem.html', rows=rows)
+        # Passes the rows of the table to editMenuItem.html.
+        return render_template('editMenuItem.html', rows=rows)
+    elif request.method == 'POST':
+        """Renders the page to remove an item from the menu."""
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Iterate over data from the form in editMenuItem.html.
+        for key, value in request.form.items():
+
+            # Is the checkbox checked.
+            if value == 'on':
+                # Delete selected rows.
+                sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
+                db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/menu')
 
 
+<<<<<<< Updated upstream
 @app.route('/removeMenuItem', methods=['POST'])
 def remove_menu_item():
     """Renders the page to remove an item from the menu."""
@@ -115,3 +132,19 @@ def remove_menu_item():
 @app.route('/login')
 def login():
     return render_template('login.html')
+=======
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        return redirect('/home')
+
+
+@app.route('/createLogin', methods=['GET', 'POST'])
+def create_login():
+    if request.method == 'GET':
+        return render_template('createLogin.html')
+    elif request.method == 'POST':
+        return redirect('/home')
+>>>>>>> Stashed changes
