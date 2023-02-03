@@ -53,6 +53,10 @@
                     <label><input type="checkbox" name="options" value="S">Soya</label>
                 </div><br>
 
+                {% if error %}
+                    <h2>{{ error }}</h2>
+                {% endif %}
+
                 <input type="submit" value="Update">
 
             </form>

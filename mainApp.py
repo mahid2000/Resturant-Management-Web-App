@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Flask, render_template, redirect, request
 from init_db import DBManager
 
@@ -59,8 +60,27 @@ def add_menu_item():
 
         # Stores the items from the form in addMenuItem.html.
         name = request.form['name']
+        if not name:
+            error = "Name cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+
         price = request.form['price']
+        if not price:
+            error = "Price cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+        elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
+            error = "Price must be a valid decimal number eg. 12.34"
+            return render_template('addMenuItem.html', error=error)
+
         calories = request.form['calories']
+        if not calories:
+            error = "Calories cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+        elif not calories.isdigit():
+            error = "Calories must be a valid whole number."
+            return render_template('addMenuItem.html', error=error)
+
+        # Changes the list of allergens to a string.
         allergensList = request.form.getlist('options')
         allergens = ', '.join(allergensList)
 
