@@ -7,4 +7,10 @@
 /dataSources/
 /dataSources.local.xml
 # Database file
-*/database.db
+/database.db
+# PyCharm IDE files
+/.idea/
+# instance folder
+/instance/
+# __pycache__ folder
+/flaskr/__pycache__/

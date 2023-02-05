@@ -3,6 +3,7 @@ from flask import current_app
 
 
 class DBManager:
+    """Handles database connections and cursors."""
     _created = False
 
     def __init__(self, app):
@@ -36,14 +37,14 @@ class DBManager:
     def _create_db(app):
         """Connects to the database and returns the connection. Creates the database if it hasn't been created since
         starting the program."""
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect("../database.db")
 
         # If the database hasn't been created yet, create it
         # This is because connecting to the database happens in each webpage method,
         # and we don't want to re-create the database every time we reload or change page
         if not DBManager._created:
             with app.app_context():
-                with current_app.open_resource('schema.sql') as file:
+                with current_app.open_resource('static/schema.sql') as file:
                     db.executescript(file.read().decode('utf8'))
                     DBManager._created = True
 

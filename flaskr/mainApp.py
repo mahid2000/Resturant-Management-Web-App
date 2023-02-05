@@ -1,18 +1,25 @@
 import os
 import re
 from flask import Flask, render_template, redirect, request
-from init_db import DBManager
+from flaskr.init_db import DBManager
 
 
 def create_app():
-    # Create and configure the flask app
-    app = Flask(__name__, instance_relative_config=True)
+    """Creates and configures the flask app."""
+    app = Flask(__name__, instance_relative_config=True, template_folder="..\\flaskr\\templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'sqlite3')
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        EXPLAIN_TEMPLATE_LOADING=True
     )
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     return app
 
@@ -29,7 +36,7 @@ def index():
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template('home.html')
+    return render_template("home.html")
 
 
 @app.route('/menu')
@@ -51,10 +58,9 @@ def menu():
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
     if request.method == 'GET':
-        """Render the page to add a menu item."""
         return render_template('addMenuItem.html')
     elif request.method == 'POST':
-        """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
+        # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -97,7 +103,7 @@ def add_menu_item():
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
     if request.method == 'GET':
-        """Renders the page to edit the menu."""
+        # Render the page to edit the menu.
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -108,9 +114,10 @@ def edit_menu_item():
         db_manager.close()
 
         # Passes the rows of the table to editMenuItem.html.
-        return render_template('editMenuItem.html', rows=rows)
+        return render_template('/editMenuItem.html', rows=rows)
+
     elif request.method == 'POST':
-        """Renders the page to remove an item from the menu."""
+        # Renders the page to remove an item from the menu.
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -130,6 +137,7 @@ def edit_menu_item():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Renders the page to login."""
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
