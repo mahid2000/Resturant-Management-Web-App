@@ -4,7 +4,7 @@ from init_db import DBManager
 
 
 def create_app():
-    # Create and configure the flask app
+    """Creates and configures the flask app."""
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
@@ -114,4 +114,5 @@ def remove_menu_item():
 
 @app.route('/login')
 def login():
+    """Renders the page to login."""
     return render_template('login.html')

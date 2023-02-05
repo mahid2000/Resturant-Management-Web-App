@@ -3,6 +3,7 @@ from flask import current_app
 
 
 class DBManager:
+    """Handles database connections and cursors."""
     _created = False
 
     def __init__(self, app):
