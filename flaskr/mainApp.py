@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Flask, render_template, redirect, request
 from flaskr.init_db import DBManager
 
@@ -35,7 +36,7 @@ def index():
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template("/home.html")
+    return render_template("home.html")
 
 
 @app.route('/menu')
@@ -51,75 +52,101 @@ def menu():
     db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
-    return render_template('/menu.html', rows=rows)
+    return render_template('menu.html', rows=rows)
 
 
-@app.route('/addMenuItem')
+@app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
-    """Render the page to add a menu item."""
-    return render_template('/addMenuItem.html')
+    if request.method == 'GET':
+        return render_template('addMenuItem.html')
+    elif request.method == 'POST':
+        # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Stores the items from the form in addMenuItem.html.
+        name = request.form['name']
+        if not name:
+            error = "Name cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+
+        price = request.form['price']
+        if not price:
+            error = "Price cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+        elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
+            error = "Price must be a valid decimal number eg. 12.34"
+            return render_template('addMenuItem.html', error=error)
+
+        calories = request.form['calories']
+        if not calories:
+            error = "Calories cannot be left blank."
+            return render_template('addMenuItem.html', error=error)
+        elif not calories.isdigit():
+            error = "Calories must be a valid whole number."
+            return render_template('addMenuItem.html', error=error)
+
+        # Changes the list of allergens to a string.
+        allergensList = request.form.getlist('options')
+        allergens = ', '.join(allergensList)
+
+        # Add an item to the menu table.
+        sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
+                               " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
+
+        db_manager.get_db().commit()
+        db_manager.close()
+
+        return redirect('/menu')
 
 
-@app.route('/addToMenu', methods=['POST'])
-def add_to_menu():
-    """Render the page to add a menu item. Adds an item to menu based on items from an HTML form."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Stores the items from the form in addMenuItem.html.
-    name = request.form['name']
-    price = request.form['price']
-    calories = request.form['calories']
-    allergens = request.form['allergens']
-
-    # Add an item to the menu table.
-    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
-                   " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
-
-    db_manager.get_db().commit()
-    db_manager.close()
-
-    return redirect('/menu')
-
-
-@app.route('/editMenuItem')
+@app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
-    """Renders the page to edit the menu."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
+    if request.method == 'GET':
+        # Render the page to edit the menu.
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
 
-    # Gets all the rows in menu.
-    sql_connection.execute("SELECT * FROM menu;")
-    rows = sql_connection.fetchall()
+        # Gets all the rows in menu.
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
 
-    db_manager.close()
+        db_manager.close()
 
-    # Passes the rows of the table to editMenuItem.html.
-    return render_template('/editMenuItem.html', rows=rows)
+        # Passes the rows of the table to editMenuItem.html.
+        return render_template('/editMenuItem.html', rows=rows)
 
+    elif request.method == 'POST':
+        # Renders the page to remove an item from the menu.
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
 
-@app.route('/removeMenuItem', methods=['POST'])
-def remove_menu_item():
-    """Renders the page to remove an item from the menu."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
+        # Iterate over data from the form in editMenuItem.html.
+        for key, value in request.form.items():
 
-    # Iterate over data from the form in editMenuItem.html.
-    for key, value in request.form.items():
+            # Is the checkbox checked.
+            if value == 'on':
+                # Delete selected rows.
+                sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
+                db_manager.get_db().commit()
 
-        # Is the checkbox checked.
-        if value == 'on':
+        db_manager.close()
 
-            # Delete selected rows.
-            sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
-            db_manager.get_db().commit()
-
-    db_manager.close()
-
-    return redirect('/menu')
+        return redirect('/menu')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """Renders the page to login."""
-    return render_template('/login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        return redirect('/home')
+
+
+@app.route('/createLogin', methods=['GET', 'POST'])
+def create_login():
+    if request.method == 'GET':
+        return render_template('createLogin.html')
+    elif request.method == 'POST':
+        return redirect('/home')
