@@ -1,17 +1,24 @@
 import os
 from flask import Flask, render_template, redirect, request
-from init_db import DBManager
+from flaskr.init_db import DBManager
 
 
 def create_app():
     """Creates and configures the flask app."""
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, template_folder="..\\flaskr\\templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'sqlite3')
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        EXPLAIN_TEMPLATE_LOADING=True
     )
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     return app
 
@@ -28,7 +35,7 @@ def index():
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template('home.html')
+    return render_template("/home.html")
 
 
 @app.route('/menu')
@@ -44,13 +51,13 @@ def menu():
     db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows)
+    return render_template('/menu.html', rows=rows)
 
 
 @app.route('/addMenuItem')
 def add_menu_item():
     """Render the page to add a menu item."""
-    return render_template('addMenuItem.html')
+    return render_template('/addMenuItem.html')
 
 
 @app.route('/addToMenu', methods=['POST'])
@@ -88,7 +95,7 @@ def edit_menu_item():
     db_manager.close()
 
     # Passes the rows of the table to editMenuItem.html.
-    return render_template('editMenuItem.html', rows=rows)
+    return render_template('/editMenuItem.html', rows=rows)
 
 
 @app.route('/removeMenuItem', methods=['POST'])
@@ -115,4 +122,4 @@ def remove_menu_item():
 @app.route('/login')
 def login():
     """Renders the page to login."""
-    return render_template('login.html')
+    return render_template('/login.html')

@@ -13,4 +13,4 @@
 # instance folder
 /instance/
 # __pycache__ folder
-/__pycache__/
+/flaskr/__pycache__/

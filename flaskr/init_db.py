@@ -37,7 +37,7 @@ class DBManager:
     def _create_db(app):
         """Connects to the database and returns the connection. Creates the database if it hasn't been created since
         starting the program."""
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect("../database.db")
 
         # If the database hasn't been created yet, create it
         # This is because connecting to the database happens in each webpage method,
