@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Add Menu Item</title>
+	</head>
+	<body>
+        <header>
+        <h1>Restaurant Name</h1>
+        <h2>Add Menu Item</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+
+            <a href="{{ url_for('login') }}">Back</a>
+
+            <form action="{{ url_for('create_login') }}" method="POST">
+
+                <label>First Name:</label>
+                <input type="text" name="firstName"><br>
+
+                <label>Surname:</label>
+                <input type="text" name="surname"><br>
+
+                <label>Password</label>
+                <input type="text" name="password"><br>
+
+
+                <div>
+                    <label for="role">Role</label>
+                    <select name="role" id="role">
+                        <option value="0">Customer</option>
+                        <option value="1">Waiter</option>
+                        <option value="2">Kitchen</option>
+                        <option value="3">Manager</option>
+                    </select>
+                </div><br>
+
+                {% if error %}
+                    <h2>{{ error }}</h2>
+                {% endif %}
+
+                <input type="submit" value="Submit">
+
+            </form>
+        </main>
+	</body>
+</html>
