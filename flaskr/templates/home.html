@@ -18,5 +18,11 @@
                 </ul>
             </nav>
         </header>
+
+        <h1> Welcome </h1><br>
+        {% for row in rows %}
+            <h1>{{ row[1] }}</h1>
+            <h1>{{ row[2] }}</h1>
+        {% endfor %}
 	</body>
 </html>
