@@ -169,8 +169,34 @@ def login():
     """Renders the page to login."""
     if request.method == 'GET':
         return render_template('login.html')
+
     elif request.method == 'POST':
-        return redirect('/home')
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        firstname = request.form['fname']
+        if not firstname:
+            error = "Enter first name."
+            return render_template('login.html', error=error)
+
+        surname = request.form['sname']
+        if not surname:
+            error = "Enter surname."
+            return render_template('login.html', error=error)
+
+        password = request.form['pass']
+        if not password:
+            error = "Enter password."
+            return render_template('login.html', error=error)
+
+        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=? AND password_hash=?""", (firstname, surname, password))
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+
+
+        return render_template('home.html', rows=rows)
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
@@ -190,8 +216,8 @@ def create_login():
 
         surname = request.form['surname']
         if not surname:
-            error = "Price enter your surname."
-            return render_template('addMenuItem.html', error=error)
+            error = "Please enter your surname."
+            return render_template('createLogin.html', error=error)
 
 
         password = request.form['password']
