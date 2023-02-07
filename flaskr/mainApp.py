@@ -1,4 +1,5 @@
 import os
+import random
 import re
 from flask import Flask, render_template, redirect, request
 from flaskr.init_db import DBManager
@@ -176,4 +177,48 @@ def create_login():
     if request.method == 'GET':
         return render_template('createLogin.html')
     elif request.method == 'POST':
-        return redirect('/home')
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+
+        firstName = request.form['firstName']
+        if not firstName:
+            error = "Please enter your first name."
+            return render_template('createLogin.html', error=error)
+
+        surname = request.form['surname']
+        if not surname:
+            error = "Price enter your surname."
+            return render_template('addMenuItem.html', error=error)
+
+
+        password = request.form['password']
+        if not password:
+            error = "Choose your password."
+            return render_template('createLogin.html', error=error)
+
+        role = request.form['role']
+        if not role:
+            error = "what kind of user are you?"
+            return render_template('createLogin.html', error=error)
+
+        sql_connection.execute("SELECT count(*) FROM users")
+        count = sql_connection.fetchone()
+
+        if count == 0:
+            sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
+                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', '###', 3))
+            db_manager.get_db().commit()
+
+        sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
+                               + " VALUES (?, ?, ?,?)", (firstName, surname, password, role))
+        db_manager.get_db().commit()
+
+        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=?""", (firstName,))
+        rows = sql_connection.fetchall()
+        db_manager.close()
+
+        return render_template('home.html', rows=rows)
+
+
