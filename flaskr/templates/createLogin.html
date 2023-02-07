@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Restaurant Name</h1>
+        <h2>Create Login</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+    </header>
+    <br>
+    <main>
+        <form action="{{ url_for('create_login') }}" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username">
+                <br>
+                <label for="password">Password</label>
+                <input type="text" id="password">
+                <br>
+                <label for="userlevel">Userlevel</label>
+                <input type="text" id="userlevel">
+                <br>
+                <input type="submit" value="Log-In">
+        </form>
+    </main>
+</body>
+</html>
