@@ -1,0 +1,1992 @@
+html {
+    box-sizing: border-box
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit
+}
+
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    margin: 0
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section {
+    display: block
+}
+
+summary {
+    display: list-item
+}
+
+audio,
+canvas,
+progress,
+video {
+    display: inline-block
+}
+
+progress {
+    vertical-align: baseline
+}
+
+audio:not([controls]) {
+    display: none;
+    height: 0
+}
+
+[hidden],
+template {
+    display: none
+}
+
+a {
+    background-color: transparent
+}
+
+a:active,
+a:hover {
+    outline-width: 0
+}
+
+abbr[title] {
+    border-bottom: none;
+    text-decoration: underline;
+    text-decoration: underline dotted
+}
+
+b,
+strong {
+    font-weight: bolder
+}
+
+dfn {
+    font-style: italic
+}
+
+mark {
+    background: #ff0;
+    color: #000
+}
+
+small {
+    font-size: 80%
+}
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+sub {
+    bottom: -0.25em
+}
+
+sup {
+    top: -0.5em
+}
+
+figure {
+    margin: 1em 40px
+}
+
+img {
+    border-style: none
+}
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, monospace;
+    font-size: 1em
+}
+
+hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible
+}
+
+button,
+input,
+select,
+textarea,
+optgroup {
+    font: inherit;
+    margin: 0
+}
+
+optgroup {
+    font-weight: bold
+}
+
+button,
+input {
+    overflow: visible
+}
+
+button,
+select {
+    text-transform: none
+}
+
+button,
+[type=button],
+[type=reset],
+[type=submit] {
+    -webkit-appearance: button
+}
+
+button::-moz-focus-inner,
+[type=button]::-moz-focus-inner,
+[type=reset]::-moz-focus-inner,
+[type=submit]::-moz-focus-inner {
+    border-style: none;
+    padding: 0
+}
+
+button:-moz-focusring,
+[type=button]:-moz-focusring,
+[type=reset]:-moz-focusring,
+[type=submit]:-moz-focusring {
+    outline: 1px dotted ButtonText
+}
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: .35em .625em .75em
+}
+
+legend {
+    color: inherit;
+    display: table;
+    max-width: 100%;
+    padding: 0;
+    white-space: normal
+}
+
+textarea {
+    overflow: auto
+}
+
+[type=checkbox],
+[type=radio] {
+    padding: 0
+}
+
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
+    height: auto
+}
+
+[type=search] {
+    -webkit-appearance: textfield;
+    outline-offset: -2px
+}
+
+[type=search]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+
+::-webkit-file-upload-button {
+    -webkit-appearance: button;
+    font: inherit
+}
+
+/* End extract */
+html,
+body {
+    font-family: Verdana, sans-serif;
+    font-size: 15px;
+    line-height: 1.5
+}
+
+html {
+    overflow-x: hidden
+}
+
+h1 {
+    font-size: 36px
+}
+
+h2 {
+    font-size: 30px
+}
+
+h3 {
+    font-size: 24px
+}
+
+h4 {
+    font-size: 20px
+}
+
+h5 {
+    font-size: 18px
+}
+
+h6 {
+    font-size: 16px
+}
+
+.css-serif {
+    font-family: serif
+}
+
+.css-sans-serif {
+    font-family: sans-serif
+}
+
+.css-cursive {
+    font-family: cursive
+}
+
+.css-monospace {
+    font-family: monospace
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: 400;
+    margin: 10px 0
+}
+
+.css-wide {
+    letter-spacing: 4px
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0
+}
+
+.css-image {
+    max-width: 100%;
+    height: auto
+}
+
+img {
+    vertical-align: middle
+}
+
+a {
+    color: inherit
+}
+
+.css-table,
+.css-table-all {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    display: table
+}
+
+.css-table-all {
+    border: 1px solid #ccc
+}
+
+.css-bordered tr,
+.css-table-all tr {
+    border-bottom: 1px solid #ddd
+}
+
+.css-striped tbody tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+.css-table-all tr:nth-child(odd) {
+    background-color: #fff
+}
+
+.css-table-all tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+.css-hoverable tbody tr:hover,
+.css-ul.css-hoverable li:hover {
+    background-color: #ccc
+}
+
+.css-centered tr th,
+.css-centered tr td {
+    text-align: center
+}
+
+.css-table td,
+.css-table th,
+.css-table-all td,
+.css-table-all th {
+    padding: 8px 8px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: top
+}
+
+.css-table th:first-child,
+.css-table td:first-child,
+.css-table-all th:first-child,
+.css-table-all td:first-child {
+    padding-left: 16px
+}
+
+.css-btn,
+.css-button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.css-btn:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+}
+
+.css-btn,
+.css-button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.css-disabled,
+.css-btn:disabled,
+.css-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.3
+}
+
+.css-disabled *,
+:disabled * {
+    pointer-events: none
+}
+
+.css-btn.css-disabled:hover,
+.css-btn:disabled:hover {
+    box-shadow: none
+}
+
+.css-badge,
+.css-tag {
+    background-color: #000;
+    color: #fff;
+    display: inline-block;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-align: center
+}
+
+.css-badge {
+    border-radius: 50%
+}
+
+.css-ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0
+}
+
+.css-ul li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd
+}
+
+.css-ul li:last-child {
+    border-bottom: none
+}
+
+.css-tooltip,
+.css-display-container {
+    position: relative
+}
+
+.css-tooltip .css-text {
+    display: none
+}
+
+.css-tooltip:hover .css-text {
+    display: inline-block
+}
+
+.css-ripple:active {
+    opacity: 0.5
+}
+
+.css-ripple {
+    transition: opacity 0s
+}
+
+.css-input {
+    padding: 8px;
+    display: block;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%
+}
+
+.css-select {
+    padding: 9px 0;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc
+}
+
+.css-dropdown-click,
+.css-dropdown-hover {
+    position: relative;
+    display: inline-block;
+    cursor: pointer
+}
+
+.css-dropdown-hover:hover .css-dropdown-content {
+    display: block
+}
+
+.css-dropdown-hover:first-child,
+.css-dropdown-click:hover {
+    background-color: #ccc;
+    color: #000
+}
+
+.css-dropdown-hover:hover>.css-button:first-child,
+.css-dropdown-click:hover>.css-button:first-child {
+    background-color: #ccc;
+    color: #000
+}
+
+.css-dropdown-content {
+    cursor: auto;
+    color: #000;
+    background-color: #fff;
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    margin: 0;
+    padding: 0;
+    z-index: 1
+}
+
+.css-check,
+.css-radio {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    top: 6px
+}
+
+.css-sidebar {
+    height: 100%;
+    width: 200px;
+    background-color: #fff;
+    position: fixed !important;
+    z-index: 1;
+    overflow: auto
+}
+
+.css-bar-block .css-dropdown-hover,
+.css-bar-block .css-dropdown-click {
+    width: 100%
+}
+
+.css-bar-block .css-dropdown-hover .css-dropdown-content,
+.css-bar-block .css-dropdown-click .css-dropdown-content {
+    min-width: 100%
+}
+
+.css-bar-block .css-dropdown-hover .css-button,
+.css-bar-block .css-dropdown-click .css-button {
+    width: 100%;
+    text-align: left;
+    padding: 8px 16px
+}
+
+.css-main,
+#main {
+    transition: margin-left .4s
+}
+
+.css-modal {
+    z-index: 3;
+    display: none;
+    padding-top: 100px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4)
+}
+
+.css-modal-content {
+    margin: auto;
+    background-color: #fff;
+    position: relative;
+    padding: 0;
+    outline: 0;
+    width: 600px
+}
+
+.css-bar {
+    width: 100%;
+    overflow: hidden
+}
+
+.css-center .css-bar {
+    display: inline-block;
+    width: auto
+}
+
+.css-bar .css-bar-item {
+    padding: 8px 16px;
+    float: left;
+    width: auto;
+    border: none;
+    display: block;
+    outline: 0
+}
+
+.css-bar .css-dropdown-hover,
+.css-bar .css-dropdown-click {
+    position: static;
+    float: left
+}
+
+.css-bar .css-button {
+    white-space: normal
+}
+
+.css-bar-block .css-bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0
+}
+
+.css-bar-block.css-center .css-bar-item {
+    text-align: center
+}
+
+.css-block {
+    display: block;
+    width: 100%
+}
+
+.css-responsive {
+    display: block;
+    overflow-x: auto
+}
+
+.css-container:after,
+.css-container:before,
+.css-panel:after,
+.css-panel:before,
+.css-row:after,
+.css-row:before,
+.css-row-padding:after,
+.css-row-padding:before,
+.css-cell-row:before,
+.css-cell-row:after,
+.css-clear:after,
+.css-clear:before,
+.css-bar:before,
+.css-bar:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+.css-col,
+.css-half,
+.css-third,
+.css-twothird,
+.css-threequarter,
+.css-quarter {
+    float: left;
+    width: 100%
+}
+
+.css-col.s1 {
+    width: 8.33333%
+}
+
+.css-col.s2 {
+    width: 16.66666%
+}
+
+.css-col.s3 {
+    width: 24.99999%
+}
+
+.css-col.s4 {
+    width: 33.33333%
+}
+
+.css-col.s5 {
+    width: 41.66666%
+}
+
+.css-col.s6 {
+    width: 49.99999%
+}
+
+.css-col.s7 {
+    width: 58.33333%
+}
+
+.css-col.s8 {
+    width: 66.66666%
+}
+
+.css-col.s9 {
+    width: 74.99999%
+}
+
+.css-col.s10 {
+    width: 83.33333%
+}
+
+.css-col.s11 {
+    width: 91.66666%
+}
+
+.css-col.s12 {
+    width: 99.99999%
+}
+
+@media (min-width:601px) {
+    .css-col.m1 {
+        width: 8.33333%
+    }
+
+    .css-col.m2 {
+        width: 16.66666%
+    }
+
+    .css-col.m3,
+    .css-quarter {
+        width: 24.99999%
+    }
+
+    .css-col.m4,
+    .css-third {
+        width: 33.33333%
+    }
+
+    .css-col.m5 {
+        width: 41.66666%
+    }
+
+    .css-col.m6,
+    .css-half {
+        width: 49.99999%
+    }
+
+    .css-col.m7 {
+        width: 58.33333%
+    }
+
+    .css-col.m8,
+    .css-twothird {
+        width: 66.66666%
+    }
+
+    .css-col.m9,
+    .css-threequarter {
+        width: 74.99999%
+    }
+
+    .css-col.m10 {
+        width: 83.33333%
+    }
+
+    .css-col.m11 {
+        width: 91.66666%
+    }
+
+    .css-col.m12 {
+        width: 99.99999%
+    }
+}
+
+@media (min-width:993px) {
+    .css-col.l1 {
+        width: 8.33333%
+    }
+
+    .css-col.l2 {
+        width: 16.66666%
+    }
+
+    .css-col.l3 {
+        width: 24.99999%
+    }
+
+    .css-col.l4 {
+        width: 33.33333%
+    }
+
+    .css-col.l5 {
+        width: 41.66666%
+    }
+
+    .css-col.l6 {
+        width: 49.99999%
+    }
+
+    .css-col.l7 {
+        width: 58.33333%
+    }
+
+    .css-col.l8 {
+        width: 66.66666%
+    }
+
+    .css-col.l9 {
+        width: 74.99999%
+    }
+
+    .css-col.l10 {
+        width: 83.33333%
+    }
+
+    .css-col.l11 {
+        width: 91.66666%
+    }
+
+    .css-col.l12 {
+        width: 99.99999%
+    }
+}
+
+.css-rest {
+    overflow: hidden
+}
+
+.css-stretch {
+    margin-left: -16px;
+    margin-right: -16px
+}
+
+.css-content,
+.css-auto {
+    margin-left: auto;
+    margin-right: auto
+}
+
+.css-content {
+    max-width: 980px
+}
+
+.css-auto {
+    max-width: 1140px
+}
+
+.css-cell-row {
+    display: table;
+    width: 100%
+}
+
+.css-cell {
+    display: table-cell
+}
+
+.css-cell-top {
+    vertical-align: top
+}
+
+.css-cell-middle {
+    vertical-align: middle
+}
+
+.css-cell-bottom {
+    vertical-align: bottom
+}
+
+.css-hide {
+    display: none !important
+}
+
+.css-show-block,
+.css-show {
+    display: block !important
+}
+
+.css-show-inline-block {
+    display: inline-block !important
+}
+
+@media (max-width:1205px) {
+    .css-auto {
+        max-width: 95%
+    }
+}
+
+@media (max-width:600px) {
+    .css-modal-content {
+        margin: 0 10px;
+        width: auto !important
+    }
+
+    .css-modal {
+        padding-top: 30px
+    }
+
+    .css-dropdown-hover.css-mobile .css-dropdown-content,
+    .css-dropdown-click.css-mobile .css-dropdown-content {
+        position: relative
+    }
+
+    .css-hide-small {
+        display: none !important
+    }
+
+    .css-mobile {
+        display: block;
+        width: 100% !important
+    }
+
+    .css-bar-item.css-mobile,
+    .css-dropdown-hover.css-mobile,
+    .css-dropdown-click.css-mobile {
+        text-align: center
+    }
+
+    .css-dropdown-hover.css-mobile,
+    .css-dropdown-hover.css-mobile .css-btn,
+    .css-dropdown-hover.css-mobile .css-button,
+    .css-dropdown-click.css-mobile,
+    .css-dropdown-click.css-mobile .css-btn,
+    .css-dropdown-click.css-mobile .css-button {
+        width: 100%
+    }
+}
+
+@media (max-width:768px) {
+    .css-modal-content {
+        width: 500px
+    }
+
+    .css-modal {
+        padding-top: 50px
+    }
+}
+
+@media (min-width:993px) {
+    .css-modal-content {
+        width: 900px
+    }
+
+    .css-hide-large {
+        display: none !important
+    }
+
+    .css-sidebar.css-collapse {
+        display: block !important
+    }
+}
+
+@media (max-width:992px) and (min-width:601px) {
+    .css-hide-medium {
+        display: none !important
+    }
+}
+
+@media (max-width:992px) {
+    .css-sidebar.css-collapse {
+        display: none
+    }
+
+    .css-main {
+        margin-left: 0 !important;
+        margin-right: 0 !important
+    }
+
+    .css-auto {
+        max-width: 100%
+    }
+}
+
+.css-top,
+.css-bottom {
+    position: fixed;
+    width: 100%;
+    z-index: 1
+}
+
+.css-top {
+    top: 0
+}
+
+.css-bottom {
+    bottom: 0
+}
+
+.css-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2
+}
+
+.css-display-topleft {
+    position: absolute;
+    left: 0;
+    top: 0
+}
+
+.css-display-topright {
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.css-display-bottomleft {
+    position: absolute;
+    left: 0;
+    bottom: 0
+}
+
+.css-display-bottomright {
+    position: absolute;
+    right: 0;
+    bottom: 0
+}
+
+.css-display-middle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
+}
+
+.css-display-left {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(0%, -50%);
+    -ms-transform: translate(-0%, -50%)
+}
+
+.css-display-right {
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%)
+}
+
+.css-display-topmiddle {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%)
+}
+
+.css-display-bottommiddle {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%)
+}
+
+.css-display-container:hover .css-display-hover {
+    display: block
+}
+
+.css-display-container:hover span.css-display-hover {
+    display: inline-block
+}
+
+.css-display-hover {
+    display: none
+}
+
+.css-display-position {
+    position: absolute
+}
+
+.css-circle {
+    border-radius: 50%
+}
+
+.css-round-small {
+    border-radius: 2px
+}
+
+.css-round,
+.css-round-medium {
+    border-radius: 4px
+}
+
+.css-round-large {
+    border-radius: 8px
+}
+
+.css-round-xlarge {
+    border-radius: 16px
+}
+
+.css-round-xxlarge {
+    border-radius: 32px
+}
+
+.css-row-padding,
+.css-row-padding>.css-half,
+.css-row-padding>.css-third,
+.css-row-padding>.css-twothird,
+.css-row-padding>.css-threequarter,
+.css-row-padding>.css-quarter,
+.css-row-padding>.css-col {
+    padding: 0 8px
+}
+
+.css-container,
+.css-panel {
+    padding: 0.01em 16px
+}
+
+.css-panel {
+    margin-top: 16px;
+    margin-bottom: 16px
+}
+
+.css-code,
+.css-codespan {
+    font-family: Consolas, "courier new";
+    font-size: 16px
+}
+
+.css-code {
+    width: auto;
+    background-color: #fff;
+    padding: 8px 12px;
+    border-left: 4px solid #4CAF50;
+    word-wrap: break-word
+}
+
+.css-codespan {
+    color: crimson;
+    background-color: #f1f1f1;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 110%
+}
+
+.css-card,
+.css-card-2 {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
+}
+
+.css-card-4,
+.css-hover-shadow:hover {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19)
+}
+
+.css-spin {
+    animation: css-spin 2s infinite linear
+}
+
+@keyframes css-spin {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(359deg)
+    }
+}
+
+.css-animate-fading {
+    animation: fading 10s infinite
+}
+
+@keyframes fading {
+    0% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+.css-animate-opacity {
+    animation: opac 0.8s
+}
+
+@keyframes opac {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.css-animate-top {
+    position: relative;
+    animation: animatetop 0.4s
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+.css-animate-left {
+    position: relative;
+    animation: animateleft 0.4s
+}
+
+@keyframes animateleft {
+    from {
+        left: -300px;
+        opacity: 0
+    }
+
+    to {
+        left: 0;
+        opacity: 1
+    }
+}
+
+.css-animate-right {
+    position: relative;
+    animation: animateright 0.4s
+}
+
+@keyframes animateright {
+    from {
+        right: -300px;
+        opacity: 0
+    }
+
+    to {
+        right: 0;
+        opacity: 1
+    }
+}
+
+.css-animate-bottom {
+    position: relative;
+    animation: animatebottom 0.4s
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -300px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0;
+        opacity: 1
+    }
+}
+
+.css-animate-zoom {
+    animation: animatezoom 0.6s
+}
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.css-animate-input {
+    transition: width 0.4s ease-in-out
+}
+
+.css-animate-input:focus {
+    width: 100% !important
+}
+
+.css-opacity,
+.css-hover-opacity:hover {
+    opacity: 0.60
+}
+
+.css-opacity-off,
+.css-hover-opacity-off:hover {
+    opacity: 1
+}
+
+.css-opacity-max {
+    opacity: 0.25
+}
+
+.css-opacity-min {
+    opacity: 0.75
+}
+
+.css-greyscale-max,
+.css-grayscale-max,
+.css-hover-greyscale:hover,
+.css-hover-grayscale:hover {
+    filter: grayscale(100%)
+}
+
+.css-greyscale,
+.css-grayscale {
+    filter: grayscale(75%)
+}
+
+.css-greyscale-min,
+.css-grayscale-min {
+    filter: grayscale(50%)
+}
+
+.css-sepia {
+    filter: sepia(75%)
+}
+
+.css-sepia-max,
+.css-hover-sepia:hover {
+    filter: sepia(100%)
+}
+
+.css-sepia-min {
+    filter: sepia(50%)
+}
+
+.css-tiny {
+    font-size: 10px !important
+}
+
+.css-small {
+    font-size: 12px !important
+}
+
+.css-medium {
+    font-size: 15px !important
+}
+
+.css-large {
+    font-size: 18px !important
+}
+
+.css-xlarge {
+    font-size: 24px !important
+}
+
+.css-xxlarge {
+    font-size: 36px !important
+}
+
+.css-xxxlarge {
+    font-size: 48px !important
+}
+
+.css-jumbo {
+    font-size: 64px !important
+}
+
+.css-left-align {
+    text-align: left !important
+}
+
+.css-right-align {
+    text-align: right !important
+}
+
+.css-justify {
+    text-align: justify !important
+}
+
+.css-center {
+    text-align: center !important
+}
+
+.css-border-0 {
+    border: 0 !important
+}
+
+.css-border {
+    border: 1px solid #ccc !important
+}
+
+.css-border-top {
+    border-top: 1px solid #ccc !important
+}
+
+.css-border-bottom {
+    border-bottom: 1px solid #ccc !important
+}
+
+.css-border-left {
+    border-left: 1px solid #ccc !important
+}
+
+.css-border-right {
+    border-right: 1px solid #ccc !important
+}
+
+.css-topbar {
+    border-top: 6px solid #ccc !important
+}
+
+.css-bottombar {
+    border-bottom: 6px solid #ccc !important
+}
+
+.css-leftbar {
+    border-left: 6px solid #ccc !important
+}
+
+.css-rightbar {
+    border-right: 6px solid #ccc !important
+}
+
+.css-section,
+.css-code {
+    margin-top: 16px !important;
+    margin-bottom: 16px !important
+}
+
+.css-margin {
+    margin: 16px !important
+}
+
+.css-margin-top {
+    margin-top: 16px !important
+}
+
+.css-margin-bottom {
+    margin-bottom: 16px !important
+}
+
+.css-margin-left {
+    margin-left: 16px !important
+}
+
+.css-margin-right {
+    margin-right: 16px !important
+}
+
+.css-padding-small {
+    padding: 4px 8px !important
+}
+
+.css-padding {
+    padding: 8px 16px !important
+}
+
+.css-padding-large {
+    padding: 12px 24px !important
+}
+
+.css-padding-16 {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important
+}
+
+.css-padding-24 {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important
+}
+
+.css-padding-32 {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important
+}
+
+.css-padding-48 {
+    padding-top: 48px !important;
+    padding-bottom: 48px !important
+}
+
+.css-padding-64 {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important
+}
+
+.css-padding-top-64 {
+    padding-top: 64px !important
+}
+
+.css-padding-top-48 {
+    padding-top: 48px !important
+}
+
+.css-padding-top-32 {
+    padding-top: 32px !important
+}
+
+.css-padding-top-24 {
+    padding-top: 24px !important
+}
+
+.css-left {
+    float: left !important
+}
+
+.css-right {
+    float: right !important
+}
+
+.css-button:hover {
+    color: #000 !important;
+    background-color: #ccc !important
+}
+
+.css-transparent,
+.css-hover-none:hover {
+    background-color: transparent !important
+}
+
+.css-hover-none:hover {
+    box-shadow: none !important
+}
+
+/* Colors */
+.css-amber,
+.css-hover-amber:hover {
+    color: #000 !important;
+    background-color: #ffc107 !important
+}
+
+.css-aqua,
+.css-hover-aqua:hover {
+    color: #000 !important;
+    background-color: #00ffff !important
+}
+
+.css-blue,
+.css-hover-blue:hover {
+    color: #fff !important;
+    background-color: #2196F3 !important
+}
+
+.css-light-blue,
+.css-hover-light-blue:hover {
+    color: #000 !important;
+    background-color: #87CEEB !important
+}
+
+.css-brown,
+.css-hover-brown:hover {
+    color: #fff !important;
+    background-color: #795548 !important
+}
+
+.css-cyan,
+.css-hover-cyan:hover {
+    color: #000 !important;
+    background-color: #00bcd4 !important
+}
+
+.css-blue-grey,
+.css-hover-blue-grey:hover,
+.css-blue-gray,
+.css-hover-blue-gray:hover {
+    color: #fff !important;
+    background-color: #607d8b !important
+}
+
+.css-green,
+.css-hover-green:hover {
+    color: #fff !important;
+    background-color: #4CAF50 !important
+}
+
+.css-light-green,
+.css-hover-light-green:hover {
+    color: #000 !important;
+    background-color: #8bc34a !important
+}
+
+.css-indigo,
+.css-hover-indigo:hover {
+    color: #fff !important;
+    background-color: #3f51b5 !important
+}
+
+.css-khaki,
+.css-hover-khaki:hover {
+    color: #000 !important;
+    background-color: #f0e68c !important
+}
+
+.css-lime,
+.css-hover-lime:hover {
+    color: #000 !important;
+    background-color: #cddc39 !important
+}
+
+.css-orange,
+.css-hover-orange:hover {
+    color: #000 !important;
+    background-color: #ff9800 !important
+}
+
+.css-deep-orange,
+.css-hover-deep-orange:hover {
+    color: #fff !important;
+    background-color: #ff5722 !important
+}
+
+.css-pink,
+.css-hover-pink:hover {
+    color: #fff !important;
+    background-color: #e91e63 !important
+}
+
+.css-purple,
+.css-hover-purple:hover {
+    color: #fff !important;
+    background-color: #9c27b0 !important
+}
+
+.css-deep-purple,
+.css-hover-deep-purple:hover {
+    color: #fff !important;
+    background-color: #673ab7 !important
+}
+
+.css-red,
+.css-hover-red:hover {
+    color: #fff !important;
+    background-color: #f44336 !important
+}
+
+.css-sand,
+.css-hover-sand:hover {
+    color: #000 !important;
+    background-color: #fdf5e6 !important
+}
+
+.css-teal,
+.css-hover-teal:hover {
+    color: #fff !important;
+    background-color: #009688 !important
+}
+
+.css-yellow,
+.css-hover-yellow:hover {
+    color: #000 !important;
+    background-color: #ffeb3b !important
+}
+
+.css-white,
+.css-hover-white:hover {
+    color: #000 !important;
+    background-color: #fff !important
+}
+
+.css-black,
+.css-hover-black:hover {
+    color: #fff !important;
+    background-color: #000 !important
+}
+
+.css-grey,
+.css-hover-grey:hover,
+.css-gray,
+.css-hover-gray:hover {
+    color: #000 !important;
+    background-color: #9e9e9e !important
+}
+
+.css-light-grey,
+.css-hover-light-grey:hover,
+.css-light-gray,
+.css-hover-light-gray:hover {
+    color: #000 !important;
+    background-color: #f1f1f1 !important
+}
+
+.css-dark-grey,
+.css-hover-dark-grey:hover,
+.css-dark-gray,
+.css-hover-dark-gray:hover {
+    color: #fff !important;
+    background-color: #616161 !important
+}
+
+.css-pale-red,
+.css-hover-pale-red:hover {
+    color: #000 !important;
+    background-color: #ffdddd !important
+}
+
+.css-pale-green,
+.css-hover-pale-green:hover {
+    color: #000 !important;
+    background-color: #ddffdd !important
+}
+
+.css-pale-yellow,
+.css-hover-pale-yellow:hover {
+    color: #000 !important;
+    background-color: #ffffcc !important
+}
+
+.css-pale-blue,
+.css-hover-pale-blue:hover {
+    color: #000 !important;
+    background-color: #ddffff !important
+}
+
+.css-text-amber,
+.css-hover-text-amber:hover {
+    color: #ffc107 !important
+}
+
+.css-text-aqua,
+.css-hover-text-aqua:hover {
+    color: #00ffff !important
+}
+
+.css-text-blue,
+.css-hover-text-blue:hover {
+    color: #2196F3 !important
+}
+
+.css-text-light-blue,
+.css-hover-text-light-blue:hover {
+    color: #87CEEB !important
+}
+
+.css-text-brown,
+.css-hover-text-brown:hover {
+    color: #795548 !important
+}
+
+.css-text-cyan,
+.css-hover-text-cyan:hover {
+    color: #00bcd4 !important
+}
+
+.css-text-blue-grey,
+.css-hover-text-blue-grey:hover,
+.css-text-blue-gray,
+.css-hover-text-blue-gray:hover {
+    color: #607d8b !important
+}
+
+.css-text-green,
+.css-hover-text-green:hover {
+    color: #4CAF50 !important
+}
+
+.css-text-light-green,
+.css-hover-text-light-green:hover {
+    color: #8bc34a !important
+}
+
+.css-text-indigo,
+.css-hover-text-indigo:hover {
+    color: #3f51b5 !important
+}
+
+.css-text-khaki,
+.css-hover-text-khaki:hover {
+    color: #b4aa50 !important
+}
+
+.css-text-lime,
+.css-hover-text-lime:hover {
+    color: #cddc39 !important
+}
+
+.css-text-orange,
+.css-hover-text-orange:hover {
+    color: #ff9800 !important
+}
+
+.css-text-deep-orange,
+.css-hover-text-deep-orange:hover {
+    color: #ff5722 !important
+}
+
+.css-text-pink,
+.css-hover-text-pink:hover {
+    color: #e91e63 !important
+}
+
+.css-text-purple,
+.css-hover-text-purple:hover {
+    color: #9c27b0 !important
+}
+
+.css-text-deep-purple,
+.css-hover-text-deep-purple:hover {
+    color: #673ab7 !important
+}
+
+.css-text-red,
+.css-hover-text-red:hover {
+    color: #f44336 !important
+}
+
+.css-text-sand,
+.css-hover-text-sand:hover {
+    color: #fdf5e6 !important
+}
+
+.css-text-teal,
+.css-hover-text-teal:hover {
+    color: #009688 !important
+}
+
+.css-text-yellow,
+.css-hover-text-yellow:hover {
+    color: #d2be0e !important
+}
+
+.css-text-white,
+.css-hover-text-white:hover {
+    color: #fff !important
+}
+
+.css-text-black,
+.css-hover-text-black:hover {
+    color: #000 !important
+}
+
+.css-text-grey,
+.css-hover-text-grey:hover,
+.css-text-gray,
+.css-hover-text-gray:hover {
+    color: #757575 !important
+}
+
+.css-text-light-grey,
+.css-hover-text-light-grey:hover,
+.css-text-light-gray,
+.css-hover-text-light-gray:hover {
+    color: #f1f1f1 !important
+}
+
+.css-text-dark-grey,
+.css-hover-text-dark-grey:hover,
+.css-text-dark-gray,
+.css-hover-text-dark-gray:hover {
+    color: #3a3a3a !important
+}
+
+.css-border-amber,
+.css-hover-border-amber:hover {
+    border-color: #ffc107 !important
+}
+
+.css-border-aqua,
+.css-hover-border-aqua:hover {
+    border-color: #00ffff !important
+}
+
+.css-border-blue,
+.css-hover-border-blue:hover {
+    border-color: #2196F3 !important
+}
+
+.css-border-light-blue,
+.css-hover-border-light-blue:hover {
+    border-color: #87CEEB !important
+}
+
+.css-border-brown,
+.css-hover-border-brown:hover {
+    border-color: #795548 !important
+}
+
+.css-border-cyan,
+.css-hover-border-cyan:hover {
+    border-color: #00bcd4 !important
+}
+
+.css-border-blue-grey,
+.css-hover-border-blue-grey:hover,
+.css-border-blue-gray,
+.css-hover-border-blue-gray:hover {
+    border-color: #607d8b !important
+}
+
+.css-border-green,
+.css-hover-border-green:hover {
+    border-color: #4CAF50 !important
+}
+
+.css-border-light-green,
+.css-hover-border-light-green:hover {
+    border-color: #8bc34a !important
+}
+
+.css-border-indigo,
+.css-hover-border-indigo:hover {
+    border-color: #3f51b5 !important
+}
+
+.css-border-khaki,
+.css-hover-border-khaki:hover {
+    border-color: #f0e68c !important
+}
+
+.css-border-lime,
+.css-hover-border-lime:hover {
+    border-color: #cddc39 !important
+}
+
+.css-border-orange,
+.css-hover-border-orange:hover {
+    border-color: #ff9800 !important
+}
+
+.css-border-deep-orange,
+.css-hover-border-deep-orange:hover {
+    border-color: #ff5722 !important
+}
+
+.css-border-pink,
+.css-hover-border-pink:hover {
+    border-color: #e91e63 !important
+}
+
+.css-border-purple,
+.css-hover-border-purple:hover {
+    border-color: #9c27b0 !important
+}
+
+.css-border-deep-purple,
+.css-hover-border-deep-purple:hover {
+    border-color: #673ab7 !important
+}
+
+.css-border-red,
+.css-hover-border-red:hover {
+    border-color: #f44336 !important
+}
+
+.css-border-sand,
+.css-hover-border-sand:hover {
+    border-color: #fdf5e6 !important
+}
+
+.css-border-teal,
+.css-hover-border-teal:hover {
+    border-color: #009688 !important
+}
+
+.css-border-yellow,
+.css-hover-border-yellow:hover {
+    border-color: #ffeb3b !important
+}
+
+.css-border-white,
+.css-hover-border-white:hover {
+    border-color: #fff !important
+}
+
+.css-border-black,
+.css-hover-border-black:hover {
+    border-color: #000 !important
+}
+
+.css-border-grey,
+.css-hover-border-grey:hover,
+.css-border-gray,
+.css-hover-border-gray:hover {
+    border-color: #9e9e9e !important
+}
+
+.css-border-light-grey,
+.css-hover-border-light-grey:hover,
+.css-border-light-gray,
+.css-hover-border-light-gray:hover {
+    border-color: #f1f1f1 !important
+}
+
+.css-border-dark-grey,
+.css-hover-border-dark-grey:hover,
+.css-border-dark-gray,
+.css-hover-border-dark-gray:hover {
+    border-color: #616161 !important
+}
+
+.css-border-pale-red,
+.css-hover-border-pale-red:hover {
+    border-color: #ffe7e7 !important
+}
+
+.css-border-pale-green,
+.css-hover-border-pale-green:hover {
+    border-color: #e7ffe7 !important
+}
+
+.css-border-pale-yellow,
+.css-hover-border-pale-yellow:hover {
+    border-color: #ffffcc !important
+}
+
+.css-border-pale-blue,
+.css-hover-border-pale-blue:hover {
+    border-color: #e7ffff !important
+}

@@ -177,3 +177,15 @@ def create_login():
         return render_template('createLogin.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+@app.route('/custMenu')
+def custMenu():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM menu;")
+    foods = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return render_template('customerMenu.html', foods=foods)
