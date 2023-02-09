@@ -48,6 +48,10 @@ main {
   padding: 20px;
 }
 
+main h1 {
+  text-align: center;
+}
+
 main h2 {
   text-align: center;
 }
