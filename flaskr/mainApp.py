@@ -38,32 +38,28 @@ def home():
     """Render the home page."""
     return render_template("home.html")
 
+
 @app.route('/call', methods=['GET', 'POST'])
 def call():
     if request.method == 'GET':
-
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                           + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
+                               + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
 
         sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
                                + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
 
         sql_connection.execute("SELECT first_name, last_name FROM users"
-                            + " WHERE  role = 1"
-                            + " ORDER BY RANDOM()"
-                            + "  LIMIT 1;")
+                               + " WHERE  role = 1"
+                               + " ORDER BY RANDOM()"
+                               + "  LIMIT 1;")
         rows = sql_connection.fetchall()
 
         db_manager.close()
 
         return render_template('calling.html', rows=rows)
-
-
-
-
 
 
 @app.route('/menu')
@@ -177,3 +173,19 @@ def create_login():
         return render_template('createLogin.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+
+@app.route('/updateOrderStatus', methods=['GET'])
+def update_order_status():
+    if request.method == 'GET':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT state FROM orderDetails;")
+
+    # Update the order status in the database
+        order_state = 0
+        sql_connection.execute("UPDATE orderDetails SET (state)"
+                               " WHERE (?)", order_state)
+        db_manager.close()
+    # Return a response indicating the status of the update
+    return {"message": "Order status updated successfully"}
