@@ -27,7 +27,7 @@
             <input name="sname" type="text" id="surname">
             <br>
             <label for="password">Password</label>
-            <input name="pass" type="text" id="password"></input>
+            <input name="pass" type="password" id="password" minlength="8" required></input>
             <br>
             {% if error %}
                 <h2>{{ error }}</h2>
