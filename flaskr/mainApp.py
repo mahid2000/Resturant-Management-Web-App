@@ -6,7 +6,7 @@ from flaskr.init_db import DBManager
 
 def create_app():
     """Creates and configures the flask app."""
-    app = Flask(__name__, instance_relative_config=True, template_folder="..\\flaskr\\templates")
+    app = Flask(__name__, instance_relative_config=True, template_folder="templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
@@ -37,33 +37,6 @@ def index():
 def home():
     """Render the home page."""
     return render_template("home.html")
-
-@app.route('/call', methods=['GET', 'POST'])
-def call():
-    if request.method == 'GET':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                           + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
-
-        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                               + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
-
-        sql_connection.execute("SELECT first_name, last_name FROM users"
-                            + " WHERE  role = 1"
-                            + " ORDER BY RANDOM()"
-                            + "  LIMIT 1;")
-        rows = sql_connection.fetchall()
-
-        db_manager.close()
-
-        return render_template('calling.html', rows=rows)
-
-
-
-
 
 
 @app.route('/menu')
@@ -177,3 +150,27 @@ def create_login():
         return render_template('createLogin.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+
+@app.route('/call', methods=['GET', 'POST'])
+def call():
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
+                           + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
+
+        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
+                               + " VALUES (96, 'Jon', 'Snow', '##1', 1)")
+
+        sql_connection.execute("SELECT first_name, last_name FROM users"
+                            + " WHERE  role = 1"
+                            + " ORDER BY RANDOM()"
+                            + "  LIMIT 1;")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('calling.html', rows=rows)
