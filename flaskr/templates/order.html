@@ -20,32 +20,39 @@
     </header>
     <br>
     <main>
-    <div class="order">
-        <div class="pizza">
-            <h2>Pizza</h2><br>
-            <h5>Margherita</h5><h5 id="price">£12.50</h5>
-            <p>Fresh tomatoes, fresh mozzarella, fresh basil</p>
-            <label for="quantity">Quantity</label>
-            <select name="quantity" id="quantity">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
-            <label for="size">Size</label>
-            <select name="size" id="size">
-                <option value="small">small</option>
-                <option value="medium">medium</option>
-                <option value="large">large</option>
-            </select>
-        </div>
-    </div>
+      <h1>Today's Options</h1>
+      <ul>
+        <li>
+          <div class="food-item">
+            <h2>Pepperoni Pizza</h2>
+            <p>Price: £10</p>
+              <div>
+                <label for="quantity">Quantity:</label>
+                <input type="text" id="quantity" name="quantity">
+              </div>
+          </div>
+        </li>
+        <li>
+          <div class="food-item">
+            <h2>Chicken Fillet Burger</h2>
+            <p>Price: £8</p>
+            <div>
+              <label for="quantity">Quantity:</label>
+              <input type="text" id="quantity" name="quantity">
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="food-item">
+            <h2>Salad</h2>
+            <p>Price: £5</p>
+              <div>
+                <label for="quantity">Quantity:</label>
+                <input type="text" id="quantity" name="quantity">
+              </div>
+          </div>
+        </li>
+      </ul>
     </main>
   </body>
 </html>
