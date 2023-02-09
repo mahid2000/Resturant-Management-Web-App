@@ -1,9 +1,11 @@
 import os
-import random
 import re
+import rsa
 from flask import Flask, render_template, redirect, request
 from flaskr.init_db import DBManager
 
+
+publicKey, privateKey = rsa.newkeys(512)
 
 def create_app():
     """Creates and configures the flask app."""
@@ -188,14 +190,28 @@ def login():
             error = "Enter password."
             return render_template('login.html', error=error)
 
-        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=? AND password_hash=?""", (firstname, surname, password))
-        rows = sql_connection.fetchall()
+
+        sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
+                               (firstname, surname))
+        encryptedPass = sql_connection.fetchone()
+        print(encryptedPass)
+        if encryptedPass is None:
+            error = "Invalid Credentials"
+            return render_template('login.html', error=error)
+
+        decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
+        if decPass == password:
+            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""", (firstname, surname))
+            rows = sql_connection.fetchall()
+            db_manager.close()
+            return render_template('home.html', rows=rows)
 
         db_manager.close()
+        error = "Invalid credentials"
+        return render_template('login.html', error=error)
 
 
 
-        return render_template('home.html', rows=rows)
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
@@ -224,6 +240,9 @@ def create_login():
             error = "Choose your password."
             return render_template('createLogin.html', error=error)
 
+        encPass = rsa.encrypt(password.encode(),
+                                 publicKey)
+
         role = request.form['role']
         if not role:
             error = "what kind of user are you?"
@@ -233,12 +252,15 @@ def create_login():
         count = sql_connection.fetchone()
 
         if count == 0:
+            managerPass = '###'
+            encPassManager = rsa.encrypt(managerPass.encode(),
+                                  publicKey)
             sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', '###', 3))
+                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
             db_manager.get_db().commit()
 
         sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                               + " VALUES (?, ?, ?,?)", (firstName, surname, password, role))
+                               + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
         db_manager.get_db().commit()
 
         sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=?""", (firstName,))
