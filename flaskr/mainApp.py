@@ -179,8 +179,4 @@ def call():
 
 @app.route('/order', methods=['GET', 'POST'])
 def order():
-
-    if request.method == 'GET':
-        return render_template('order.html')
-    elif request.method == 'POST':
-        return render_template('order.html')
+    return render_template('order.html')
