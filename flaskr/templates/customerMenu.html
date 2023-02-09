@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 
+
+<!-- Menu page for customer side browsing -->
+
 <head>
   <title>Customer Menu</title>
   <meta charset="UTF-8">
@@ -57,63 +60,65 @@
         <!-- Source : "https://www.pexels.com/zh-tw/photo/4968307/"-->
         <img src="static\customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
 
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Pizza');" id="myLink">
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Main');" id="myLink">
           <div class="css-col s4 tablink css-padding-large css-hover-blue">Main</div>
         </a>
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Pasta');">
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Sides');">
           <div class="css-col s4 tablink css-padding-large css-hover-blue">Sides</div>
         </a>
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Starter');">
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Sweets');">
           <div class="css-col s4 tablink css-padding-large css-hover-blue">Sweets</div>
         </a>
       </div>
+      <!-- Menu connected to the database -->
+      <div id="Main" class="css-container menu css-padding-32 css-white">
+        {% for food in foods %}
+        <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+        <p class="css-text-grey">{{ food[4] }}. {{ food[3] }}kcal</p>
+        <hr>
+        {% endfor %}
+      </div>
 
-      <div id="Pizza" class="css-container menu css-padding-32 css-white">
-          {% for food in foods %}
-            <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-            <p class="css-text-grey">{{ food[4] }}. {{ food[3] }}kcal</p>
-            <hr>
-          {% endfor %}
+      <!-- An temporary example of different categories of food -->
+
+      <div id="Sides" class="css-container menu css-padding-32 css-white">
+        <h1><b>Lasagna</b> <span class="css-tag css-grey css-round">Popular</span> <span
+            class="css-right css-tag css-dark-grey css-round">£13.50</span></h1>
+        <p class="css-text-grey">Special sauce, mozzarella, parmesan, ground beef</p>
+        <hr>
+
+        <h1><b>Ravioli</b> <span class="css-right css-tag css-dark-grey css-round">£14.50</span></h1>
+        <p class="css-text-grey">Ravioli filled with cheese</p>
+        <hr>
+
+        <h1><b>Spaghetti Classica</b> <span class="css-right css-tag css-dark-grey css-round">£11.00</span></h1>
+        <p class="css-text-grey">Fresh tomatoes, onions, ground beef</p>
+        <hr>
+
+        <h1><b>Seafood pasta</b> <span class="css-right css-tag css-dark-grey css-round">£25.50</span></h1>
+        <p class="css-text-grey">Salmon, shrimp, lobster, garlic</p>
+      </div>
+
+
+      <div id="Sweets" class="css-container menu css-padding-32 css-white">
+        <h1><b>Today's Soup</b> <span class="css-tag css-grey css-round">Seasonal</span><span
+            class="css-right css-tag css-dark-grey css-round">£5.50</span></h1>
+        <p class="css-text-grey">Ask the waiter</p>
+        <hr>
+
+        <h1><b>Bruschetta</b> <span class="css-right css-tag css-dark-grey css-round">£8.50</span></h1>
+        <p class="css-text-grey">Bread with pesto, tomatoes, onion, garlic</p>
+        <hr>
+
+        <h1><b>Garlic bread</b> <span class="css-right css-tag css-dark-grey css-round">£9.50</span></h1>
+        <p class="css-text-grey">Grilled ciabatta, garlic butter, onions</p>
+        <hr>
+
+        <h1><b>Tomozzarella</b> <span class="css-right css-tag css-dark-grey css-round">£10.50</span></h1>
+        <p class="css-text-grey">Tomatoes and mozzarella</p>
+      </div><br>
+
     </div>
-
-    <div id="Pasta" class="css-container menu css-padding-32 css-white">
-      <h1><b>Lasagna</b> <span class="css-tag css-grey css-round">Popular</span> <span
-          class="css-right css-tag css-dark-grey css-round">£13.50</span></h1>
-      <p class="css-text-grey">Special sauce, mozzarella, parmesan, ground beef</p>
-      <hr>
-
-      <h1><b>Ravioli</b> <span class="css-right css-tag css-dark-grey css-round">£14.50</span></h1>
-      <p class="css-text-grey">Ravioli filled with cheese</p>
-      <hr>
-
-      <h1><b>Spaghetti Classica</b> <span class="css-right css-tag css-dark-grey css-round">£11.00</span></h1>
-      <p class="css-text-grey">Fresh tomatoes, onions, ground beef</p>
-      <hr>
-
-      <h1><b>Seafood pasta</b> <span class="css-right css-tag css-dark-grey css-round">£25.50</span></h1>
-      <p class="css-text-grey">Salmon, shrimp, lobster, garlic</p>
-    </div>
-
-
-    <div id="Starter" class="css-container menu css-padding-32 css-white">
-      <h1><b>Today's Soup</b> <span class="css-tag css-grey css-round">Seasonal</span><span
-          class="css-right css-tag css-dark-grey css-round">£5.50</span></h1>
-      <p class="css-text-grey">Ask the waiter</p>
-      <hr>
-
-      <h1><b>Bruschetta</b> <span class="css-right css-tag css-dark-grey css-round">£8.50</span></h1>
-      <p class="css-text-grey">Bread with pesto, tomatoes, onion, garlic</p>
-      <hr>
-
-      <h1><b>Garlic bread</b> <span class="css-right css-tag css-dark-grey css-round">£9.50</span></h1>
-      <p class="css-text-grey">Grilled ciabatta, garlic butter, onions</p>
-      <hr>
-
-      <h1><b>Tomozzarella</b> <span class="css-right css-tag css-dark-grey css-round">£10.50</span></h1>
-      <p class="css-text-grey">Tomatoes and mozzarella</p>
-    </div><br>
-
-  </div>
   </div>
 
   <!-- Footer -->
