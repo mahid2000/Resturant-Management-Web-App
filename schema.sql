@@ -1,9 +1,0 @@
-DROP TABLE IF EXISTS menu;
-
-CREATE TABLE menu (
-	itemID SERIAL PRIMARY KEY,
-	name VARCHAR(256),
-	price INTEGER,
-	calories INTEGER,
-	allergens VARCHAR(256)
-);

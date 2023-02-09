@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Restaurant Name</title>
+    <link rel="stylesheet" href="../../order.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+  </head>
+  <body>
+    <header>
+      <h1>Restaurant Name</h1>
+      <nav>
+        <ul>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="order.html">Order</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="order">
+        <h1>Order</h1>
+        <div class="pizza">
+            <h2>Pizza</h2><br>
+            <h5>Margherita</h5><h5 id="price">£12.50</h5>
+            <p>Fresh tomatoes, fresh mozzarella, fresh basil</p>
+            <label for="quantity">Quantity</label>
+            <select name="quantity" id="quantity">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <label for="size">Size</label>
+            <select name="size" id="size">
+                <option value="small">small</option>
+                <option value="medium">medium</option>
+                <option value="large">large</option>
+            </select>
+        </div>
+    </div>
+  </body>
+</html>
