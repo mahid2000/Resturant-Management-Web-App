@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Restaurant Name</title>
-    <link rel="stylesheet" href="../../order.css">
+    <title>Order</title>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
   </head>
   <body>
     <header>
       <h1>Restaurant Name</h1>
+        <h2>Order</h2>
       <nav>
         <ul>
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="login.html">Login</a></li>
-          <li><a href="order.html">Order</a></li>
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    <li><a href="{{ url_for('order') }}">Order</a></li>
         </ul>
       </nav>
     </header>
+    <br>
+    <main>
     <div class="order">
-        <h1>Order</h1>
         <div class="pizza">
             <h2>Pizza</h2><br>
             <h5>Margherita</h5><h5 id="price">£12.50</h5>
@@ -43,5 +46,6 @@
             </select>
         </div>
     </div>
+    </main>
   </body>
 </html>
