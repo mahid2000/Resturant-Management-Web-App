@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Home</title>
+	</head>
+	<body>
+        <header>
+            <h1>Restaurant Name</h1>
+            <h2>Home</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <h1> Welcome </h1><br>
+        {% for row in rows %}
+            <h1>{{ row[1] }}</h1>
+            <h1>{{ row[2] }}</h1>
+        {% endfor %}
+	</body>
+</html>

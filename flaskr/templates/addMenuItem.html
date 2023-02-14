@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Add Menu Item</title>
+	</head>
+	<body>
+        <header>
+        <h1>Restaurant Name</h1>
+        <h2>Add Menu Item</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+
+            <a href="{{ url_for('menu') }}">Back</a>
+
+            <form action="{{ url_for('add_menu_item') }}" method="POST">
+
+                <label>Name:</label>
+                <input type="text" name="name"><br>
+
+                <label>Price:</label>
+                <input type="text" name="price"><br>
+
+                <label>Calories:</label>
+                <input type="text" name="calories"><br>
+
+                <label>Allergens:</label>
+                <div>
+                    <label><input type="checkbox" name="options" value="Ce">Celery</label>
+                    <label><input type="checkbox" name="options" value="Cr">Crustaceans</label>
+                    <label><input type="checkbox" name="options" value="E">Egg</label>
+                    <label><input type="checkbox" name="options" value="F">Fish</label>
+                    <label><input type="checkbox" name="options" value="G">Cereals Containing Gluten</label>
+                    <label><input type="checkbox" name="options" value="L">Lupin</label>
+                    <label><input type="checkbox" name="options" value="Mi">Milk</label>
+                </div><br>
+                <div>
+                    <label><input type="checkbox" name="options" value="Mo">Molluscs</label>
+                    <label><input type="checkbox" name="options" value="Mu">Mustard</label>
+                    <label><input type="checkbox" name="options" value="N">Nuts</label>
+                    <label><input type="checkbox" name="options" value="P">Peanuts</label>
+                    <label><input type="checkbox" name="options" value="Se">Sesame Seeds</label>
+                    <label><input type="checkbox" name="options" value="Su">Sulphur Dioxide</label>
+                    <label><input type="checkbox" name="options" value="S">Soya</label>
+                </div><br>
+
+                {% if error %}
+                    <h2>{{ error }}</h2>
+                {% endif %}
+
+                <input type="submit" value="Update">
+
+            </form>
+        </main>
+	</body>
+</html>
