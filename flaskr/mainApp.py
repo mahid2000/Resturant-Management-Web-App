@@ -71,6 +71,9 @@ def menu():
     """Render the menu page. Get menu items from the database."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
+    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
+                           "VALUES ('Item1',4.99,250,'Mi,E,G'), ('Item2',10.99,370,'M,L'), ('Item3',2.50,75,'Ce,M'), "
+                           "('Item4',1.99,99,'E,F,Mo'), ('Item5',9.95,138,'N,P,S')")
 
     # Gets all the rows from menu.
     sql_connection.execute("SELECT * FROM menu;")
@@ -177,3 +180,11 @@ def create_login():
         return render_template('createLogin.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+def filter_menu():
+    if request.method == 'GET':
+        return render_template('menu.html')
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
