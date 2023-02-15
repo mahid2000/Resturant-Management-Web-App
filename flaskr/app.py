@@ -105,6 +105,8 @@ def add_menu_item():
             error = "Price must be a valid decimal number eg. 12.34"
             return render_template('addMenuItem.html', error=error)
 
+        category = request.form['category']
+
         calories = request.form['calories']
         if not calories:
             error = "Calories cannot be left blank."
@@ -118,8 +120,8 @@ def add_menu_item():
         allergens = ', '.join(allergensList)
 
         # Add an item to the menu table.
-        sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
-                               " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
+        sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
+                               " VALUES (?, ?, ?, ?, ?)", (name, price, category, calories, allergens))
 
         db_manager.get_db().commit()
         db_manager.close()
