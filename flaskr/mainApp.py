@@ -287,3 +287,15 @@ def update_order_status():
         db_manager.close()
     # Return a response indicating the status of the update
     return {"message": "Order status updated successfully"}
+
+@app.route('/waiterPage')
+def change_menu():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM menu;")
+    foods = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return render_template('waiter.html', foods=foods)
