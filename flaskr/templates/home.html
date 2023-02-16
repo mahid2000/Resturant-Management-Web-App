@@ -14,21 +14,22 @@
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     <li><a href="{{ url_for('menu') }}">Menu</a></li>
                     <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
                 </ul>
             </nav>
         </header>
         <br>
         <main>
-            {% if page_state == 0 %}
+            {% if privilege == 0 %}
                 <p>0</p>
-            {% elif page_state == 1 %}
+            {% elif privilege == 1 %}
                 <p>1</p>
-            {% elif page_state == 2 %}
+            {% elif privilege == 2 %}
                 <p>2</p>
-            {% elif page_state == 3 %}
+            {% elif privilege == 3 %}
                 <p>3</p>
-            {% elif page_state == 4 %}
+            {% elif privilege == 4 %}
                 <p>4</p>
             {% endif %}
         </main>

@@ -41,7 +41,8 @@ def index():
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template('home.html', page_state=session.get('privilege'))
+    return render_template('home.html', privilege=session.get('privilege'))
+
 
 @app.route('/call', methods=['GET', 'POST'])
 def call():
@@ -201,13 +202,13 @@ def login():
             sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
                                    (firstname, surname))
             user = sql_connection.fetchone()
+            db_manager.close()
 
             session['firstName'] = user[1]
             session['lastName'] = user[2]
             session['privilege'] = user[4]
 
-            db_manager.close()
-            return render_template('home.html', )
+            return redirect('/home')
 
         db_manager.close()
         error = "Invalid credentials"
@@ -268,7 +269,15 @@ def create_login():
 
         db_manager.close()
 
-        return render_template('home.html', page_state=session.get('privilege'))
+        return redirect('/home')
+
+
+@app.route('/logout')
+def logout():
+    session['firstName'] = ''
+    session['LastName'] = ''
+    session['privilege'] = 0
+    return redirect('/home')
 
 
 @app.route('/updateOrderStatus', methods=['GET'])
