@@ -71,9 +71,6 @@ def menu():
     """Render the menu page. Get menu items from the database."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
-    sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
-                           "VALUES ('Item1',4.99,250,'Mi,E,G'), ('Item2',10.99,370,'M,L'), ('Item3',2.50,75,'Ce,M'), "
-                           "('Item4',1.99,99,'E,F,Mo'), ('Item5',9.95,138,'N,P,S')")
 
     # Gets all the rows from menu.
     if not request.form:
