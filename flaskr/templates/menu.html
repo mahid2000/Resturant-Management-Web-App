@@ -17,6 +17,7 @@
                     <li><a href="{{ url_for('login') }}">Login</a></li>
                 {% elif user[2] == 1 %}
                     <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    <li><a href="{{ url_for('order') }}">Order</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[2] == 2 %}
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>

@@ -274,6 +274,11 @@ def logout():
     return redirect('/home')
 
 
+@app.route('/order')
+def order():
+    return render_template('order.html')
+
+
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
     if request.method == 'GET':
