@@ -66,7 +66,7 @@ def call():
 
 
 
-@app.route('/menu')
+@app.route('/menu', methods=['GET', 'POST'])
 def menu():
     """Render the menu page. Get menu items from the database."""
     db_manager = DBManager(app)
@@ -76,8 +76,14 @@ def menu():
                            "('Item4',1.99,99,'E,F,Mo'), ('Item5',9.95,138,'N,P,S')")
 
     # Gets all the rows from menu.
-    sql_connection.execute("SELECT * FROM menu;")
-    rows = sql_connection.fetchall()
+    if not request.form:
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
+    else:
+        if request.method == 'GET':
+            return render_template('menu.html')
+        elif request.method == 'POST':
+            rows = filter_menu()
 
     db_manager.close()
 
@@ -182,9 +188,25 @@ def create_login():
         return redirect('/home')
 
 def filter_menu():
-    if request.method == 'GET':
-        return render_template('menu.html')
-    elif request.method == 'POST':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
+        # Initial SQL command Built up over filtering
+        command = "SELECT * FROM menu "
+        # Sort By Dropdown menu
+        sort = request.form['Sort']
+        if sort == 'HPrice':
+            command += "ORDER BY price DESC;"
+        elif sort == 'LPrice':
+            command += "ORDER BY price;"
+        elif sort == 'HCalorie':
+            command += "ORDER BY calories DESC;"
+        elif sort == 'LCalorie':
+            command += "ORDER BY calories;"
+        rows = sql_connection.fetchall()
+        sql_connection.execute(command)
+        rows = sql_connection.fetchall()
+        return rows
+
+
+
 

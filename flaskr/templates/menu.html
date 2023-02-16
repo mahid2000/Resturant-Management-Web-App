@@ -30,7 +30,7 @@
                 <div class="column">
                     <legend>Allergens</legend>
                     <form action="{{ url_for('menu') }}" method="POST">
-<label><input type="checkbox" name="options" value="Ce">Celery</label><br>
+                    <label><input type="checkbox" name="options" value="Ce">Celery</label><br>
                     <label><input type="checkbox" name="options" value="Cr">Crustaceans</label><br>
                     <label><input type="checkbox" name="options" value="E">Egg</label><br>
                     <label><input type="checkbox" name="options" value="F">Fish</label><br>
@@ -66,7 +66,7 @@
   </select>
                 </div>
             </div>
-            <input type="submit" value="Filter">
+            <input onclick="filter_menu()" type="submit" value="Filter">
             </form>
             <fieldset>
         <p>-</p>
