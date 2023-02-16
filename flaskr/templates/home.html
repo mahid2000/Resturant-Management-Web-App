@@ -13,25 +13,25 @@
                 <ul>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    {% if user[2] == 0 %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% elif user[2] == 1 %}
+                        <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 2 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 3 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 4 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>
         <br>
         <main>
-            {% if privilege == 0 %}
-                <p>0</p>
-            {% elif privilege == 1 %}
-                <p>1</p>
-            {% elif privilege == 2 %}
-                <p>2</p>
-            {% elif privilege == 3 %}
-                <p>3</p>
-            {% elif privilege == 4 %}
-                <p>4</p>
-            {% endif %}
+            <h3>Welcome</h3>
+            <p>{{ user[0] }} {{ user[1] }}</p>
         </main>
 	</body>
 </html>

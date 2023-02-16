@@ -33,15 +33,15 @@ app = create_app()
 @app.route('/')
 def index():
     """Navigate to the home page."""
-    if 'privilege' not in session:
-        session['privilege'] = 0
+    if 'user' not in session:
+        session['user'] = ['', '', 0]
     return redirect('/home')
 
 
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template('home.html', privilege=session.get('privilege'))
+    return render_template('home.html', user=session.get('user'))
 
 
 @app.route('/call', methods=['GET', 'POST'])
@@ -204,9 +204,7 @@ def login():
             user = sql_connection.fetchone()
             db_manager.close()
 
-            session['firstName'] = user[1]
-            session['lastName'] = user[2]
-            session['privilege'] = user[4]
+            session['user'] = [user[1], user[2], user[4]]
 
             return redirect('/home')
 
@@ -263,9 +261,7 @@ def create_login():
         sql_connection.execute("SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
         user = sql_connection.fetchone()
 
-        session['firstName'] = user[1]
-        session['lastName'] = user[2]
-        session['privilege'] = user[4]
+        session['user'] = [user[1], user[2], user[4]]
 
         db_manager.close()
 
@@ -274,9 +270,7 @@ def create_login():
 
 @app.route('/logout')
 def logout():
-    session['firstName'] = ''
-    session['LastName'] = ''
-    session['privilege'] = 0
+    session['user'] = ['', '', 0]
     return redirect('/home')
 
 
