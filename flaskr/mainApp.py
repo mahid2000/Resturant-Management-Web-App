@@ -81,7 +81,7 @@ def menu():
     db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows)
+    return render_template('menu.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
