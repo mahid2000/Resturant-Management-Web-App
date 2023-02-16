@@ -274,9 +274,21 @@ def logout():
     return redirect('/home')
 
 
-@app.route('/order')
+@app.route('/order', methods=['GET', 'POST'])
 def order():
-    return render_template('order.html')
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('order.html', rows=rows)
 
 
 @app.route('/updateOrderStatus', methods=['GET'])
