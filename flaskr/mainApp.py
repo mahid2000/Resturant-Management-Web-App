@@ -192,17 +192,34 @@ def filter_menu():
         sql_connection = db_manager.get_connection()
         # Initial SQL command Built up over filtering
         command = "SELECT * FROM menu "
+        pri_min = str(request.form['Price_Min'])
+        pri_max = str(request.form['Price_Max'])
+        cal_min = str(request.form['Calories_Min'])
+        cal_max = str(request.form['Calories_Max'])
+        if pri_max or pri_min or cal_max or cal_min:
+            command += "WHERE price > 0"
+        if pri_max:
+            command += "AND price <= ".join(pri_max) + " "
+        if pri_min:
+            command += "AND price >= ".join(pri_min) + " "
+        if cal_max:
+            command += "AND price <= ".join(cal_max) + " "
+        if cal_min:
+            command += "AND price >= ".join(cal_min) + " "
+
         # Sort By Dropdown menu
         sort = request.form['Sort']
         if sort == 'HPrice':
-            command += "ORDER BY price DESC;"
+            command += "ORDER BY price DESC"
         elif sort == 'LPrice':
-            command += "ORDER BY price;"
+            command += "ORDER BY price"
         elif sort == 'HCalorie':
-            command += "ORDER BY calories DESC;"
+            command += "ORDER BY calories DESC"
         elif sort == 'LCalorie':
-            command += "ORDER BY calories;"
+            command += "ORDER BY calories"
+        command += ';'
         rows = sql_connection.fetchall()
+        print(command)
         sql_connection.execute(command)
         rows = sql_connection.fetchall()
         return rows
