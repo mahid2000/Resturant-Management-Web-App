@@ -74,7 +74,7 @@
       <div id="Main" class="css-container menu css-padding-32 css-white">
         {% for food in foods %}
         <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-        <p class="css-text-grey">{{ food[4] }}. {{ food[3] }}kcal</p>
+        <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens : {{ food[5] }}</p>
         <hr>
         {% endfor %}
       </div>
