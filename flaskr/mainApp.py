@@ -1,15 +1,15 @@
 import os
 import re
 import rsa
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from flaskr.init_db import DBManager
-
 
 publicKey, privateKey = rsa.newkeys(512)
 
+
 def create_app():
     """Creates and configures the flask app."""
-    app = Flask(__name__, instance_relative_config=True, template_folder="..\\flaskr\\templates")
+    app = Flask(__name__, instance_relative_config=True, template_folder="templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
@@ -33,14 +33,15 @@ app = create_app()
 @app.route('/')
 def index():
     """Navigate to the home page."""
+    if 'privilege' not in session:
+        session['privilege'] = 0
     return redirect('/home')
 
 
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template("home.html")
-
+    return render_template('home.html', page_state=session.get('privilege'))
 
 @app.route('/call', methods=['GET', 'POST'])
 def call():
@@ -64,10 +65,6 @@ def call():
         db_manager.close()
 
         return render_template('calling.html', rows=rows)
-
-
-
-
 
 
 @app.route('/menu')
@@ -191,7 +188,6 @@ def login():
             error = "Enter password."
             return render_template('login.html', error=error)
 
-
         sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (firstname, surname))
         encryptedPass = sql_connection.fetchone()
@@ -202,17 +198,20 @@ def login():
 
         decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
         if decPass == password:
-            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""", (firstname, surname))
-            rows = sql_connection.fetchall()
+            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
+                                   (firstname, surname))
+            user = sql_connection.fetchone()
+
+            session['firstName'] = user[1]
+            session['lastName'] = user[2]
+            session['privilege'] = user[4]
+
             db_manager.close()
-            return render_template('home.html', rows=rows)
+            return render_template('home.html', )
 
         db_manager.close()
         error = "Invalid credentials"
         return render_template('login.html', error=error)
-
-
-
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
@@ -224,7 +223,6 @@ def create_login():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-
         firstName = request.form['firstName']
         if not firstName:
             error = "Please enter your first name."
@@ -235,14 +233,12 @@ def create_login():
             error = "Please enter your surname."
             return render_template('createLogin.html', error=error)
 
-
         password = request.form['password']
         if not password:
             error = "Choose your password."
             return render_template('createLogin.html', error=error)
 
-        encPass = rsa.encrypt(password.encode(),
-                                 publicKey)
+        encPass = rsa.encrypt(password.encode(), publicKey)
 
         role = request.form['role']
         if not role:
@@ -254,8 +250,7 @@ def create_login():
 
         if count == 0:
             managerPass = '###'
-            encPassManager = rsa.encrypt(managerPass.encode(),
-                                  publicKey)
+            encPassManager = rsa.encrypt(managerPass.encode(),publicKey)
             sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
                                    + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
             db_manager.get_db().commit()
@@ -264,13 +259,16 @@ def create_login():
                                + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
         db_manager.get_db().commit()
 
-        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=?""", (firstName,))
-        rows = sql_connection.fetchall()
+        sql_connection.execute("SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
+        user = sql_connection.fetchone()
+
+        session['firstName'] = user[1]
+        session['lastName'] = user[2]
+        session['privilege'] = user[4]
+
         db_manager.close()
 
-        return render_template('home.html', rows=rows)
-
-
+        return render_template('home.html', page_state=session.get('privilege'))
 
 
 @app.route('/updateOrderStatus', methods=['GET'])

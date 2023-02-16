@@ -18,11 +18,19 @@
                 </ul>
             </nav>
         </header>
-
-        <h1> Welcome </h1><br>
-        {% for row in rows %}
-            <h1>{{ row[1] }}</h1>
-            <h1>{{ row[2] }}</h1>
-        {% endfor %}
+        <br>
+        <main>
+            {% if page_state == 0 %}
+                <p>0</p>
+            {% elif page_state == 1 %}
+                <p>1</p>
+            {% elif page_state == 2 %}
+                <p>2</p>
+            {% elif page_state == 3 %}
+                <p>3</p>
+            {% elif page_state == 4 %}
+                <p>4</p>
+            {% endif %}
+        </main>
 	</body>
 </html>
