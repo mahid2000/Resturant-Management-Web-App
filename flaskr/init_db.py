@@ -47,5 +47,7 @@ class DBManager:
                 with current_app.open_resource('static/schema.sql') as file:
                     db.executescript(file.read().decode('utf8'))
                     DBManager._created = True
+                with current_app.open_resource('static/testData.sql') as file:
+                    db.executescript(file.read().decode('utf8'))
 
         return db
