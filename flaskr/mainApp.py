@@ -34,7 +34,7 @@ app = create_app()
 def index():
     """Navigate to the home page."""
     if 'user' not in session:
-        session['user'] = ['', '', 0]
+        session['user'] = [0, '', '', 0]
     return redirect('/home')
 
 
@@ -58,7 +58,7 @@ def call():
                                + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
 
         sql_connection.execute("SELECT first_name, last_name FROM users"
-                               + " WHERE  role = 1"
+                               + " WHERE  role = 2"
                                + " ORDER BY RANDOM()"
                                + "  LIMIT 1;")
         rows = sql_connection.fetchall()
@@ -204,7 +204,7 @@ def login():
             user = sql_connection.fetchone()
             db_manager.close()
 
-            session['user'] = [user[1], user[2], user[4]]
+            session['user'] = [user[0], user[1], user[2], user[4]]
 
             return redirect('/home')
 
@@ -261,7 +261,7 @@ def create_login():
         sql_connection.execute("SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
         user = sql_connection.fetchone()
 
-        session['user'] = [user[1], user[2], user[4]]
+        session['user'] = [user[0], user[1], user[2], user[4]]
 
         db_manager.close()
 
