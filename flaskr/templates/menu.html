@@ -36,7 +36,59 @@
             <li><a href="{{ url_for('edit_menu_item') }}">Edit Menu</a></li>
             {% endif %}
         </ul>
-
+        <fieldset>
+        <label>Sort and Filter:</label>
+            <div class="row">
+                <div class="column">
+                    <legend>Allergens</legend>
+                    <form action="{{ url_for('menu') }}" method="POST">
+                    <label><input type="checkbox" name="options" value="Ce">Celery</label><br>
+                    <label><input type="checkbox" name="options" value="Cr">Crustaceans</label><br>
+                    <label><input type="checkbox" name="options" value="E">Egg</label><br>
+                    <label><input type="checkbox" name="options" value="F">Fish</label><br>
+                    <label><input type="checkbox" name="options" value="G">Gluten</label><br>
+                    <label><input type="checkbox" name="options" value="L">Lupin</label><br>
+                    <label><input type="checkbox" name="options" value="Mi">Milk</label><br>
+                </div>
+                <div class="column">
+                    <br>
+                    <label><input type="checkbox" name="options" value="Mo">Molluscs</label><br>
+                    <label><input type="checkbox" name="options" value="Mu">Mustard</label><br>
+                    <label><input type="checkbox" name="options" value="N">Nuts</label><br>
+                    <label><input type="checkbox" name="options" value="P">Peanuts</label><br>
+                    <label><input type="checkbox" name="options" value="Se">Sesame Seeds</label><br>
+                    <label><input type="checkbox" name="options" value="Su">Sulphur Dioxide</label><br>
+                    <label><input type="checkbox" name="options" value="S">Soya</label><br>
+                </div>
+                <div class="column">
+                    <div class="column2">
+                        <label>Price:</label>
+                        <input type="text" name="Price_Min" placeholder="Min">
+                        <label>Calories:</label>
+                        <input type="text" name="Calories_Min" placeholder="Min">
+                    </div>
+                    <div class="column2">
+                        <br>
+                        <input type="text" name="Price_Max" placeholder="Max">
+                        <br><br>
+                        <input type="text" name="Calories_Max" placeholder="Max">
+                    </div>
+                </div>
+                <div class="column">
+                    <legend>Sort By</legend>
+                    <select name="Sort" id="Sort">
+                        <option>Select</option>>
+                        <option value="HPrice">Highest Price</option>
+                        <option value="LPrice">Lowest Price</option>
+                        <option value="HCalorie">Highest Calorie</option>
+                        <option value="LCalorie">Lowest Calorie</option>
+                    </select>
+  </select>
+                </div>
+            </div>
+            <input onclick="filter_menu()" type="submit" value="Filter">
+            </form>
+            <fieldset>
         <p>-</p>
         {% for row in rows %}
         <h2>{{ row[1] }}</h2>

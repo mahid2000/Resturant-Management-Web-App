@@ -47,7 +47,6 @@ def home():
 @app.route('/call', methods=['GET', 'POST'])
 def call():
     if request.method == 'GET':
-
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -68,15 +67,21 @@ def call():
         return render_template('calling.html', rows=rows)
 
 
-@app.route('/menu')
+@app.route('/menu', methods=['GET', 'POST'])
 def menu():
     """Render the menu page. Get menu items from the database."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    # Gets all the rows from menu.
-    sql_connection.execute("SELECT * FROM menu;")
-    rows = sql_connection.fetchall()
+    # Gets all the rows from menu or apply the filter if made.
+    if not request.form:
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
+    else:
+        if request.method == 'GET':
+            return render_template('menu.html')
+        elif request.method == 'POST':
+            rows = filter_menu()
 
     db_manager.close()
 
@@ -267,12 +272,10 @@ def create_login():
 
         return redirect('/home')
 
-
 @app.route('/logout')
 def logout():
     session['user'] = ['', '', 0]
     return redirect('/home')
-
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
@@ -288,3 +291,57 @@ def update_order_status():
         db_manager.close()
     # Return a response indicating the status of the update
     return {"message": "Order status updated successfully"}
+    
+def filter_menu():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    # Initial SQL command Built up over filtering
+    command = "SELECT * FROM menu "
+
+    # Sort by ranges (both price and calorie)
+    pri_min = str(request.form['Price_Min'])
+    pri_max = str(request.form['Price_Max'])
+    cal_min = str(request.form['Calories_Min'])
+    cal_max = str(request.form['Calories_Max'])
+    if pri_max or pri_min or cal_max or cal_min:
+        command += "WHERE price >= 0 "
+        if pri_max:
+            command += "AND price <= " + pri_max + " "
+        if pri_min:
+            command += "AND price >= " + pri_min + " "
+        if cal_max:
+            command += "AND price <= " + cal_max + " "
+        if cal_min:
+            command += "AND price >= " + cal_min + " "
+
+    # Sort By Dropdown menu
+    sort = request.form['Sort']
+    if sort == 'HPrice':
+        command += "ORDER BY price DESC"
+    elif sort == 'LPrice':
+        command += "ORDER BY price"
+    elif sort == 'HCalorie':
+        command += "ORDER BY calories DESC"
+    elif sort == 'LCalorie':
+        command += "ORDER BY calories"
+    command += ';'
+    sql_connection.execute(command)
+    rows = sql_connection.fetchall()
+
+    # Allergens removed from menu
+    allergies = request.form.getlist('options')
+    if not allergies:
+        filtered_rows = []
+        for row in rows:
+            found = False
+            allergens = row[4].split(", ")
+            for i in range(len(allergens)):
+                for j in range(len(allergies)):
+                    if allergens[i] == allergies[j]:
+                        found = True
+            if not found:
+                filtered_rows.append(row)
+        return filtered_rows
+    else:
+        return rows
+
