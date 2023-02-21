@@ -13,10 +13,25 @@
                 <ul>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    {% if user[2] == 0 %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% elif user[2] == 1 %}
+                        <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 2 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 3 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% elif user[2] == 4 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>
+        <br>
+        <main>
+            <h3>Welcome</h3>
+            <p>{{ user[0] }} {{ user[1] }}</p>
+        </main>
 	</body>
 </html>

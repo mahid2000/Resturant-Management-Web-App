@@ -18,13 +18,24 @@
     </header>
     <br>
     <main>
-        <form id="login-form">
-                <label for="username">Username</label>
-                <input type="text" id="username">
-                <br>
-                <label for="password">Password</label>
-                <input type="text" id="password"></input>
-                <button>Login</button>
+        <li><a href="{{ url_for('create_login') }}">Sign Up</a></li>
+        <form action="{{ url_for('login') }}" method="POST">
+            <label for="firstname">First name</label>
+            <input name="fname" type="text" id="firstname">
+            <br>
+            <label for="surname">Surname</label>
+            <input name="sname" type="text" id="surname">
+            <br>
+            <label for="password">Password</label>
+            <input name="pass" type="password" id="password" minlength="8" required></input>
+            <br>
+            {% if error %}
+                <h2>{{ error }}</h2>
+            {% endif %}
+            <br>
+            <input type="submit" value="Login">
+
+
         </form>
     </main>
 </body>

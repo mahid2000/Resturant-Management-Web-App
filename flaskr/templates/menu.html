@@ -13,16 +13,28 @@
             <ul>
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-                <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                {% if user[2] == 0 %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% elif user[2] == 1 %}
+                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% elif user[2] == 2 %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% elif user[2] == 3 %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% elif user[2] == 4 %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
     <br>
     <main>
         <ul>
+            {% if user[2] > 1 %}
             <li><a href="{{ url_for('add_menu_item') }}">Add Menu Item</a></li>
             <li><a href="{{ url_for('edit_menu_item') }}">Edit Menu</a></li>
+            {% endif %}
         </ul>
         <fieldset>
         <label>Sort and Filter:</label>

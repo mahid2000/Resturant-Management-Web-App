@@ -1,12 +1,15 @@
 import os
 import re
-from flask import Flask, render_template, redirect, request
+import rsa
+from flask import Flask, render_template, redirect, request, session
 from flaskr.init_db import DBManager
+
+publicKey, privateKey = rsa.newkeys(512)
 
 
 def create_app():
     """Creates and configures the flask app."""
-    app = Flask(__name__, instance_relative_config=True, template_folder="..\\flaskr\\templates")
+    app = Flask(__name__, instance_relative_config=True, template_folder="templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
@@ -30,13 +33,16 @@ app = create_app()
 @app.route('/')
 def index():
     """Navigate to the home page."""
+    if 'user' not in session:
+        session['user'] = ['', '', 0]
     return redirect('/home')
 
 
 @app.route('/home')
 def home():
     """Render the home page."""
-    return render_template("home.html")
+    return render_template('home.html', user=session.get('user'))
+
 
 @app.route('/call', methods=['GET', 'POST'])
 def call():
@@ -80,7 +86,7 @@ def menu():
     db_manager.close()
 
     # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows)
+    return render_template('menu.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
@@ -168,8 +174,48 @@ def login():
     """Renders the page to login."""
     if request.method == 'GET':
         return render_template('login.html')
+
     elif request.method == 'POST':
-        return redirect('/home')
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        firstname = request.form['fname']
+        if not firstname:
+            error = "Enter first name."
+            return render_template('login.html', error=error)
+
+        surname = request.form['sname']
+        if not surname:
+            error = "Enter surname."
+            return render_template('login.html', error=error)
+
+        password = request.form['pass']
+        if not password:
+            error = "Enter password."
+            return render_template('login.html', error=error)
+
+        sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
+                               (firstname, surname))
+        encryptedPass = sql_connection.fetchone()
+        print(encryptedPass)
+        if encryptedPass is None:
+            error = "Invalid Credentials"
+            return render_template('login.html', error=error)
+
+        decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
+        if decPass == password:
+            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
+                                   (firstname, surname))
+            user = sql_connection.fetchone()
+            db_manager.close()
+
+            session['user'] = [user[1], user[2], user[4]]
+
+            return redirect('/home')
+
+        db_manager.close()
+        error = "Invalid credentials"
+        return render_template('login.html', error=error)
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
@@ -177,9 +223,75 @@ def create_login():
     if request.method == 'GET':
         return render_template('createLogin.html')
     elif request.method == 'POST':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        firstName = request.form['firstName']
+        if not firstName:
+            error = "Please enter your first name."
+            return render_template('createLogin.html', error=error)
+
+        surname = request.form['surname']
+        if not surname:
+            error = "Please enter your surname."
+            return render_template('createLogin.html', error=error)
+
+        password = request.form['password']
+        if not password:
+            error = "Choose your password."
+            return render_template('createLogin.html', error=error)
+
+        encPass = rsa.encrypt(password.encode(), publicKey)
+
+        role = request.form['role']
+        if not role:
+            error = "what kind of user are you?"
+            return render_template('createLogin.html', error=error)
+
+        sql_connection.execute("SELECT count(*) FROM users")
+        count = sql_connection.fetchone()
+
+        if count == 0:
+            managerPass = '###'
+            encPassManager = rsa.encrypt(managerPass.encode(),publicKey)
+            sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
+                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
+            db_manager.get_db().commit()
+
+        sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
+                               + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
+        db_manager.get_db().commit()
+
+        sql_connection.execute("SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
+        user = sql_connection.fetchone()
+
+        session['user'] = [user[1], user[2], user[4]]
+
+        db_manager.close()
+
         return redirect('/home')
 
+@app.route('/logout')
+def logout():
+    session['user'] = ['', '', 0]
+    return redirect('/home')
 
+@app.route('/updateOrderStatus', methods=['GET'])
+def update_order_status():
+    if request.method == 'GET':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT state FROM orderDetails;")
+
+    # Update the order status in the database
+        order_state = 0
+        sql_connection.execute("UPDATE orderDetails SET (state)"
+                               " WHERE (?)", order_state)
+        db_manager.close()
+    # Return a response indicating the status of the update
+    return {"message": "Order status updated successfully"}
+    
 def filter_menu():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
@@ -232,3 +344,4 @@ def filter_menu():
         return filtered_rows
     else:
         return rows
+
