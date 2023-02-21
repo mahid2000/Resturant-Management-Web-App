@@ -38,7 +38,6 @@ def home():
     """Render the home page."""
     return render_template("home.html")
 
-
 @app.route('/call', methods=['GET', 'POST'])
 def call():
     if request.method == 'GET':
