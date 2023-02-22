@@ -327,7 +327,42 @@ def order():
 
         db_manager.close()
 
-        return redirect('/home')
+        return redirect('/orderPayment')
+
+
+@app.route('/orderPayment', methods=['GET', 'POST'])
+def order_payment():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
+        orderRows = sql_connection.fetchall()
+
+        menuRows = []
+        for orderRow in orderRows:
+            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[1],))
+            menuRow = sql_connection.fetchone()
+            menuRows.append(menuRow)
+
+        rows = []
+        totalPrice = 0
+        for i in range(0, len(menuRows)):
+            price = menuRows[i][1] * orderRows[i][1]
+            row = [menuRows[i][0], orderRows[i][1], price]
+            rows.append(row)
+            totalPrice += price
+
+        print(orderRows)
+        print(menuRows)
+        print(rows)
+        print(totalPrice)
+
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+    elif request.method == 'POST':
+        pass
 
 
 @app.route('/updateOrderStatus', methods=['GET'])
