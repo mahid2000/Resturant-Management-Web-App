@@ -362,7 +362,16 @@ def order_payment():
 
         return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
     elif request.method == 'POST':
-        pass
+        return redirect('/orderConformation')
+
+
+@app.route('/orderConformation', methods=['GET', 'POST'])
+def order_conformation():
+
+    if request.method == 'GET':
+        return render_template('orderConformation.html')
+    elif request.method == 'POST':
+        return redirect('/home')
 
 
 @app.route('/updateOrderStatus', methods=['GET'])

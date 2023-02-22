@@ -49,6 +49,15 @@
             </table>
             <h3>Total Price:</h3>
             <h3>£{{ totalPrice }}</h3>
+            <form action="{{ url_for('order_payment') }}", method="POST">
+                <label for="name">Name On Card:</label>
+                <input type="text" name="cardNumber" id="name">
+                <label for="cardNum">Card Number:</label>
+                <input type="text" name="cardNumber" id="cardNum">
+                <label for="CVV">CVV Number:</label>
+                <input type="text" name="cardNumber" id="CVV">
+                <input type="submit" value="Submit Details">
+            </form>
         </main>
 	</body>
 </html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Home</title>
+	</head>
+	<body>
+        <header>
+            <h1>Restaurant Name</h1>
+            <h2>Home</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    <li><a href="{{ url_for('order') }}">Order</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+            <h1>Your order has been placed!</h1>
+            <h2>A waiter will be along soon to confirm your order.</h2>
+            <form action="{{ url_for('order_conformation') }}" method="POST">
+                <input type="submit" value="Press here to return to home page.">
+            </form>
+        </main>
+	</body>
+</html>
