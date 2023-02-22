@@ -12,7 +12,7 @@ Install the packages and library for the project by running \
 
 ### Running The Project
 Once you have installed the package requirements, the project can be run with the command \
-`flask --app flaskr/mainApp run`
+`flask --app flaskr/app run`
 
 ##### Example Logins
 Our restaurant system uses the same login portal for customers and staff. The following are some logins to see the functionality at different levels of admin. \

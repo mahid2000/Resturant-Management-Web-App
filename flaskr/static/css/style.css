@@ -48,6 +48,10 @@ main {
   padding: 20px;
 }
 
+main h1 {
+  text-align: center;
+}
+
 main h2 {
   text-align: center;
 }
@@ -87,6 +91,20 @@ main input[type=text], select {
   box-sizing: border-box;
 }
 
+main table {
+  width: 50%
+}
+
+main table th {
+  text-align: left;
+  padding: 8px;
+}
+
+main table td {
+  text-align: left;
+  padding: 8px;
+}
+
 main input[type=submit] {
   width: 100%;
   background-color: #004d80;
@@ -114,6 +132,18 @@ main form div label {
   display: inline-block;
   text-align: center;
   width: 150px;
+}
+.column {
+    float: left;
+    width: 25%;
+}
+.column2 {
+    float: left;
+    width: 50%
+}
+.row:after {
+    content: "";
+    clear: both;
 }
 
 footer {

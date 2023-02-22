@@ -7,6 +7,7 @@ CREATE TABLE menu (
     itemID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TINYTEXT NOT NULL,
     price DOUBLE(4, 2) NOT NULL,
+    category TINYTEXT NOT NULL,
     calories SMALLINT NOT NULL,
     allergens TEXT
 );
