@@ -44,7 +44,7 @@
   <div class="css-top css-hide-small">
     <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
       <a href="#" class="css-bar-item css-button">HOME</a>
-      <a href="#menu" class="css-bar-item css-button">MENU</a>
+      <a href="custMenu" class="css-bar-item css-button">MENU</a>
       <a href="#about" class="css-bar-item css-button">ABOUT</a>
       <a href="#myMap" class="css-bar-item css-button">CONTACT</a>
     </div>
@@ -61,20 +61,23 @@
         <img src="static\customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
 
         <a href="javascript:void(0)" onclick="openMenu(event, 'Main');" id="myLink">
-          <div class="css-col s4 tablink css-padding-large css-hover-blue">Main</div>
+          <div class="css-col s3 tablink css-padding-large css-hover-blue">Main</div>
         </a>
         <a href="javascript:void(0)" onclick="openMenu(event, 'Sides');">
-          <div class="css-col s4 tablink css-padding-large css-hover-blue">Sides</div>
+          <div class="css-col s3 tablink css-padding-large css-hover-blue">Sides</div>
         </a>
         <a href="javascript:void(0)" onclick="openMenu(event, 'Desserts');">
-          <div class="css-col s4 tablink css-padding-large css-hover-blue">Sweets</div>
+          <div class="css-col s3 tablink css-padding-large css-hover-blue">Sweets</div>
+        </a>
+        <a href="javascript:void(0)" onclick="openMenu(event, 'Drinks');">
+          <div class="css-col s3 tablink css-padding-large css-hover-blue">Drinks</div>
         </a>
       </div>
       <!-- Menu connected to the database -->
       <div class="css-container menu-container">
         <div id="Main" class="css-container menu css-padding-32 css-white">
           {% for food in foods %}
-          {% if food[3] == "mains" %}
+          {% if food[3] == "Mains" %}
           <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
           <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
               food[5] }}</span></p>
@@ -85,7 +88,7 @@
 
         <div id="Sides" class="css-container menu css-padding-32 css-white">
           {% for food in foods %}
-          {% if food[3] == "sides" %}
+          {% if food[3] == "Sides" %}
           <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
           <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
               food[5] }}</span></p>
@@ -97,38 +100,49 @@
 
       <div id="Desserts" class="css-container menu css-padding-32 css-white">
         {% for food in foods %}
-          {% if food[3] == "desserts" %}
-          <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-          <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-              food[5] }}</span></p>
-          <hr>
-          {% endif %}
-          {% endfor %}
-        </div>
-  </div>
+        {% if food[3] == "Desserts" %}
+        <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+        <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
+            food[5] }}</span></p>
+        <hr>
+        {% endif %}
+        {% endfor %}
+      </div>
 
-  <!-- Footer -->
-  <footer class="css-center css-black css-padding-48 css-xxlarge">
-    <p>Customer Menu by Steven</p>
-  </footer>
+      <div id="Drinks" class="css-container menu css-padding-32 css-white">
+        {% for food in foods %}
+        {% if food[3] == "Drinks" %}
+        <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+        <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
+            food[5] }}</span></p>
+        <hr>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
 
-  <script>
-    // Tabbed Menu
-    function openMenu(evt, menuName) {
-      var i, x, tablinks;
-      x = document.getElementsByClassName("menu");
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
+    <!-- Footer -->
+    <footer class="css-center css-black css-padding-48 css-xxlarge">
+      <p>Customer Menu by Steven</p>
+    </footer>
+
+    <script>
+      // Tabbed Menu
+      function openMenu(evt, menuName) {
+        var i, x, tablinks;
+        x = document.getElementsByClassName("menu");
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
+        }
+        document.getElementById(menuName).style.display = "block";
+        evt.currentTarget.firstElementChild.className += " css-blue";
       }
-      tablinks = document.getElementsByClassName("tablink");
-      for (i = 0; i < x.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
-      }
-      document.getElementById(menuName).style.display = "block";
-      evt.currentTarget.firstElementChild.className += " css-blue";
-    }
-    document.getElementById("myLink").click();
-  </script>
+      document.getElementById("myLink").click();
+    </script>
 
 </body>
 
