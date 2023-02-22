@@ -436,7 +436,7 @@ def filter_menu():
         filtered_rows = []
         for row in rows:
             found = False
-            allergens = row[4].split(", ")
+            allergens = row[5].split(", ")
             for i in range(len(allergens)):
                 for j in range(len(allergies)):
                     if allergens[i] == allergies[j]:
