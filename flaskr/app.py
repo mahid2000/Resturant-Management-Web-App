@@ -9,7 +9,8 @@ publicKey, privateKey = rsa.newkeys(512)
 
 def create_app():
     """Creates and configures the flask app."""
-    app = Flask(__name__, instance_relative_config=True, template_folder="templates")
+    app = Flask(__name__, instance_relative_config=True,
+                template_folder="templates")
     app.config.from_mapping(
         # This is used by Flask and extensions to keep data safe.
         # Should be overridden with a random value when deploying
@@ -112,6 +113,8 @@ def add_menu_item():
             error = "Price must be a valid decimal number eg. 12.34"
             return render_template('addMenuItem.html', error=error)
 
+        category = request.form['category']
+
         calories = request.form['calories']
         if not calories:
             error = "Calories cannot be left blank."
@@ -125,8 +128,8 @@ def add_menu_item():
         allergens = ', '.join(allergensList)
 
         # Add an item to the menu table.
-        sql_connection.execute("INSERT INTO menu (name, price, calories, allergens)"
-                               " VALUES (?, ?, ?, ?)", (name, price, calories, allergens))
+        sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
+                               " VALUES (?, ?, ?, ?, ?)", (name, price, category, calories, allergens))
 
         db_manager.get_db().commit()
         db_manager.close()
@@ -161,7 +164,8 @@ def edit_menu_item():
             # Is the checkbox checked.
             if value == 'on':
                 # Delete selected rows.
-                sql_connection.execute("DELETE FROM menu WHERE itemID = ?", key)
+                sql_connection.execute(
+                    "DELETE FROM menu WHERE itemID = ?", key)
                 db_manager.get_db().commit()
 
         db_manager.close()
@@ -254,7 +258,7 @@ def create_login():
 
         if count == 0:
             managerPass = '###'
-            encPassManager = rsa.encrypt(managerPass.encode(),publicKey)
+            encPassManager = rsa.encrypt(managerPass.encode(), publicKey)
             sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
                                    + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
             db_manager.get_db().commit()
@@ -263,7 +267,8 @@ def create_login():
                                + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
         db_manager.get_db().commit()
 
-        sql_connection.execute("SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
+        sql_connection.execute(
+            "SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
         user = sql_connection.fetchone()
 
         session['user'] = [user[1], user[2], user[4]]
@@ -291,7 +296,8 @@ def update_order_status():
         db_manager.close()
     # Return a response indicating the status of the update
     return {"message": "Order status updated successfully"}
-    
+
+
 def filter_menu():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
@@ -345,3 +351,15 @@ def filter_menu():
     else:
         return rows
 
+
+@app.route('/custMenu')
+def custMenu():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM menu;")
+    foods = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return render_template('customerMenu.html', foods=foods)
