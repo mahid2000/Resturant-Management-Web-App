@@ -35,7 +35,9 @@ app = create_app()
 def index():
     """Navigate to the home page."""
     if 'user' not in session:
-        session['user'] = ['', '', 0]
+        session['user'] = ['', '', '', 0]
+    if 'order' not in session:
+        session['order'] = ['', '', '']
     return redirect('/home')
 
 
@@ -58,7 +60,7 @@ def call():
                                + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
 
         sql_connection.execute("SELECT first_name, last_name FROM users"
-                               + " WHERE  role = 1"
+                               + " WHERE  role = 2"
                                + " ORDER BY RANDOM()"
                                + "  LIMIT 1;")
         rows = sql_connection.fetchall()
@@ -213,7 +215,7 @@ def login():
             user = sql_connection.fetchone()
             db_manager.close()
 
-            session['user'] = [user[1], user[2], user[4]]
+            session['user'] = [user[0], user[1], user[2], user[4]]
 
             return redirect('/home')
 
@@ -271,7 +273,7 @@ def create_login():
             "SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
         user = sql_connection.fetchone()
 
-        session['user'] = [user[1], user[2], user[4]]
+        session['user'] = [user[0], user[1], user[2], user[4]]
 
         db_manager.close()
 
@@ -279,8 +281,102 @@ def create_login():
 
 @app.route('/logout')
 def logout():
-    session['user'] = ['', '', 0]
+    session['user'] = ['', '', '', 0]
+    session['order'] = [0, 0, 0]
     return redirect('/home')
+
+
+@app.route('/order', methods=['GET', 'POST'])
+def order():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute("SELECT * FROM menu;")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('order.html', rows=rows)
+
+    if request.method == 'POST':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        table_number = int(request.form['tableNumber'])
+
+        sql_connection.execute("INSERT INTO orders (tableNum, paid)"
+                                   " VALUES (?, ?)", (table_number, 0))
+
+        db_manager.get_db().commit()
+
+        last_row = sql_connection.lastrowid
+
+        sql_connection.execute("SELECT * FROM orders WHERE orderID=?", (last_row,))
+        current_order = sql_connection.fetchone()
+
+        session['order'] = [current_order[0], current_order[1], current_order[2]]
+
+        for key, value in request.form.items():
+
+            if key != 'tableNumber':
+
+                if value != '0':
+
+                    sql_connection.execute("INSERT INTO orderDetails "
+                                           "(orderID, itemID, customerID, qty, state, timestamp) "
+                                           "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                                           (session['order'][0], key, session['user'][0], value, 0))
+
+                    db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/orderPayment')
+
+
+@app.route('/orderPayment', methods=['GET', 'POST'])
+def order_payment():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
+        orderRows = sql_connection.fetchall()
+
+        menuRows = []
+        for orderRow in orderRows:
+            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[1],))
+            menuRow = sql_connection.fetchone()
+            menuRows.append(menuRow)
+
+        rows = []
+        totalPrice = 0
+        for i in range(0, len(menuRows)):
+            price = menuRows[i][1] * orderRows[i][1]
+            row = [menuRows[i][0], orderRows[i][1], price]
+            rows.append(row)
+            totalPrice += price
+
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+    elif request.method == 'POST':
+        # This is where the payment information would be processed.
+        return redirect('/orderConformation')
+
+
+@app.route('/orderConformation', methods=['GET', 'POST'])
+def order_conformation():
+
+    if request.method == 'GET':
+        return render_template('orderConformation.html')
+    elif request.method == 'POST':
+        return redirect('/home')
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():

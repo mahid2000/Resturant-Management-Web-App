@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Order</title>
+	</head>
+	<body>
+    <header>
+        <h1>Restaurant Name</h1>
+        <h2>Order</h2>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                <li><a href="{{ url_for('order') }}">Order</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <main>
+        <form action="{{ url_for('order') }}" method="POST">
+            <h3>Table Number:</h3>
+            <input type="number" name="tableNumber" min="1" max="100" value="0">
+            <table>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td>
+                                <h2>{{ row[1] }}</h2>
+                                <p>£{{ row[2] }}</p>
+                                <p>{{ row[3] }}kcal</p>
+                                <p><b>{{ row[4] }}</b></p>
+                            </td>
+                            <td>
+                                <input type="number" name="{{ row[0] }}" min="0" max="10" value="0">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input type="submit" value="Finish Order">
+        </form>
+    </main>
+	</body>
+</html>
