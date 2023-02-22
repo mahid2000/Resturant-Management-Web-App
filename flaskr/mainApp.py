@@ -34,7 +34,9 @@ app = create_app()
 def index():
     """Navigate to the home page."""
     if 'user' not in session:
-        session['user'] = [0, '', '', 0]
+        session['user'] = ['', '', '', 0]
+    if 'order' not in session:
+        session['order'] = ['', '', '']
     return redirect('/home')
 
 
@@ -270,7 +272,8 @@ def create_login():
 
 @app.route('/logout')
 def logout():
-    session['user'] = ['', '', 0]
+    session['user'] = ['', '', '', 0]
+    session['order'] = [0, 0, 0]
     return redirect('/home')
 
 
@@ -289,6 +292,46 @@ def order():
         db_manager.close()
 
         return render_template('order.html', rows=rows)
+
+    if request.method == 'POST':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        if session['order'][0] == 0:
+
+            sql_connection.execute("INSERT INTO orders (tableNum, paid)"
+                                   " VALUES (?, ?)", (1, 1))
+
+            db_manager.get_db().commit()
+
+            sql_connection.execute("SELECT * FROM orders WHERE tableNum=1")
+            current_order = sql_connection.fetchone()
+
+            session['order'] = [current_order[0], current_order[1], current_order[2]]
+
+        for key, value in request.form.items():
+
+            # Is the checkbox checked.
+            if value != '0':
+
+                sql_connection.execute("INSERT INTO orderDetails (orderID, itemID, customerID, qty, state, timestamp) "
+                                       "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                                       (session['order'][0], key, session['user'][0], value, 0))
+
+                db_manager.get_db().commit()
+
+        sql_connection.execute("SELECT * FROM orders")
+        orders = sql_connection.fetchall()
+        print(orders)
+
+        sql_connection.execute("SELECT * FROM orderDetails")
+        orderDeets = sql_connection.fetchall()
+        print(orderDeets)
+
+        db_manager.close()
+
+        return redirect('/home')
 
 
 @app.route('/updateOrderStatus', methods=['GET'])
