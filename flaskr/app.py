@@ -432,7 +432,7 @@ def filter_menu():
 
     # Allergens removed from menu
     allergies = request.form.getlist('options')
-    if not allergies:
+    if allergies:
         filtered_rows = []
         for row in rows:
             found = False
