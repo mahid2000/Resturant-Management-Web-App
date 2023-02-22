@@ -363,3 +363,8 @@ def custMenu():
     db_manager.close()
 
     return render_template('customerMenu.html', foods=foods)
+
+@app.route('/custHome')
+def custHome():
+    """Render the home page."""
+    return render_template('customerHome.html', user=session.get('user'))
