@@ -22,6 +22,8 @@
     <br>
     <main>
         <form action="{{ url_for('order') }}" method="POST">
+            <h3>Table Number:</h3>
+            <input type="number" name="tableNumber" min="1" max="100" value="0">
             <table>
                 <tbody>
                     {% for row in rows %}
