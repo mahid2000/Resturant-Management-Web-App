@@ -48,6 +48,10 @@ main {
   padding: 20px;
 }
 
+main h1 {
+  text-align: center;
+}
+
 main h2 {
   text-align: center;
 }
@@ -85,6 +89,20 @@ main input[type=text], select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+main table {
+  width: 50%
+}
+
+main table th {
+  text-align: left;
+  padding: 8px;
+}
+
+main table td {
+  text-align: left;
+  padding: 8px;
 }
 
 main input[type=submit] {
