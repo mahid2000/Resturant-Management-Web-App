@@ -355,13 +355,9 @@ def order_payment():
             rows.append(row)
             totalPrice += price
 
-        print(orderRows)
-        print(menuRows)
-        print(rows)
-        print(totalPrice)
-
         return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
     elif request.method == 'POST':
+        # This is where the payment information would be processed.
         return redirect('/orderConformation')
 
 
