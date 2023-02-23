@@ -1,10 +1,41 @@
+
+
+
+
+
+
+
 <!DOCTYPE html>
-<html>
-<head>
-	<title>Restaurant Order Management</title>
-</head>
-<body>
-	<h1>Restaurant Order Management</h1>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Home</title>
+	</head>
+	<body>
+        <header>
+            <h1>Restaurant Name</h1>
+            <h2>Home</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    {% if user[3] == 4 %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+            <h3>Welcome</h3>
+            <p>{{ user[1] }} {{ user[2] }}</p>
+        </main>
+
+
+
+
+        <h1>Restaurant Order Management</h1>
 	<table>
 		<thead>
 			<tr>
@@ -19,25 +50,39 @@
 			<!-- Table rows will be dynamically generated here -->
 		</tbody>
 	</table>
-</body>
+    console.log({{ Orders }})
+
+
+	</body>
 </html>
+
 
 <script>
 	// Define an array of orders
-	orders = '{{ Orders }}';
+
+	 orders = JSON.parse('{{ Orders | tojson | safe }}');
+
 
 	// Get a reference to the table body element
 	const tableBody = document.querySelector('tbody');
 
 	// Loop through each order and generate a table row
 	orders.forEach(order => {
+
+        console.log({ order })
+
+
+        let orderInfo = order.toString().split(",")
+
+        console.log({ orderInfo })
+
 		const row = tableBody.insertRow();
 
 		const orderIDCell = row.insertCell();
-		orderIDCell.textContent = order.orderID;
+		orderIDCell.textContent = orderInfo[0];
 
 		const statusCell = row.insertCell();
-		statusCell.textContent = order.status;
+		statusCell.textContent = orderInfo[1];
 
 		const approveCell = row.insertCell();
 		const approveButton = document.createElement('button');
@@ -55,3 +100,21 @@
 		deleteCell.appendChild(deleteButton);
 	});
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
