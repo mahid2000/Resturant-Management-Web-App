@@ -43,8 +43,12 @@ def index():
 
 @app.route('/home')
 def home():
+    user = session.get('user')
+    if user[3] == 2:
+        return redirect('/WaiterOrder')
+
     """Render the home page."""
-    return render_template('home.html', user=session.get('user'))
+    return render_template('home.html', user=user)
 
 
 @app.route('/call', methods=['GET', 'POST'])
@@ -459,3 +463,15 @@ def custMenu():
     db_manager.close()
 
     return render_template('customerMenu.html', foods=foods)
+
+@app.route('/WaiterOrder')
+def WaiterOrder():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM orderDetails;")
+    rows = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return render_template('WaiterOrderManagement.html', Orders=rows )

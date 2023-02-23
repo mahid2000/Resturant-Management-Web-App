@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Restaurant Order Management</title>
+</head>
+<body>
+	<h1>Restaurant Order Management</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Table number</th>
+				<th>Status</th>
+				<th>-</th>
+				<th>-</th>
+				<th>-</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- Table rows will be dynamically generated here -->
+		</tbody>
+	</table>
+</body>
+</html>
+
+<script>
+	// Define an array of orders
+	orders = '{{ Orders }}';
+
+	// Get a reference to the table body element
+	const tableBody = document.querySelector('tbody');
+
+	// Loop through each order and generate a table row
+	orders.forEach(order => {
+		const row = tableBody.insertRow();
+
+		const orderIDCell = row.insertCell();
+		orderIDCell.textContent = order.orderID;
+
+		const statusCell = row.insertCell();
+		statusCell.textContent = order.status;
+
+		const approveCell = row.insertCell();
+		const approveButton = document.createElement('button');
+		approveButton.textContent = 'Approve';
+		approveCell.appendChild(approveButton);
+
+		const denyCell = row.insertCell();
+		const denyButton = document.createElement('button');
+		denyButton.textContent = 'Deny';
+		denyCell.appendChild(denyButton);
+
+		const deleteCell = row.insertCell();
+		const deleteButton = document.createElement('button');
+		deleteButton.textContent = 'Delete';
+		deleteCell.appendChild(deleteButton);
+	});
+</script>
