@@ -102,36 +102,15 @@ def add_menu_item():
 
     elif request.method == 'POST':
 
-        # Validating the data
-        name = request.form['name']
-        if not name:
-            error = "Name cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
-
-        price = request.form['price']
-        if not price:
-            error = "Price cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
-        elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
-            error = "Price must be a valid decimal number eg. 12.34"
-            return render_template('addMenuItem.html', error=error)
-
-        category = request.form['category']
-
-        calories = request.form['calories']
-        if not calories:
-            error = "Calories cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
-        elif not calories.isdigit():
-            error = "Calories must be a valid whole number."
-            return render_template('addMenuItem.html', error=error)
-
-        allergens_list = request.form.getlist('options')
-        allergens = ', '.join(allergens_list)
-
-        # Create menu item object and send if off to be added to the database
-        menu_item = MenuItemModel(name, price, category, calories, allergens)
-        add_item(menu_item)
+        try:
+            menu_item = MenuItemModel(request.form['name'],
+                                      request.form['price'],
+                                      request.form['category'],
+                                      request.form['calories'],
+                                      request.form.getlist('options'))
+            add_item(menu_item)
+        except Exception as ex:
+            return render_template('addMenuItem.html', error=str(ex))
 
         return redirect('/menu')
 
