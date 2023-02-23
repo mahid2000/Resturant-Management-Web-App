@@ -3,6 +3,7 @@ import re
 import rsa
 from flask import Flask, render_template, redirect, request, session
 from flaskr.init_db import DBManager
+from flaskr.menu_item_model import MenuItemModel
 
 publicKey, privateKey = rsa.newkeys(512)
 
@@ -43,7 +44,7 @@ def index():
 
 @app.route('/home')
 def home():
-    """Render the home page."""
+    #Render the home page.
     return render_template('home.html', user=session.get('user'))
 
 
@@ -94,14 +95,14 @@ def menu():
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
+    """Render the page to add a menu item.
+    Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
     if request.method == 'GET':
         return render_template('addMenuItem.html')
-    elif request.method == 'POST':
-        # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
 
-        # Stores the items from the form in addMenuItem.html.
+    elif request.method == 'POST':
+
+        # Validating the data
         name = request.form['name']
         if not name:
             error = "Name cannot be left blank."
@@ -125,18 +126,31 @@ def add_menu_item():
             error = "Calories must be a valid whole number."
             return render_template('addMenuItem.html', error=error)
 
-        # Changes the list of allergens to a string.
-        allergensList = request.form.getlist('options')
-        allergens = ', '.join(allergensList)
+        allergens_list = request.form.getlist('options')
+        allergens = ', '.join(allergens_list)
 
-        # Add an item to the menu table.
-        sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
-                               " VALUES (?, ?, ?, ?, ?)", (name, price, category, calories, allergens))
-
-        db_manager.get_db().commit()
-        db_manager.close()
+        # Create menu item object and send if off to be added to the database
+        menu_item = MenuItemModel(name, price, category, calories, allergens)
+        add_item(menu_item)
 
         return redirect('/menu')
+
+
+def add_item(menu_item):
+    """Gets passed a menu item as an object and adds it to the database."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Add an item to the menu table.
+    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
+                           " VALUES (?, ?, ?, ?, ?)",
+                           (menu_item.name, menu_item.price, menu_item.category, menu_item.calories,
+                            menu_item.allergens))
+
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    return redirect('/menu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
