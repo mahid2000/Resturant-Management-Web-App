@@ -10,16 +10,16 @@
         <h2>Home</h2>
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="login.html">Login</a></li>
                 </ul>
             </nav>
     </header>
     <br>
     <main>
-        <li><a href="{{ url_for('create_login') }}">Sign Up</a></li>
-        <form action="{{ url_for('login') }}" method="POST">
+        <li><a href="createLogin.html">Sign Up</a></li>
+        <form action="login.html" method="POST">
             <label for="firstname">First name</label>
             <input name="fname" type="text" id="firstname">
             <br>
