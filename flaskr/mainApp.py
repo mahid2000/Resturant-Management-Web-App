@@ -299,3 +299,15 @@ def change_menu():
     db_manager.close()
 
     return render_template('waiter.html', foods=foods)
+
+@app.route('/waiterPage/removeMenu', methods=['POST'])
+def removeMenu():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    
+    foods = request.form.get('list')
+    for food in foods.split():
+        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", food)
+        db_manager.get_db().commit()
+    db_manager.close()
+    return redirect('/waiterPage')

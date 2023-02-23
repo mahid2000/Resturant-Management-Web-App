@@ -30,24 +30,37 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete food</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                      <div class="list-group">
-                        {% for food in foods %}
-                        <label class="list-group-item">
-                          <input class="form-check-input me-1" type="checkbox" value="{{ food[0] }}">
-                          {{ food[1] }}
-                        </label>
-                        {% endfor %}
+                    <form id="list" action="{{ url_for('removeMenu') }}" method="POST">
+                      <input type="hidden" name="list" id="selectedItems">
+                      <div class="modal-body">
+                        <div class="list-group">
+                          {% for food in foods %}
+                          <label class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" name="food" value="{{ food[0] }}">
+                            {{ food[1] }}
+                          </label>
+                          {% endfor %}
+                        </div>
                       </div>
-                  </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Remove from Menu</button>
-                    </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary" id="remove" onclick="remove()">Remove from Menu</button>
+                      </div>
+                    </form>
                 </div>
             </div>
         </div>    
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     </main>
+    <script>
+      document.getElementById("remove").onclick = function() {remove()};
+      function remove(){
+        var items = document.getElementsByName("food");
+            for (var i = 0; i < items.length; i++) {
+              if (items[i].type == "checkbox" && items[i].checked == true) document.getElementById("selectedItems").value += items[i].value + " ";
+            }
+        document.getElementById("list").submit();
+      }
+    </script>
   </body>
 </html>
