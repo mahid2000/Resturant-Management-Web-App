@@ -98,6 +98,13 @@
 		const deleteButton = document.createElement('button');
 		deleteButton.textContent = 'Delete';
 		deleteCell.appendChild(deleteButton);
+
+        deleteButton.addEventListener('click', () => {
+        // Remove the corresponding row from the table
+        tableBody.removeChild(row);
+    });
+        console.log('Delete button clicked for order ID: ' + orderInfo[0]);
+
 	});
 </script>
 
