@@ -11,11 +11,11 @@
             <h2>Home</h2>
             <nav>
                 <ul>
-                    <li><a href="home.html">Home</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="calling.html">Call Waiter</a></li>
-                    <li><a href="order.html">Order</a></li>
-                    <li><a href="home.html">Logout</a></li>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                    <li><a href="{{ url_for('order') }}">Order</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 </ul>
             </nav>
         </header>
