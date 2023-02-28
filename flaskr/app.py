@@ -412,9 +412,9 @@ def filter_menu():
         if pri_min:
             command += "AND price >= " + pri_min + " "
         if cal_max:
-            command += "AND price <= " + cal_max + " "
+            command += "AND calories <= " + cal_max + " "
         if cal_min:
-            command += "AND price >= " + cal_min + " "
+            command += "AND calories >= " + cal_min + " "
 
     # Sort By Dropdown menu
     sort = request.form['Sort']
