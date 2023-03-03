@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<title>Manage Orders</title>
+	</head>
+	<body>
+        <header>
+            <h1>Restaurant Name</h1>
+            <h2>Manage Orders</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                    <li><a href="{{ url_for('kitchen_orders') }}">Manage Orders</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        <main>
+
+        </main>
+	</body>
+</html>

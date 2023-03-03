@@ -334,6 +334,14 @@ def order():
 
                     db_manager.get_db().commit()
 
+        sql_connection.execute("SELECT * FROM orders")
+        orders = sql_connection.fetchall()
+        print(orders)
+
+        sql_connection.execute("SELECT * FROM orderDetails")
+        orderDeets = sql_connection.fetchall()
+        print(orderDeets)
+
         db_manager.close()
 
         return redirect('/orderPayment')
@@ -352,7 +360,7 @@ def order_payment():
 
         menuRows = []
         for orderRow in orderRows:
-            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[1],))
+            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
             menuRow = sql_connection.fetchone()
             menuRows.append(menuRow)
 
@@ -377,6 +385,16 @@ def order_conformation():
         return render_template('orderConformation.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+
+@app.route('/kitchenOrders', methods=['GET', 'POST'])
+def kitchen_orders():
+
+    if request.method == 'GET':
+        return render_template('kitchenOrders.html')
+    elif request.method == 'POST':
+        return redirect('/kitchenOrders')
+
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
