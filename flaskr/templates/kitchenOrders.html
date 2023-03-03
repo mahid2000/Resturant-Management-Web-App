@@ -20,7 +20,21 @@
         </header>
         <br>
         <main>
-
+            <h2>Orders To Be Made:</h2>
+            {% for key, value in all_orders.items() %}
+                <form action="{{ url_for('kitchen_orders') }}" method="POST">
+                    <h3>Order: {{ key }}</h3>
+                    <h4>Placed: {{ all_orders[key][0][2] }}</h4>
+                    <ul>
+                        {% for row in value %}
+                            <li>{{ row[1] }} x {{ row[0] }}</li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="orderID" value="{{ key }}">
+                    <input type="submit" value="Order Finished">
+                </form>
+                <p>-</p>
+            {% endfor %}
         </main>
 	</body>
 </html>

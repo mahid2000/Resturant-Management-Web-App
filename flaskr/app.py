@@ -334,14 +334,6 @@ def order():
 
                     db_manager.get_db().commit()
 
-        sql_connection.execute("SELECT * FROM orders")
-        orders = sql_connection.fetchall()
-        print(orders)
-
-        sql_connection.execute("SELECT * FROM orderDetails")
-        orderDeets = sql_connection.fetchall()
-        print(orderDeets)
-
         db_manager.close()
 
         return redirect('/orderPayment')
@@ -391,8 +383,38 @@ def order_conformation():
 def kitchen_orders():
 
     if request.method == 'GET':
-        return render_template('kitchenOrders.html')
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute("SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute("SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            temp_list = [name[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('kitchenOrders.html', all_orders=all_orders)
     elif request.method == 'POST':
+
+        orderID = request.form['orderID']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
         return redirect('/kitchenOrders')
 
 
