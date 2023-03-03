@@ -195,14 +195,17 @@ def login():
 
         sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (firstname, surname))
-        encryptedPass = sql_connection.fetchone()
-        print(encryptedPass)
+        hashed_password_db = sql_connection.fetchone()[0]
+        print(hash(password))
+
+        """
+        # Surely this check should happen before inserting into the db, not after?
         if encryptedPass is None:
             error = "Invalid Credentials"
             return render_template('login.html', error=error)
+        """
 
-        decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
-        if decPass == password:
+        if str(hash(password)) == hashed_password_db:
             sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
                                    (firstname, surname))
             user = sql_connection.fetchone()
@@ -242,24 +245,15 @@ def create_login():
             return render_template('createLogin.html', error=error)
 
         encPass = rsa.encrypt(password.encode(), publicKey)
+        hashed_password = hash(password)
 
         role = request.form['role']
         if not role:
             error = "what kind of user are you?"
             return render_template('createLogin.html', error=error)
 
-        sql_connection.execute("SELECT count(*) FROM users")
-        count = sql_connection.fetchone()
-
-        if count == 0:
-            managerPass = '###'
-            encPassManager = rsa.encrypt(managerPass.encode(), publicKey)
-            sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
-            db_manager.get_db().commit()
-
         sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                               + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
+                               + " VALUES (?, ?, ?,?)", (firstName, surname, hashed_password, role))
         db_manager.get_db().commit()
 
         sql_connection.execute(
