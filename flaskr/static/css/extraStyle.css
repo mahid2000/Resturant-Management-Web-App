@@ -60,6 +60,12 @@ body {
   align-content: center;
 }
 
+.footer {
+  text-align: center;
+  font-size: 48px;
+  color: white;
+}
+
 .kitchen-order-boxes {
   border: thick solid #333333;
   border-radius: 10px;
