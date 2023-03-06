@@ -153,26 +153,21 @@ def edit_menu_item():
         db_manager.close()
 
         # Passes the rows of the table to editMenuItem.html.
-        return render_template('/editMenuItem.html', rows=rows)
+        return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
 
     elif request.method == 'POST':
-        # Renders the page to remove an item from the menu.
+
+        itemID = request.form['itemID']
+
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        # Iterate over data from the form in editMenuItem.html.
-        for key, value in request.form.items():
-
-            # Is the checkbox checked.
-            if value == 'on':
-                # Delete selected rows.
-                sql_connection.execute(
-                    "DELETE FROM menu WHERE itemID = ?", key)
-                db_manager.get_db().commit()
+        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (itemID, ))
+        db_manager.get_db().commit()
 
         db_manager.close()
 
-        return redirect('/menu')
+        return redirect('/editMenuItem')
 
 
 @app.route('/login', methods=['GET', 'POST'])
