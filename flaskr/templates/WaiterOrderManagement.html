@@ -169,15 +169,19 @@ tr:nth-child(even) {
 
     if (cells[1].innerHTML == "0") {
         cells[1].style.backgroundColor = "red";
+        cells[1].textContent = "Ordered...";
     }
     if (cells[1].innerHTML == "1") {
         cells[1].style.backgroundColor = "orange";
+        cells[1].textContent = "Preparing...";
     }
     if (cells[1].innerHTML == "2") {
         cells[1].style.backgroundColor = "green";
+        cells[1].textContent = "Ready!";
     }
     if (cells[1].innerHTML == "3") {
         cells[1].style.backgroundColor = "blue";
+        cells[1].textContent = "DONE :)";
 
 }
 </script>
