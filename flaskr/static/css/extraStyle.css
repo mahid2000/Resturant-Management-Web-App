@@ -1,3 +1,4 @@
+/* CSS for the general elements on every page */
 body {
   background-color: black;
   font-family: 'Courier New', monospace;
@@ -66,6 +67,98 @@ body {
   color: white;
 }
 
+.button {
+  text-align: left;
+  background-color: #333333;
+  border: none;
+  padding: 6px 16px;
+  color: white;
+  margin: 10px;
+}
+
+.button:hover {
+  background-color: #9e9e9e;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-size-16px {
+  font-size: 16px;
+}
+
+.text-size-32px {
+  font-size: 32px;
+}
+
+.text-size-48px {
+  font-size: 48px;
+}
+
+.text-size-64px {
+  font-size: 64px;
+}
+
+/* CSS for the addMenuItem.html page */
+.addmenu-submit {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 24px;
+  background-color: darkgoldenrod;
+}
+
+.addmenu-submit:hover {
+  background-color: palegoldenrod;
+}
+
+.addmenu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 16px;
+}
+
+.addmenu-allergens {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  padding: 0 16px;
+}
+
+.addmenu-grid-item input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 16px 0;
+  display: inline-block;
+  border-top-style: hidden;
+  border-left-style: hidden;
+  border-right-style: hidden;
+  border-bottom-style: solid;
+  border-color: #333333;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: white;
+  font-family: 'Courier New', monospace;
+}
+
+.addmenu-grid-item select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  box-sizing: border-box;
+  background-color: #9e9e9e;
+  color: white;
+  font-family: 'Courier New', monospace;
+}
+
+::placeholder {
+  color: #333333;
+  font-family: 'Courier New', monospace;
+}
+
+/* CSS for the kitchenOrders.html page */
 .kitchen-order-boxes {
   border: thick solid #333333;
   border-radius: 10px;
@@ -95,20 +188,4 @@ body {
 
 .kitchen-submit:hover {
   background-color: palegoldenrod;
-}
-
-.text-size-16px {
-  font-size: 16px;
-}
-
-.text-size-32px {
-  font-size: 32px;
-}
-
-.text-size-48px {
-  font-size: 48px;
-}
-
-.text-size-64px {
-  font-size: 64px;
 }

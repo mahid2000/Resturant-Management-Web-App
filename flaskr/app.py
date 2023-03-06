@@ -95,7 +95,7 @@ def menu():
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
     if request.method == 'GET':
-        return render_template('addMenuItem.html')
+        return render_template('addMenuItem.html', user=session.get('user'))
     elif request.method == 'POST':
         # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
         db_manager = DBManager(app)
@@ -105,25 +105,25 @@ def add_menu_item():
         name = request.form['name']
         if not name:
             error = "Name cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         price = request.form['price']
         if not price:
             error = "Price cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
         elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
             error = "Price must be a valid decimal number eg. 12.34"
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         category = request.form['category']
 
         calories = request.form['calories']
         if not calories:
             error = "Calories cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
         elif not calories.isdigit():
             error = "Calories must be a valid whole number."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         # Changes the list of allergens to a string.
         allergensList = request.form.getlist('options')
