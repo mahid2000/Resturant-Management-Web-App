@@ -461,14 +461,43 @@ def custMenu():
 
     return render_template('customerMenu.html', foods=foods)
 
-@app.route('/WaiterOrder')
+@app.route('/WaiterOrder', methods=['GET','POST'])
 def WaiterOrder():
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
 
-    sql_connection.execute("SELECT DISTINCT tableNum, state FROM orderDetails, orders;")
-    rows = sql_connection.fetchall()
 
-    db_manager.close()
+    if request.method == 'GET':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT DISTINCT tableNum, state FROM orderDetails, orders;")
+        rows = sql_connection.fetchall()
 
-    return render_template('WaiterOrderManagement.html', Orders=rows, user = session.get('user') )
+        db_manager.close()
+
+        return render_template('WaiterOrderManagement.html', Orders=rows, user=session.get('user'))
+
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        print(request.form)
+        order_id = request.form['order_id']
+        print(order_id)
+        new_status = request.form['status']
+        print(new_status)
+
+        # First update the orders table
+        sql_connection.execute("UPDATE orders SET paid=? WHERE tableNum=?", (new_status, order_id))
+
+
+        # Then update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=? WHERE orderID IN (SELECT orderID FROM orders WHERE tableNum=?)",
+            (new_status, order_id))
+
+
+
+        sql_connection.execute("SELECT DISTINCT tableNum, state FROM orderDetails, orders;")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('WaiterOrderManagement.html', Orders=rows, user=session.get('user'))

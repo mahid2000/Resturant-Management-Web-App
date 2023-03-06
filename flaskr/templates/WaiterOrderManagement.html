@@ -115,45 +115,70 @@ tr:nth-child(even) {
 		const statusCell = row.insertCell();
 		statusCell.textContent = orderInfo[1];
 
-		const approveCell = row.insertCell();
-		const approveButton = document.createElement('button');
-		approveButton.textContent = 'Approve';
-		approveCell.appendChild(approveButton);
+    const approveCell = row.insertCell();
+    const approveForm = document.createElement('form');
+    approveForm.action = '/WaiterOrder';
+    approveForm.method = 'POST';
+    approveForm.style.display = 'inline-block';
+    const approveInput = document.createElement('input');
+    approveInput.type = 'hidden';
+    approveInput.name = 'order_id';
+    approveInput.value = orderInfo[0];
+    approveForm.appendChild(approveInput);
+    const approveButton = document.createElement('button');
+    approveButton.type = 'submit';
+    approveButton.name = 'status';
+    approveButton.value = '1';
+    approveButton.textContent = 'Approve';
+    approveForm.appendChild(approveButton);
+    approveCell.appendChild(approveForm);
 
-		const denyCell = row.insertCell();
-		const denyButton = document.createElement('button');
-		denyButton.textContent = 'Deny';
-		denyCell.appendChild(denyButton);
+    const denyCell = row.insertCell();
+    const denyForm = document.createElement('form');
+    denyForm.action = '/WaiterOrder';
+    denyForm.method = 'POST';
+    denyForm.style.display = 'inline-block';
+    const denyInput = document.createElement('input');
+    denyInput.type = 'hidden';
+    denyInput.name = 'order_id';
+    denyInput.value = orderInfo[0];
+    denyForm.appendChild(denyInput);
+    const denyButton = document.createElement('button');
+    denyButton.type = 'submit';
+    denyButton.name = 'status';
+    denyButton.value = '0';
+    denyButton.textContent = 'Deny';
+    denyForm.appendChild(denyButton);
+    denyCell.appendChild(denyForm);
 
-		const deleteCell = row.insertCell();
-		const deleteButton = document.createElement('button');
-		deleteButton.textContent = 'Delete';
-		deleteCell.appendChild(deleteButton);
+    const deleteCell = row.insertCell();
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteCell.appendChild(deleteButton);
 
-        deleteButton.addEventListener('click', () => {
+    deleteButton.addEventListener('click', () => {
         // Remove the corresponding row from the table
         tableBody.removeChild(row);
     });
-        console.log('Delete button clicked for order ID: ' + orderInfo[0]);
 
-	});
+});
 
 
 
     var cells = document.getElementById("orders").getElementsByTagName("td");
-    for (var i = 0; i < cells.length; i++) {
-    if (cells[i].innerHTML == "0") {
-        cells[i].style.backgroundColor = "red";
+
+    if (cells[1].innerHTML == "0") {
+        cells[1].style.backgroundColor = "red";
     }
-    if (cells[i].innerHTML == "1") {
-        cells[i].style.backgroundColor = "orange";
+    if (cells[1].innerHTML == "1") {
+        cells[1].style.backgroundColor = "orange";
     }
-    if (cells[i].innerHTML == "2") {
-        cells[i].style.backgroundColor = "green";
+    if (cells[1].innerHTML == "2") {
+        cells[1].style.backgroundColor = "green";
     }
-    if (cells[i].innerHTML == "3") {
-        cells[i].style.backgroundColor = "blue";
-    }
+    if (cells[1].innerHTML == "3") {
+        cells[1].style.backgroundColor = "blue";
+
 }
 </script>
 
