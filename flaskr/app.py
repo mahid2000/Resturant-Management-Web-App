@@ -359,7 +359,7 @@ def order_payment():
 
         menuRows = []
         for orderRow in orderRows:
-            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[1],))
+            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
             menuRow = sql_connection.fetchone()
             menuRows.append(menuRow)
 
@@ -384,6 +384,46 @@ def order_conformation():
         return render_template('orderConformation.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+
+@app.route('/kitchenOrders', methods=['GET', 'POST'])
+def kitchen_orders():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute("SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute("SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            temp_list = [name[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('kitchenOrders.html', all_orders=all_orders)
+    elif request.method == 'POST':
+
+        orderID = request.form['orderID']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/kitchenOrders')
+
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
