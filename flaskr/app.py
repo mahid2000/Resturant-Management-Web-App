@@ -222,7 +222,7 @@ def login():
 @app.route('/createLogin', methods=['GET', 'POST'])
 def create_login():
     if request.method == 'GET':
-        return render_template('createLogin.html')
+        return redirect('/login')
     elif request.method == 'POST':
 
         db_manager = DBManager(app)
