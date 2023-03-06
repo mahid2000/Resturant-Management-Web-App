@@ -67,7 +67,7 @@ tr:nth-child(even) {
 
 
         <h1>Restaurant Order Management</h1>
-	<table>
+	<table id="orders">
 		<thead>
 			<tr>
 				<th>Table number</th>
@@ -137,6 +137,24 @@ tr:nth-child(even) {
         console.log('Delete button clicked for order ID: ' + orderInfo[0]);
 
 	});
+
+
+
+    var cells = document.getElementById("orders").getElementsByTagName("td");
+    for (var i = 0; i < cells.length; i++) {
+    if (cells[i].innerHTML == "0") {
+        cells[i].style.backgroundColor = "red";
+    }
+    if (cells[i].innerHTML == "1") {
+        cells[i].style.backgroundColor = "orange";
+    }
+    if (cells[i].innerHTML == "2") {
+        cells[i].style.backgroundColor = "green";
+    }
+    if (cells[i].innerHTML == "3") {
+        cells[i].style.backgroundColor = "blue";
+    }
+}
 </script>
 
 
