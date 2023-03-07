@@ -537,8 +537,6 @@ def manage_accounts_edit():
         userID = request.form['userID']
         role = request.form['role']
 
-        print(userID, role)
-
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
