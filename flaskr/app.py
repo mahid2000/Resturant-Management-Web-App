@@ -502,3 +502,8 @@ def custMenu():
     db_manager.close()
 
     return render_template('customerMenu.html', foods=foods, user=session.get('user'))
+
+@app.route('/about')
+def about():
+    """Render the about page."""
+    return render_template('about.html', user=session.get('user'))

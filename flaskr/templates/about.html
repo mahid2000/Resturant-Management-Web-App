@@ -1,148 +1,114 @@
 <!DOCTYPE html>
 <html>
-    
+
 <!-- About page -->
 
 <head>
-  <title>Customer Menu</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
-  <style>
-    body,
-    html {
-      height: 100%
-    }
+    <title>About</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+    <style>
+        body,
+        html {
+            height: 100%
+        }
 
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: 'Courier New', monospace;
-    }
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Courier New', monospace;
+        }
 
-    .menu {
-      display: none
-    }
+        .menu {
+            display: none
+        }
 
-    .bgimg {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-image: ("customerMenuCover.jpg");
-      min-height: 90%;
-    }
-  </style>
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: ("customerMenuCover.jpg");
+            min-height: 90%;
+        }
+    </style>
 </head>
 
 <body>
 
-  <!-- Top navigation bar -->
-  <div class="css-top css-hide-small">
-    <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
-        <a href="home" class="css-bar-item css-button">HOME</a>
-        <a href="custMenu" class="css-bar-item css-button">MENU</a>
-        <a href="#about" class="css-bar-item css-button">ABOUT</a>
-        <a href="login" class="css-bar-item css-button">LOGIN</a>
-    </div>
-</div>
+    <!-- Navbar (Sits on top) -->
+    <div class="css-top css-hide-small">
+        <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
+            <a href="home" class="css-bar-item css-button">HOME</a>
+            <a href="custMenu" class="css-bar-item css-button">MENU</a>
+            <a href="about" class="css-bar-item css-button">ABOUT</a>
 
-  <!-- The Menu -->
-  <div class="css-container css-black css-padding-64 css-xxlarge" id="menu">
-    <div class="css-content">
+            {% if user[3] == 0 %}
 
-      <h1 class="css-center css-jumbo" style="margin-bottom:64px">MENU</h1>
-      <div class="css-row css-center css-border css-border-dark-grey">
+            <a href="login" class="css-bar-item css-button">LOGIN</a>
 
-        <!-- Source : "https://www.pexels.com/zh-tw/photo/4968307/"-->
-        <img src="static\customerMenuCover.jpg" style="width:100%" class="css-margin-top css-margin-bottom" alt="Menu">
+            <!-- Customer additional button -->
+            {% elif user[3] == 1 %}
 
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Main');" id="myLink">
-          <div class="css-col s3 tablink css-padding-large css-hover-blue">Main</div>
-        </a>
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Sides');">
-          <div class="css-col s3 tablink css-padding-large css-hover-blue">Sides</div>
-        </a>
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Desserts');">
-          <div class="css-col s3 tablink css-padding-large css-hover-blue">Sweets</div>
-        </a>
-        <a href="javascript:void(0)" onclick="openMenu(event, 'Drinks');">
-          <div class="css-col s3 tablink css-padding-large css-hover-blue">Drinks</div>
-        </a>
-      </div>
-      <!-- Menu connected to the database -->
-      <div class="css-container menu-container">
-        <div id="Main" class="css-container menu css-padding-32 css-white">
-          {% for food in foods %}
-          {% if food[3] == "Mains" %}
-          <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-          <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-              food[5] }}</span></p>
-          <hr>
-          {% endif %}
-          {% endfor %}
+            <a href="call" class="css-bar-item css-button">WAITER</a>
+            <a href="order" class="css-bar-item css-button">ORDER</a>
+            <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+
+            <!-- Waiter additional buttons -->
+            {% elif user[3] == 2 %}
+
+            <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+
+            <!-- Kitchen staff additional buttons -->
+            {% elif user[3] == 3 %}
+
+            <a href="kitchen_orders" class="css-bar-item css-button">MANAGE</a>
+            <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+
+            <!-- Manager additional buttons -->
+            {% elif user[3] == 4 %}
+
+            <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+
+            {% endif %}
         </div>
-
-        <div id="Sides" class="css-container menu css-padding-32 css-white">
-          {% for food in foods %}
-          {% if food[3] == "Sides" %}
-          <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-          <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-              food[5] }}</span></p>
-          <hr>
-          {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-
-      <div id="Desserts" class="css-container menu css-padding-32 css-white">
-        {% for food in foods %}
-        {% if food[3] == "Desserts" %}
-        <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-        <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-            food[5] }}</span></p>
-        <hr>
-        {% endif %}
-        {% endfor %}
-      </div>
-
-      <div id="Drinks" class="css-container menu css-padding-32 css-white">
-        {% for food in foods %}
-        {% if food[3] == "Drinks" %}
-        <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
-        <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-            food[5] }}</span></p>
-        <hr>
-        {% endif %}
-        {% endfor %}
-      </div>
     </div>
 
+    <div id="about" class="css-container css-indigo css-grayscale css-xlarge css-padding-64">
+        <h1 class="css-center css-jumbo">About</h1>
+        <p>For the past ten years, the restaurant chain Oaxaca has steadily expanded its footprint in London and the UK,
+            and it now has 25 locations.
+            When they first opened in 2007, their cuisine, a distinct style of Mexican street food, and their table
+            service set them apart from the competition. </p>
+        <p>We take pride in our cuisine.</p>
+        <p class="css-padding-16 css-stretch">
+            <!-- Photo source : https://www.pexels.com/zh-tw/photo/13869897/ -->
+            <img src="static\about.jpg" style="width:100%" alt="Restaurant">
+        </p>
+        <h1><b>Opening Hours</b></h1>
+        <div class="css-row">
+            <div class="css-half">
+                <p>Mon & Tue CLOSED</p>
+                <p>Wednesday 10.00 - 24.00</p>
+                <p>Thursday 10:00 - 24:00</p>
+            </div>
+            <div class="css-half">
+                <p>Friday 10:00 - 12:00</p>
+                <p>Saturday 10:00 - 23:00</p>
+                <p>Sunday Closed</p>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
     <footer class="css-center css-black css-padding-48 css-xxlarge">
-      <p>Oaxaca Group</p>
+        <p>Oaxaca Group</p>
     </footer>
 
-    <script>
-      // Tabbed Menu
-      function openMenu(evt, menuName) {
-        var i, x, tablinks;
-        x = document.getElementsByClassName("menu");
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablink");
-        for (i = 0; i < x.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
-        }
-        document.getElementById(menuName).style.display = "block";
-        evt.currentTarget.firstElementChild.className += " css-blue";
-      }
-      document.getElementById("myLink").click();
-    </script>
-
+    <!-- End Content -->
+    </div>
 </body>
 
 </html>
