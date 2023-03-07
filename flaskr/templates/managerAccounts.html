@@ -3,7 +3,7 @@
 	<head>
 		<meta charset = "UTF-8">
 		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
-		<title>Add Menu Item</title>
+		<title>Manage Accounts</title>
 	</head>
 	<body>
         <div class="navbar">
@@ -17,19 +17,21 @@
                 <p>MANAGE ACCOUNTS</p>
             </div>
             <div class="body">
-
-                <div class="accountSearch-grid">
-                    <div class="accountSearch-grid-item">
-
-                    </div>
-                    <div class="accountSearch-grid-item">
-
-                    </div>
-                    <div class="accountSearch-grid-item">
-
-                    </div>
-                </div>
-
+                <form style="display: inline-block" action="{{ url_for('manage_accounts') }}" method="POST">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                <input class="accountSearch-text" style="padding: 10px 16px" type="text" name="firstName" placeholder="First Name...">
+                            </td>
+                            <td>
+                                <input class="accountSearch-text" style="padding: 10px 16px" type="text" name="lastName" placeholder="Last Name...">
+                            </td>
+                            <td>
+                                <input class="addmenu-submit" style="padding: 10px 16px" type="submit" value="Search">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
                 <div class="accountDisplay-grid">
 
                 </div>
