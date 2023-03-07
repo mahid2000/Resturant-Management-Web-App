@@ -147,30 +147,35 @@
         {% endif %}
         {% endfor %}
       </div>
-    </div>
 
-    <!-- Footer -->
-    <footer class="css-center css-black css-padding-48 css-xxlarge">
-      <p>Oaxaca Group</p>
-    </footer>
+      <!-- Footer -->
+      <footer class="css-center css-black css-padding-48 css-xxlarge">
+        <p><b>Allergens</b></p>
+        <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
+        <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
+        <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
+        <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
+        <p>---------------------------------------------</p>
+        <p>Oaxaca Group</p>
+      </footer>
 
-    <script>
-      // Tabbed Menu
-      function openMenu(evt, menuName) {
-        var i, x, tablinks;
-        x = document.getElementsByClassName("menu");
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "none";
+      <script>
+        // Tabbed Menu
+        function openMenu(evt, menuName) {
+          var i, x, tablinks;
+          x = document.getElementsByClassName("menu");
+          for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
+          }
+          document.getElementById(menuName).style.display = "block";
+          evt.currentTarget.firstElementChild.className += " css-blue";
         }
-        tablinks = document.getElementsByClassName("tablink");
-        for (i = 0; i < x.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
-        }
-        document.getElementById(menuName).style.display = "block";
-        evt.currentTarget.firstElementChild.className += " css-blue";
-      }
-      document.getElementById("myLink").click();
-    </script>
+        document.getElementById("myLink").click();
+      </script>
 
 </body>
 
