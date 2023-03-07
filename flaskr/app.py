@@ -43,9 +43,8 @@ def index():
 
 @app.route('/home')
 def home():
-    user = session.get('user')
     """Render the home page."""
-    return render_template('home.html', user=user)
+    return render_template('home.html', user=session.get('user'))
 
 
 @app.route('/call', methods=['GET', 'POST'])
@@ -306,16 +305,18 @@ def order():
         table_number = int(request.form['tableNumber'])
 
         sql_connection.execute("INSERT INTO orders (tableNum, paid)"
-                                   " VALUES (?, ?)", (table_number, 0))
+                               " VALUES (?, ?)", (table_number, 0))
 
         db_manager.get_db().commit()
 
         last_row = sql_connection.lastrowid
 
-        sql_connection.execute("SELECT * FROM orders WHERE orderID=?", (last_row,))
+        sql_connection.execute(
+            "SELECT * FROM orders WHERE orderID=?", (last_row,))
         current_order = sql_connection.fetchone()
 
-        session['order'] = [current_order[0], current_order[1], current_order[2]]
+        session['order'] = [current_order[0],
+                            current_order[1], current_order[2]]
 
         for key, value in request.form.items():
 
@@ -343,12 +344,14 @@ def order_payment():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
+        sql_connection.execute(
+            "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
         orderRows = sql_connection.fetchall()
 
         menuRows = []
         for orderRow in orderRows:
-            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
+            sql_connection.execute(
+                "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
             menuRow = sql_connection.fetchone()
             menuRows.append(menuRow)
 
@@ -384,14 +387,16 @@ def kitchen_orders():
         sql_connection = db_manager.get_connection()
 
         # Gets all the rows from menu.
-        sql_connection.execute("SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
         for row in rows:
             if row[0] not in all_orders:
                 all_orders[row[0]] = []
-            sql_connection.execute("SELECT name FROM menu WHERE itemID=?", (row[1],))
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
             temp_list = [name[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
@@ -406,7 +411,8 @@ def kitchen_orders():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -494,7 +500,12 @@ def custMenu():
 
     db_manager.close()
 
-    return render_template('customerMenu.html', foods=foods)
+    return render_template('customerMenu.html', foods=foods, user=session.get('user'))
+
+@app.route('/about')
+def about():
+    """Render the about page."""
+    return render_template('about.html', user=session.get('user'))
 
 @app.route('/WaiterOrder', methods=['GET','POST'])
 def WaiterOrder():
