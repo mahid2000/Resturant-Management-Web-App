@@ -16,7 +16,19 @@ Once you have installed the package requirements, the project can be run with th
 
 ##### Example Logins
 Our restaurant system uses the same login portal for customers and staff. The following are some logins to see the functionality at different levels of admin. \
-Customer: \
-Waiter: \
-Kitchen Staff: \
+Customer: 
+
+Waiters: 
+* Melissa Wilson, Waiter1!
+* Rory Baker, Waiter2!
+* Amy Smith, Waiter3!
+
+Kitchen Staff: 
+* Anthony Spark, Kitchen1!
+* Phoebe Taylor, Kitchen2!
+* Matthew Williams, Kitchen3!
+
 Manager/Owner: 
+* Isabelle Davies, Manager1!
+* Paul Grant, Manager2!
+* Tony Atkinson, Owner10!

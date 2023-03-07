@@ -39,9 +39,8 @@ class DBManager:
         starting the program."""
         db = sqlite3.connect("../database.db")
 
-        # If the database hasn't been created yet, create it
-        # This is because connecting to the database happens in each webpage method,
-        # and we don't want to re-create the database every time we reload or change page
+        # Connecting to the database happens in each webpage method, and we don't want to
+        # re-create the database every time we reload or change page
         if not DBManager._created:
             with app.app_context():
                 with current_app.open_resource('static/schema.sql') as file:

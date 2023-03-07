@@ -8,6 +8,8 @@ from flaskr.menu_item_model import MenuItemModel
 publicKey, privateKey = rsa.newkeys(512)
 
 
+os.environ["PYTHONHASHSEED"] = "0"
+
 def create_app():
     """Creates and configures the flask app."""
     app = Flask(__name__, instance_relative_config=True,
@@ -196,14 +198,6 @@ def login():
         sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (firstname, surname))
         hashed_password_db = sql_connection.fetchone()[0]
-        print(hash(password))
-
-        """
-        # Surely this check should happen before inserting into the db, not after?
-        if encryptedPass is None:
-            error = "Invalid Credentials"
-            return render_template('login.html', error=error)
-        """
 
         if str(hash(password)) == hashed_password_db:
             sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
