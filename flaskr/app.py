@@ -494,3 +494,12 @@ def custMenu():
     db_manager.close()
 
     return render_template('customerMenu.html', foods=foods)
+
+
+@app.route('/manageAccounts', methods=['GET', 'POST'])
+def manage_accounts():
+
+    if request.method == 'GET':
+        return render_template('managerAccounts.html')
+    elif request.method == 'POST':
+        return redirect('/manageAccounts')

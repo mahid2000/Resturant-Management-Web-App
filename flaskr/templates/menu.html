@@ -25,6 +25,7 @@
                     <li><a href="{{ url_for('kitchen_orders') }}">Manage Orders</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 4 %}
+                    <li><a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>

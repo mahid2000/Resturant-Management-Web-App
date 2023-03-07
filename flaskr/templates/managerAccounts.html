@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
+		<title>Add Menu Item</title>
+	</head>
+	<body>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('menu') }}">MENU</a>
+            <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </div>
+        <div class="main">
+            <div class="header">
+                <p>MANAGE ACCOUNTS</p>
+            </div>
+            <div class="body">
+
+                <div class="accountSearch-grid">
+                    <div class="accountSearch-grid-item">
+
+                    </div>
+                    <div class="accountSearch-grid-item">
+
+                    </div>
+                    <div class="accountSearch-grid-item">
+
+                    </div>
+                </div>
+
+                <div class="accountDisplay-grid">
+
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Oaxaca Group</p>
+        </div>
+    </body>
+</html>
