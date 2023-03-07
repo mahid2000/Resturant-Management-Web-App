@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
+		<title>Manage Orders</title>
+	</head>
+	<body>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('menu') }}">MENU</a>
+            <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </div>
+
+        <div class="main">
+            <div class="header">
+                <p>MANAGE ORDERS - KITCHEN</p>
+            </div>
+            <div class="body-header">
+                <p>Orders To Be Made:</p>
+            </div>
+            <div class="body">
+                {% for key, value in all_orders.items() %}
+                    <div class="kitchen-order-boxes">
+                        <table class="kitchen-order-contents">
+                            <tr>
+                                <td>
+                                    <p class="text-size-32px">Order: {{ key }}</p>
+                                    <p>Placed: {{ all_orders[key][0][2] }}</p>
+                                </td>
+                                <td>
+                                    <ul style="list-style: none">
+                                        {% for row in value %}
+                                            <li class="text-size-16px">{{ row[1] }} x {{ row[0] }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('kitchen_orders') }}" method="POST">
+                                        <input type="hidden" name="orderID" value="{{ key }}">
+                                        <input class="kitchen-submit text-size-16px" type="submit" value="Order Finished">
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="footer">
+            <p>Oaxaca Group</p>
+        </div>
+	</body>
+</html>

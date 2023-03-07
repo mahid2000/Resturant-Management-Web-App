@@ -1,42 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Restaurant Name</h1>
-        <h2>Home</h2>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                </ul>
-            </nav>
-    </header>
-    <br>
-    <main>
-        <li><a href="{{ url_for('create_login') }}">Sign Up</a></li>
-        <form action="{{ url_for('login') }}" method="POST">
-            <label for="firstname">First name</label>
-            <input name="fname" type="text" id="firstname">
-            <br>
-            <label for="surname">Surname</label>
-            <input name="sname" type="text" id="surname">
-            <br>
-            <label for="password">Password</label>
-            <input name="pass" type="password" id="password" minlength="8" required></input>
-            <br>
-            {% if error %}
-                <h2>{{ error }}</h2>
-            {% endif %}
-            <br>
-            <input type="submit" value="Login">
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    </head>
+    <body>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('menu') }}">MENU</a>
+            <a href="{{ url_for('about') }}">ABOUT</a>
+            <a href="{{ url_for('login') }}">LOGIN</a>
+        </div>
+        <div class="main">
+            <div class="header">
+                <p>LOGIN</p>
+            </div>
+            <div class="body" style="height: 500px">
+                <div class="addmenu-grid">
+                    <div class="addmenu-grid-item">
+                        <p class="text-size-32px">LOGIN</p>
 
+                        <form action="{{ url_for('login') }}" method="POST">
 
-        </form>
-    </main>
-</body>
+                            <input name="fname" type="text" id="firstname" placeholder="First Name...">
+
+                            <input name="sname" type="text" id="surname" placeholder="Last Name...">
+
+                            <input name="pass" type="password" id="password" minlength="8" required placeholder="Password...">
+
+                            {% if error %}
+                                <h2>{{ error }}</h2>
+                            {% endif %}
+
+                            <input style="margin-top: 74px " class="addmenu-submit" type="submit" value="Login">
+                        </form>
+                    </div>
+                    <div class="addmenu-grid-item">
+                        <p class="text-size-32px">CREATE LOGIN</p>
+
+                        <form action="{{ url_for('create_login') }}" method="POST">
+
+                            <input type="text" name="firstName" placeholder="First Name..."><br>
+
+                            <input type="text" name="surname" placeholder="Last Name..."><br>
+
+                            <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
+
+                            <div>
+                                <label for="role">Role:</label>
+                                <select name="role" id="role">
+                                    <option value="1">Customer</option>
+                                    <option value="2">Waiter</option>
+                                    <option value="3">Kitchen</option>
+                                    <option value="4">Manager</option>
+                                </select>
+                            </div><br>
+
+                            {% if error %}
+                                <h2>{{ error }}</h2>
+                            {% endif %}
+
+                            <input class="addmenu-submit" type="submit" value="Create Login">
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Oaxaca Group</p>
+        </div>
+    </body>
 </html>

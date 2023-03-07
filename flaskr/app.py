@@ -100,7 +100,7 @@ def add_menu_item():
     """Render the page to add a menu item.
     Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
     if request.method == 'GET':
-        return render_template('addMenuItem.html')
+        return render_template('addMenuItem.html', user=session.get('user'))
 
     elif request.method == 'POST':
 
@@ -114,7 +114,7 @@ def add_menu_item():
         except Exception as ex:
             return render_template('addMenuItem.html', error=str(ex))
 
-        return redirect('/menu')
+        return redirect('/custMenu')
 
 
 def add_item(menu_item):
@@ -148,26 +148,21 @@ def edit_menu_item():
         db_manager.close()
 
         # Passes the rows of the table to editMenuItem.html.
-        return render_template('/editMenuItem.html', rows=rows)
+        return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
 
     elif request.method == 'POST':
-        # Renders the page to remove an item from the menu.
+
+        itemID = request.form['itemID']
+
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        # Iterate over data from the form in editMenuItem.html.
-        for key, value in request.form.items():
-
-            # Is the checkbox checked.
-            if value == 'on':
-                # Delete selected rows.
-                sql_connection.execute(
-                    "DELETE FROM menu WHERE itemID = ?", key)
-                db_manager.get_db().commit()
+        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (itemID, ))
+        db_manager.get_db().commit()
 
         db_manager.close()
 
-        return redirect('/menu')
+        return redirect('/editMenuItem')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -217,7 +212,7 @@ def login():
 @app.route('/createLogin', methods=['GET', 'POST'])
 def create_login():
     if request.method == 'GET':
-        return render_template('createLogin.html')
+        return redirect('/login')
     elif request.method == 'POST':
 
         db_manager = DBManager(app)
@@ -260,6 +255,7 @@ def create_login():
 
         return redirect('/home')
 
+
 @app.route('/logout')
 def logout():
     session['user'] = ['', '', '', 0]
@@ -291,16 +287,18 @@ def order():
         table_number = int(request.form['tableNumber'])
 
         sql_connection.execute("INSERT INTO orders (tableNum, paid)"
-                                   " VALUES (?, ?)", (table_number, 0))
+                               " VALUES (?, ?)", (table_number, 0))
 
         db_manager.get_db().commit()
 
         last_row = sql_connection.lastrowid
 
-        sql_connection.execute("SELECT * FROM orders WHERE orderID=?", (last_row,))
+        sql_connection.execute(
+            "SELECT * FROM orders WHERE orderID=?", (last_row,))
         current_order = sql_connection.fetchone()
 
-        session['order'] = [current_order[0], current_order[1], current_order[2]]
+        session['order'] = [current_order[0],
+                            current_order[1], current_order[2]]
 
         for key, value in request.form.items():
 
@@ -328,12 +326,14 @@ def order_payment():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
+        sql_connection.execute(
+            "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
         orderRows = sql_connection.fetchall()
 
         menuRows = []
         for orderRow in orderRows:
-            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[1],))
+            sql_connection.execute(
+                "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
             menuRow = sql_connection.fetchone()
             menuRows.append(menuRow)
 
@@ -358,6 +358,49 @@ def order_conformation():
         return render_template('orderConformation.html')
     elif request.method == 'POST':
         return redirect('/home')
+
+
+@app.route('/kitchenOrders', methods=['GET', 'POST'])
+def kitchen_orders():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            temp_list = [name[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('kitchenOrders.html', all_orders=all_orders)
+    elif request.method == 'POST':
+
+        orderID = request.form['orderID']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/kitchenOrders')
+
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
@@ -393,9 +436,9 @@ def filter_menu():
         if pri_min:
             command += "AND price >= " + pri_min + " "
         if cal_max:
-            command += "AND price <= " + cal_max + " "
+            command += "AND calories <= " + cal_max + " "
         if cal_min:
-            command += "AND price >= " + cal_min + " "
+            command += "AND calories >= " + cal_min + " "
 
     # Sort By Dropdown menu
     sort = request.form['Sort']
@@ -439,4 +482,9 @@ def custMenu():
 
     db_manager.close()
 
-    return render_template('customerMenu.html', foods=foods)
+    return render_template('customerMenu.html', foods=foods, user=session.get('user'))
+
+@app.route('/about')
+def about():
+    """Render the about page."""
+    return render_template('about.html', user=session.get('user'))

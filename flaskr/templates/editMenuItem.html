@@ -2,45 +2,45 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
 		<title>Edit Menu Item</title>
 	</head>
 	<body>
-        <header>
-        <h1>Restaurant Name</h1>
-        <h2>Edit Menu Item</h2>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                </ul>
-            </nav>
-        </header>
-        <br>
-        <main>
-            <a href="{{ url_for('menu') }}">Back</a><br>
 
-            <form action="{{ url_for('edit_menu_item') }}" method="POST">
-                <table>
-                    <tbody>
-                        {% for row in rows %}
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="{{ row[0] }}" value="on">
-                            </td>
-                            <td>
-                                <h2>{{ row[1] }}</h2>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('menu') }}">MENU</a>
+            {% if user[3] == 3 %}
+                <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </div>
+        <div class="main">
+            <div class="header">
+                <p>EDIT MENU ITEMS</p>
+            </div>
+            <div class="body">
+                <a class="button" href="{{ url_for('menu') }}">< BACK TO MENU</a>
+
+                <div class="editmenu-grid">
+                    {% for row in rows %}
+                        <div class="editmenu-grid-item">
+                            <form action="{{ url_for('edit_menu_item') }}" method="POST">
+                                <p style="font-weight: bold">{{ row[1] }}</p>
                                 <p>£{{ row[2] }}</p>
-                                <p>{{ row[3] }}kcal</p>
-                                <p><b>{{ row[4] }}</b></p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <input type="submit" value="Delete Selected Rows">
-            </form>
-        </main>
+                                <p>Category: {{ row[3] }}</p>
+                                <p>{{ row[4] }}kcal</p>
+                                <p>Allergens: {{ row[5] }}</p>
+                                <input type="hidden" name="itemID" value="{{ row[0] }}">
+                                <input class="kitchen-submit text-size-16px" type="submit" value="Delete Item">
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Oaxaca Group</p>
+        </div>
 	</body>
 </html>
