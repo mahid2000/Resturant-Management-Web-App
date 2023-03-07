@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-
-
-<!-- Menu page for customer side browsing -->
+    
+<!-- About page -->
 
 <head>
   <title>Customer Menu</title>
@@ -40,43 +39,15 @@
 
 <body>
 
-  <!-- Navbar (Sits on top) -->
+  <!-- Top navigation bar -->
   <div class="css-top css-hide-small">
     <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
-      <a href="home" class="css-bar-item css-button">HOME</a>
-      <a href="custMenu" class="css-bar-item css-button">MENU</a>
-      <a href="#about" class="css-bar-item css-button">ABOUT</a>
-
-      {% if user[3] == 0 %}
-
-      <a href="login" class="css-bar-item css-button">LOGIN</a>
-
-      <!-- Customer additional button -->
-      {% elif user[3] == 1 %}
-
-      <a href="call" class="css-bar-item css-button">WAITER</a>
-      <a href="order" class="css-bar-item css-button">ORDER</a>
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
-
-      <!-- Waiter additional buttons -->
-      {% elif user[3] == 2 %}
-
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
-
-      <!-- Kitchen staff additional buttons -->
-      {% elif user[3] == 3 %}
-
-      <a href="kitchen_orders" class="css-bar-item css-button">MANAGE</a>
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
-
-      <!-- Manager additional buttons -->
-      {% elif user[3] == 4 %}
-
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
-
-      {% endif %}
+        <a href="home" class="css-bar-item css-button">HOME</a>
+        <a href="custMenu" class="css-bar-item css-button">MENU</a>
+        <a href="#about" class="css-bar-item css-button">ABOUT</a>
+        <a href="login" class="css-bar-item css-button">LOGIN</a>
     </div>
-  </div>
+</div>
 
   <!-- The Menu -->
   <div class="css-container css-black css-padding-64 css-xxlarge" id="menu">
