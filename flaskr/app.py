@@ -500,6 +500,51 @@ def custMenu():
 def manage_accounts():
 
     if request.method == 'GET':
-        return render_template('managerAccounts.html')
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT userID, first_name, last_name, role FROM users")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows)
     elif request.method == 'POST':
+
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT userID, first_name, last_name, role"
+                               " FROM users WHERE first_name=? AND last_name=?;", (firstName, lastName))
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows)
+
+
+@app.route('/manageAccountsEdit', methods=['GET', 'POST'])
+def manage_accounts_edit():
+
+    if request.method == 'GET':
+        return redirect('/manageAccounts')
+    elif request.method == 'POST':
+
+        userID = request.form['userID']
+        role = request.form['role']
+
+        print(userID, role)
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("UPDATE users SET role=? WHERE userID=?", (role, userID))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
         return redirect('/manageAccounts')

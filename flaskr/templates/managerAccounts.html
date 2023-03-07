@@ -32,8 +32,46 @@
                         </tr>
                     </table>
                 </form>
-                <div class="accountDisplay-grid">
-
+                <div>
+                    {% if rows %}
+                        {% for row in rows %}
+                            <div class="kitchen-order-boxes">
+                                <table class="kitchen-order-contents" style="width: 100%">
+                                    <tr>
+                                        <td>
+                                            <p>{{ row[1] }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ row[2] }}</p>
+                                        </td>
+                                        <td>
+                                            {% if row[3] == 1 %}
+                                                <p>Role: Customer</p>
+                                            {% elif row[3] == 2 %}
+                                                <p>Role: Waiter</p>
+                                            {% elif row[3] == 3 %}
+                                                <p>Role: Kitchen</p>
+                                            {% elif row[3] == 4 %}
+                                                <p>Role: Manager</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <form action="{{ url_for('manage_accounts_edit') }}" method="POST">
+                                                <select name="role">
+                                                    <option value="1">Customer</option>
+                                                    <option value="2">Waiter</option>
+                                                    <option value="3">Kitchen</option>
+                                                    <option value="4">Manager</option>
+                                                </select>
+                                                <input type="hidden" name="userID" value="{{ row[0] }}">
+                                                <input style="width: 100%; font-size: 16px" class="kitchen-submit" type="submit" value="Change Role">
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
