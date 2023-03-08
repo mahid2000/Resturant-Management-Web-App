@@ -297,6 +297,7 @@ body {
   grid-template-columns: 1fr;
 }
 
-.accountDisplay-grid-item {
-
+/* CSS for the orderPayment.html page */
+.summary-table {
+  width: 100%;
 }

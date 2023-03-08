@@ -2,63 +2,69 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
 		<title>Home</title>
 	</head>
 	<body>
-        <header>
-            <h1>Restaurant Name</h1>
-            <h2>Order Payment</h2>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
-                    <li><a href="{{ url_for('order') }}">Order</a></li>
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                </ul>
-            </nav>
-        </header>
-        <br>
-        <main>
-            <table>
-                <tr>
-                    <th>
-                        <h3>Item Name:</h3>
-                    </th>
-                    <th>
-                        <h3>Quantity:</h3>
-                    </th>
-                    <th>
-                        <h3>Price:</h3>
-                    </th>
-                </tr>
-                {% for row in rows %}
-                    <tr>
-                        <td>
-                            <p>{{ row[0] }}</p>
-                        </td>
-                        <td>
-                            <p>{{ row[1] }}</p>
-                        </td>
-                        <td>
-                            <p>£{{ row[2] }}</p>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <h3>Total Price:</h3>
-            <h3>£{{ totalPrice }}</h3>
-            <form action="{{ url_for('order_payment') }}", method="POST">
-                <label for="name">Name On Card:</label>
-                <input type="text" name="cardNumber" id="name">
-                <label for="cardNum">Card Number:</label>
-                <input type="text" name="cardNumber" id="cardNum">
-                <label for="CVV">CVV Number:</label>
-                <input type="text" name="cardNumber" id="CVV">
-                <input type="submit" value="Submit Details">
-            </form>
-        </main>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('custMenu') }}">MENU</a>
+            <a href="{{ url_for('call') }}">CALL WAITER</a>
+            <a href="{{ url_for('order') }}">ORDER</a>
+            <a href="{{ url_for('about') }}">ABOUT</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </div>
+        <div class="main">
+            <div class="header">
+                <p>ORDER PAYMENT</p>
+            </div>
+            <div class="body">
+                <div class="addmenu-grid">
+                    <div class="addmenu-grid-item">
+                        <p class="text-size-32px">Order Summary</p>
+                        <table class="summary-table">
+                            <tr>
+                                <th>
+                                    <h3>Item:</h3>
+                                </th>
+                                <th>
+                                    <h3>Qty:</h3>
+                                </th>
+                                <th>
+                                    <h3>Price:</h3>
+                                </th>
+                            </tr>
+                            {% for row in rows %}
+                                <tr>
+                                    <td>
+                                        <p>{{ row[0] }}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{ row[1] }}</p>
+                                    </td>
+                                    <td>
+                                        <p>£{{ row[2] }}</p>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <h3>Total Price:</h3>
+                        <h3>£{{ totalPrice }}</h3>
+                    </div>
+                    <div class="addmenu-grid-item">
+                        <p class="text-size-32px">Payment</p>
+                        <form action="{{ url_for('order_payment') }}", method="POST">
+                            <input type="text" name="cardNumber" id="name" placeholder="Name On Card...">
+                            <input type="text" name="cardNumber" id="cardNum" placeholder="Card Number...">
+                            <input type="text" name="cardNumber" id="CVV" placeholder="CVV...">
+                            <input class="addmenu-submit" type="submit" value="Submit Details">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Oaxaca Group</p>
+        </div>
 	</body>
 </html>
