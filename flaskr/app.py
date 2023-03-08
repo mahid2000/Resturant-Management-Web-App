@@ -616,4 +616,4 @@ def waiter_order_delivered():
 
         db_manager.close()
 
-        return redirect('/waiterOrders')
+        return redirect('/waiterOrdersDelivered')
