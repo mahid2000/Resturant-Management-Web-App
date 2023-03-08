@@ -9,10 +9,11 @@
 
         <div class="navbar">
             <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('menu') }}">MENU</a>
+            <a href="{{ url_for('custMenu') }}">MENU</a>
             {% if user[3] == 3 %}
                 <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
             {% endif %}
+            <a href="{{ url_for('about') }}">ABOUT</a>
             <a href="{{ url_for('logout') }}">LOGOUT</a>
         </div>
         <div class="main">
@@ -20,7 +21,7 @@
                 <p>ADD MENU ITEM</p>
             </div>
             <div class="body" style="height: auto">
-                <a class="button" href="{{ url_for('menu') }}">< BACK TO MENU</a>
+                <a class="button" href="{{ url_for('custMenu') }}">< BACK TO MENU</a>
 
                 <form action="{{ url_for('add_menu_item') }}" method="POST">
 

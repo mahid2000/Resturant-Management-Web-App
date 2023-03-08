@@ -5,37 +5,37 @@
 <!-- Menu page for customer side browsing -->
 
 <head>
-  <title>Customer Menu</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
-  <style>
-    body,
-    html {
-      height: 100%
-    }
+    <title>Customer Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+    <style>
+        body,
+        html {
+            height: 100%
+        }
 
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: 'Courier New', monospace;
-    }
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Courier New', monospace;
+        }
 
-    .menu {
-      display: none
-    }
+        .menu {
+            display: none
+        }
 
-    .bgimg {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-image: ("customerMenuCover.jpg");
-      min-height: 90%;
-    }
-  </style>
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: ("customerMenuCover.jpg");
+            min-height: 90%;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,38 +43,47 @@
   <!-- Navbar (Sits on top) -->
   <div class="css-top css-hide-small">
     <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
-      <a href="home" class="css-bar-item css-button">HOME</a>
-      <a href="custMenu" class="css-bar-item css-button">MENU</a>
-      <a href="about" class="css-bar-item css-button">ABOUT</a>
+        <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
+        <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
 
-      {% if user[3] == 0 %}
+        {% if user[3] == 0 %}
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('login') }}" class="css-bar-item css-button">LOGIN</a>
 
-      <a href="login" class="css-bar-item css-button">LOGIN</a>
+        <!-- Customer additional button -->
+        {% elif user[3] == 1 %}
 
-      <!-- Customer additional button -->
-      {% elif user[3] == 1 %}
+            <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
+            <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
 
-      <a href="call" class="css-bar-item css-button">WAITER</a>
-      <a href="order" class="css-bar-item css-button">ORDER</a>
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+        <!-- Waiter additional buttons -->
+        {% elif user[3] == 2 %}
 
-      <!-- Waiter additional buttons -->
-      {% elif user[3] == 2 %}
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
 
-      <!-- Kitchen staff additional buttons -->
-      {% elif user[3] == 3 %}
+            <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
-      <a href="kitchen_orders" class="css-bar-item css-button">MANAGE</a>
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
 
-      <!-- Manager additional buttons -->
-      {% elif user[3] == 4 %}
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
-      <a href="logout" class="css-bar-item css-button">LOGOUT</a>
-
-      {% endif %}
+        {% endif %}
     </div>
   </div>
 
