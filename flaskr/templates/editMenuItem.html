@@ -10,7 +10,9 @@
         <div class="navbar">
             <a href="{{ url_for('home') }}">HOME</a>
             <a href="{{ url_for('custMenu') }}">MENU</a>
-            {% if user[3] == 3 %}
+            {% if user[3] == 2 %}
+                <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+            {% elif user[3] == 3 %}
                 <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
             {% elif user[3] == 4 %}
                 <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>

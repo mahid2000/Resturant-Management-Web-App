@@ -61,6 +61,7 @@
         <!-- Waiter additional buttons -->
         {% elif user[3] == 2 %}
 
+            <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
             <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
             <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
             <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
