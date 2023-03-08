@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<!-- About page -->
+
+<head>
+    <title>About</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+    <style>
+        body,
+        html {
+            height: 100%
+        }
+
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Courier New', monospace;
+        }
+
+        .menu {
+            display: none
+        }
+
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: ("customerMenuCover.jpg");
+            min-height: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (Sits on top) -->
+    <div class="css-top css-hide-small">
+        <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
+            <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
+            <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
+
+            {% if user[3] == 0 %}
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('login') }}" class="css-bar-item css-button">LOGIN</a>
+
+                <!-- Customer additional button -->
+            {% elif user[3] == 1 %}
+
+                <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
+                <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+                <!-- Waiter additional buttons -->
+            {% elif user[3] == 2 %}
+
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+                <!-- Kitchen staff additional buttons -->
+            {% elif user[3] == 3 %}
+
+                <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+                <!-- Manager additional buttons -->
+            {% elif user[3] == 4 %}
+
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="about" class="css-container css-indigo css-grayscale css-xlarge css-padding-64">
+        <h1 class="css-center css-jumbo">About</h1>
+        <p>For the past ten years, the restaurant chain Oaxaca has steadily expanded its footprint in London and the UK,
+            and it now has 25 locations.
+            When they first opened in 2007, their cuisine, a distinct style of Mexican street food, and their table
+            service set them apart from the competition. </p>
+        <p>We take pride in our cuisine.</p>
+        <p class="css-padding-16 css-stretch">
+            <!-- Photo source : https://www.pexels.com/zh-tw/photo/13869897/ -->
+            <img src="static\about.jpg" style="width:100%" alt="Restaurant">
+        </p>
+        <h1>Operating times</h1>
+        <div class="css-row">
+            <div class="css-half">
+                <p>Monday to Friday</p>
+                <p>Saturday</p>
+                <p>Sunday</p>
+            </div>
+            <div class="css-half">
+                <p>11:00 - 21:00</p>
+                <p>12:00 - 00:00</p>
+                <p>Closed</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="css-center css-black css-padding-48 css-xxlarge">
+        <p>Oaxaca Group</p>
+    </footer>
+
+    <!-- End Content -->
+    </div>
+</body>
+
+</html>

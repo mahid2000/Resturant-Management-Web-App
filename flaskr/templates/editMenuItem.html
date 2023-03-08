@@ -9,13 +9,13 @@
 
         <div class="navbar">
             <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('menu') }}">MENU</a>
+            <a href="{{ url_for('custMenu') }}">MENU</a>
             {% if user[3] == 3 %}
                 <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
-            {% endif %}
-            {% if user[3] == 4 %}
+            {% elif user[3] == 4 %}
                 <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
             {% endif %}
+            <a href="{{ url_for('about') }}">ABOUT</a>
             <a href="{{ url_for('logout') }}">LOGOUT</a>
         </div>
         <div class="main">
@@ -23,7 +23,7 @@
                 <p>EDIT MENU ITEMS</p>
             </div>
             <div class="body">
-                <a class="button" href="{{ url_for('menu') }}">< BACK TO MENU</a>
+                <a class="button" href="{{ url_for('custMenu') }}">< BACK TO MENU</a>
 
                 <div class="editmenu-grid">
                     {% for row in rows %}
