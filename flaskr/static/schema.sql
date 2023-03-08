@@ -33,7 +33,7 @@ CREATE TABLE orderDetails (
     customerID INTEGER NOT NULL,
     qty TINYINT NOT NULL,
     state TINYINT NOT NULL,
-    timestamp TIMESTAMP NOT NULL,
+    ordertime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (orderID) REFERENCES orders(orderID),
     FOREIGN KEY (itemID) REFERENCES menu(itemID),
     FOREIGN KEY (customerID) REFERENCES users(userID)
