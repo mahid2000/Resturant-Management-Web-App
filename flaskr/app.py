@@ -502,48 +502,118 @@ def custMenu():
 
     return render_template('customerMenu.html', foods=foods, user=session.get('user'))
 
+
 @app.route('/about')
 def about():
     """Render the about page."""
     return render_template('about.html', user=session.get('user'))
 
-@app.route('/WaiterOrder', methods=['GET','POST'])
-def WaiterOrder():
 
+@app.route('/waiterOrders', methods=['GET', 'POST'])
+def waiter_order_confirm():
 
     if request.method == 'GET':
+
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
-        sql_connection.execute("SELECT DISTINCT tableNum, state FROM orderDetails, orders;")
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0],tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
 
         db_manager.close()
 
-        return render_template('WaiterOrderManagement.html', Orders=rows, user=session.get('user'))
+        return render_template('waiterOrderConfirm.html', all_orders=all_orders)
 
     elif request.method == 'POST':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
-        print(request.form)
-        order_id = request.form['order_id']
-        print(order_id)
-        new_status = request.form['status']
-        print(new_status)
 
-        # First update the orders table
-        sql_connection.execute("UPDATE orders SET paid=? WHERE tableNum=?", (new_status, order_id))
+        orderID = request.form['orderID']
 
-
-        # Then update the orderDetails table
+        # Update the orderDetails table
         sql_connection.execute(
-            "UPDATE orderDetails SET state=? WHERE orderID IN (SELECT orderID FROM orders WHERE tableNum=?)",
-            (new_status, order_id))
-
-
-
-        sql_connection.execute("SELECT DISTINCT tableNum, state FROM orderDetails, orders;")
-        rows = sql_connection.fetchall()
+            "UPDATE orderDetails SET state=1 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
 
         db_manager.close()
 
-        return render_template('WaiterOrderManagement.html', Orders=rows, user=session.get('user'))
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
+def waiter_order_cancel():
+
+    if request.method == 'GET':
+        return redirect('/waiterOrders')
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=5 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersDelivered', methods=['GET', 'POST'])
+def waiter_order_delivered():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=2 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('waiterOrderDeliver.html', all_orders=all_orders)
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=3 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
