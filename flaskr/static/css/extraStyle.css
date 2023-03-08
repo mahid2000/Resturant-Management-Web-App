@@ -233,3 +233,33 @@ body {
   background: azure;
   color: black;
 }
+
+.waiter-orders-confirm {
+  background-color: green;
+  border-radius: 10px;
+  padding: 16px 32px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.waiter-orders-confirm:hover {
+  background-color: lightgreen;
+}
+
+.waiter-orders-cancel {
+  background-color: red;
+  border-radius: 10px;
+  padding: 16px 32px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.waiter-orders-cancel:hover {
+  background-color: lightcoral;
+}

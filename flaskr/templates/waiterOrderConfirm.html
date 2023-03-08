@@ -42,11 +42,12 @@
                                 <td>
                                     <form action="{{ url_for('waiter_order_confirm') }}" method="POST">
                                         <input type="hidden" name="orderID" value="{{ key }}">
-                                        <input class="kitchen-submit text-size-16px" type="submit" value="Confirm Order">
+                                        <input class="waiter-orders-confirm text-size-16px" type="submit" value="Confirm Order">
                                     </form>
+                                    <br>
                                     <form action="{{ url_for('waiter_order_cancel') }}" method="POST">
                                         <input type="hidden" name="orderID" value="{{ key }}">
-                                        <input class="kitchen-submit text-size-16px" type="submit" value="Cancel Order">
+                                        <input class="waiter-orders-cancel text-size-16px" type="submit" value="Cancel Order ">
                                     </form>
                                 </td>
                             </tr>
