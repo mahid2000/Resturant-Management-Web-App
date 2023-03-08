@@ -4,11 +4,13 @@ import rsa
 from flask import Flask, render_template, redirect, request, session
 from flaskr.init_db import DBManager
 from flaskr.menu_item_model import MenuItemModel
+from flaskr.user_account_model import UserAccountModel
 
 publicKey, privateKey = rsa.newkeys(512)
 
 
 os.environ["PYTHONHASHSEED"] = "0"
+
 
 def create_app():
     """Creates and configures the flask app."""
@@ -166,47 +168,47 @@ def edit_menu_item():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def fetch_login():
     """Renders the page to login."""
+
     if request.method == 'GET':
         return render_template('login.html')
 
     elif request.method == 'POST':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
+        try:
+            user_account = UserAccountModel(request.form['fname'],
+                                            request.form['sname'],
+                                            request.form['pass'])
+            try:
+                login(user_account)
+            except Exception as ex:
+                return render_template('login.html', error=str(ex))
+        except Exception as ex:
+            return render_template('login.html', error=str(ex))
+        return redirect('/home')
 
-        firstname = request.form['fname']
-        if not firstname:
-            error = "Enter first name."
-            return render_template('login.html', error=error)
 
-        surname = request.form['sname']
-        if not surname:
-            error = "Enter surname."
-            return render_template('login.html', error=error)
+def login(user_account):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-        password = request.form['pass']
-        if not password:
-            error = "Enter password."
-            return render_template('login.html', error=error)
+    sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
+                           (user_account.first_name, user_account.last_name))
+    hashed_password_db = sql_connection.fetchone()[0]
 
-        sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
-                               (firstname, surname))
-        hashed_password_db = sql_connection.fetchone()[0]
-
-        if str(hash(password)) == hashed_password_db:
-            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
-                                   (firstname, surname))
-            user = sql_connection.fetchone()
-            db_manager.close()
-
-            session['user'] = [user[0], user[1], user[2], user[4]]
-
-            return redirect('/home')
-
+    if user_account.password == hashed_password_db:
+        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
+                               (user_account.first_name, user_account.last_name))
+        user = sql_connection.fetchone()
         db_manager.close()
-        error = "Invalid credentials"
-        return render_template('login.html', error=error)
+
+        session['user'] = [user[0], user[1], user[2], user[4]]
+
+        return redirect('/home')
+
+    db_manager.close()
+    error = "Invalid credentials"
+    return render_template('login.html', error=error)
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
