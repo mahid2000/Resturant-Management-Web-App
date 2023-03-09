@@ -231,24 +231,24 @@ def create_login():
         firstName = request.form['firstName']
         if not firstName:
             error = "Please enter your first name."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         surname = request.form['surname']
         if not surname:
             error = "Please enter your surname."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         password = request.form['password']
         if not password:
             error = "Choose your password."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         encPass = rsa.encrypt(password.encode(), publicKey)
 
         role = request.form['role']
         if not role:
             error = "what kind of user are you?"
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         sql_connection.execute("SELECT count(*) FROM users")
         count = sql_connection.fetchone()
@@ -296,7 +296,7 @@ def order():
 
         db_manager.close()
 
-        return render_template('order.html', rows=rows)
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
 
