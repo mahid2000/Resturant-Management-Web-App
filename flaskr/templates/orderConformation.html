@@ -1,33 +1,65 @@
 <!DOCTYPE html>
-<html lang = "en">
-	<head>
-		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
-		<title>Order Conformation</title>
-	</head>
-	<body>
-        <div class="navbar">
-            <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('custMenu') }}">MENU</a>
-            <a href="{{ url_for('call') }}">CALL WAITER</a>
-            <a href="{{ url_for('order') }}">ORDER</a>
-            <a href="{{ url_for('about') }}">ABOUT</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
+<html lang="en">
+
+<!-- Order confirmation page -->
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    <title>Order Conformation</title>
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('custMenu') }}">MENU</a>
+
+        <!-- Waiter additional buttons -->
+        {% if user[3] == 2 %}
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
+        <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
+        <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Logout button at the end -->
+        {% endif %}
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+    <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+            <p>ORDER CONFIRMATION</p>
         </div>
-        <div class="main">
-            <div class="header">
-                <p>ORDER CONFIRMATION</p>
-            </div>
-            <div class="body" style="height: auto">
-                <h1>Your order has been placed!</h1>
-                <h2>A waiter will be along soon to confirm your order.</h2>
-                <form action="{{ url_for('order_conformation') }}" method="POST">
-                    <input class="addmenu-submit text-size-16px" type="submit" value="Press here to return to home page.">
-                </form>
-            </div>
+
+        <!-- Confirmation notification -->
+        <div class="body" style="height: auto">
+            <h1>Your order has been placed!</h1>
+            <h2>A waiter will be along soon to confirm your order.</h2>
+            <form action="{{ url_for('order_conformation') }}" method="POST">
+                <input class="addmenu-submit text-size-16px" type="submit" value="Press here to return to home page.">
+            </form>
         </div>
-        <div class="footer">
-            <p>Oaxaca Group</p>
-        </div>
-	</body>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
+</body>
+
 </html>

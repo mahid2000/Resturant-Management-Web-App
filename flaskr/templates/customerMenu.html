@@ -46,7 +46,9 @@
         <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
         <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
 
+        <!-- Additional buttons for no login credentials -->
         {% if user[3] == 0 %}
+
             <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
             <a href="{{ url_for('login') }}" class="css-bar-item css-button">LOGIN</a>
 
@@ -62,7 +64,6 @@
         {% elif user[3] == 2 %}
 
             <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
-            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
             <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
             <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
             <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
@@ -71,7 +72,6 @@
         {% elif user[3] == 3 %}
 
             <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
-            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
             <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
             <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
             <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
@@ -80,7 +80,6 @@
         {% elif user[3] == 4 %}
 
             <a href="{{ url_for('manage_accounts') }}" class="css-bar-item css-button">MANAGE ACCOUNTS</a>
-            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
             <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
             <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
             <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>

@@ -45,43 +45,49 @@
             <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
             <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
 
+            <!-- Additional buttons for no login credentials -->
             {% if user[3] == 0 %}
-                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-                <a href="{{ url_for('login') }}" class="css-bar-item css-button">LOGIN</a>
 
-                <!-- Customer additional button -->
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('login') }}" class="css-bar-item css-button">LOGIN</a>
+
+            <!-- Customer additional button -->
             {% elif user[3] == 1 %}
 
-                <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
-                <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
-                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
+            <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
 
-                <!-- Waiter additional buttons -->
+            <!-- Waiter additional buttons -->
             {% elif user[3] == 2 %}
 
-                <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
-                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
-                <!-- Kitchen staff additional buttons -->
+            <!-- Kitchen staff additional buttons -->
             {% elif user[3] == 3 %}
 
-                <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
-                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
-                <!-- Manager additional buttons -->
+            <!-- Manager additional buttons -->
             {% elif user[3] == 4 %}
 
-                <a href="{{ url_for('manage_accounts') }}" class="css-bar-item css-button">MANAGE ACCOUNTS</a>
-                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-                <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('manage_accounts') }}" class="css-bar-item css-button">MANAGE ACCOUNTS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
 
             {% endif %}
         </div>
     </div>
 
+    <!-- About page content  -->
     <div id="about" class="css-container css-indigo css-grayscale css-xlarge css-padding-64">
         <h1 class="css-center css-jumbo">About</h1>
         <p>For the past ten years, the restaurant chain Oaxaca has steadily expanded its footprint in London and the UK,
@@ -89,10 +95,14 @@
             When they first opened in 2007, their cuisine, a distinct style of Mexican street food, and their table
             service set them apart from the competition. </p>
         <p>We take pride in our cuisine.</p>
+
+        <!-- About us picture -->
         <p class="css-padding-16 css-stretch">
             <!-- Photo source : https://www.pexels.com/zh-tw/photo/13869897/ -->
             <img src="static\about.jpg" style="width:100%" alt="Restaurant">
         </p>
+
+        <!-- Operating times bar -->
         <h1>Operating times</h1>
         <div class="css-row">
             <div class="css-half">
@@ -107,6 +117,7 @@
             </div>
         </div>
     </div>
+
     <!-- Footer -->
     <footer class="css-center css-black css-padding-48 css-xxlarge">
         <p>Oaxaca Group</p>
