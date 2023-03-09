@@ -174,7 +174,7 @@ def edit_menu_item():
 def login():
     """Renders the page to login."""
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', user=session.get('user'))
 
     elif request.method == 'POST':
         db_manager = DBManager(app)
@@ -183,17 +183,17 @@ def login():
         firstname = request.form['fname']
         if not firstname:
             error = "Enter first name."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         surname = request.form['sname']
         if not surname:
             error = "Enter surname."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         password = request.form['pass']
         if not password:
             error = "Enter password."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (firstname, surname))
@@ -201,7 +201,7 @@ def login():
         print(encryptedPass)
         if encryptedPass is None:
             error = "Invalid Credentials"
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
         if decPass == password:
@@ -216,7 +216,7 @@ def login():
 
         db_manager.close()
         error = "Invalid credentials"
-        return render_template('login.html', error=error)
+        return render_template('login.html', error=error, user=session.get('user'))
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
