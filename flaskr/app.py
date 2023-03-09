@@ -37,8 +37,6 @@ def create_app():
 
 app = create_app()
 
-print("hashing:", hash("Waiter1!"))
-
 
 @app.route('/')
 def index():
@@ -199,9 +197,6 @@ def login(user_account):
     sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (user_account.first_name, user_account.last_name))
     hashed_password_db = sql_connection.fetchone()[0]
-
-    print(user_account.password)
-    print(hashed_password_db)
 
     if user_account.password == hashed_password_db:
         sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
