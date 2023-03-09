@@ -1,5 +1,5 @@
 import os
-import re
+import sys
 import rsa
 from flask import Flask, render_template, redirect, request, session
 from flaskr.init_db import DBManager
@@ -8,8 +8,10 @@ from flaskr.user_account_model import UserAccountModel
 
 publicKey, privateKey = rsa.newkeys(512)
 
-
-os.environ["PYTHONHASHSEED"] = "0"
+hash_seed = os.getenv('PYTHONHASHSEED')
+if not hash_seed:
+    os.environ['PYTHONHASHSEED'] = '0'
+    os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
 def create_app():
@@ -34,6 +36,8 @@ def create_app():
 
 
 app = create_app()
+
+print("hashing:", hash("Waiter1!"))
 
 
 @app.route('/')
@@ -196,6 +200,9 @@ def login(user_account):
                            (user_account.first_name, user_account.last_name))
     hashed_password_db = sql_connection.fetchone()[0]
 
+    print(user_account.password)
+    print(hashed_password_db)
+
     if user_account.password == hashed_password_db:
         sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
                                (user_account.first_name, user_account.last_name))
@@ -207,8 +214,7 @@ def login(user_account):
         return redirect('/home')
 
     db_manager.close()
-    error = "Invalid credentials"
-    return render_template('login.html', error=error)
+    raise Exception("Invalid credentials")
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])

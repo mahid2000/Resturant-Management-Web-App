@@ -1,3 +1,9 @@
+import os
+import hashlib
+
+os.environ["PYTHONHASHSEED"] = "0"
+
+
 class UserAccountModel:
     def __init__(self, first_name, last_name, password):
         self.validate_name(first_name, last_name)
@@ -5,7 +11,8 @@ class UserAccountModel:
 
         self.first_name = first_name
         self.last_name = last_name
-        self.password = hash(password)
+        self.password = self.hash_password(password)
+        print(self.password)
 
     @staticmethod
     def validate_name(first_name, last_name):
@@ -18,3 +25,8 @@ class UserAccountModel:
     def validate_password(password):
         if not password:
             raise Exception("Please enter your password")
+
+    @staticmethod
+    def hash_password(password):
+        salt = "0"
+        return hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 5).hex()
