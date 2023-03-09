@@ -186,7 +186,7 @@ def fetch_login():
             try:
                 login(user_account)
             except Exception as ex:
-                return render_template('login.html', error=str(ex))
+                return render_template('login.html', error="Invalid credentials")
         except Exception as ex:
             return render_template('login.html', error=str(ex))
         return redirect('/home')
@@ -197,7 +197,7 @@ def login(user_account):
     sql_connection = db_manager.get_connection()
 
     sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
-                           (user_account.first_name, user_account.last_name))
+                               (user_account.first_name, user_account.last_name))
     hashed_password_db = sql_connection.fetchone()[0]
 
     print(user_account.password)
