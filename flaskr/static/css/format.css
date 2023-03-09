@@ -1990,3 +1990,9 @@ a {
 .css-hover-border-pale-blue:hover {
     border-color: #e7ffff !important
 }
+
+.food-image {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+  }
