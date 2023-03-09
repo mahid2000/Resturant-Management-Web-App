@@ -364,7 +364,7 @@ def order_payment():
             rows.append(row)
             totalPrice += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice, user=session.get('user'))
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -374,7 +374,7 @@ def order_payment():
 def order_conformation():
 
     if request.method == 'GET':
-        return render_template('orderConformation.html')
+        return render_template('orderConformation.html', user=session.get('user'))
     elif request.method == 'POST':
         return redirect('/home')
 
