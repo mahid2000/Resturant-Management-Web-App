@@ -510,8 +510,9 @@ def custMenu():
 
 @app.route('/calling', methods=['GET', 'POST'])
 def callWaiter():
-    #if request.method == 'POST':
-        #table = request.form['tableNumber']
+    if request.method == 'POST':
+        table = request.form['tableNum']
+        print(table)
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
         sql_connection.execute("SELECT first_name, last_name FROM users"
@@ -522,5 +523,6 @@ def callWaiter():
         db_manager.close()
         print(rows)
         return render_template('calling.html', confirm=True, rows=rows)
+    return render_template('calling.html', confirm=False)
 
 #def confirmAlert():
