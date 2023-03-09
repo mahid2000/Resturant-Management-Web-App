@@ -1,7 +1,7 @@
 import os
 import re
 import rsa
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, url_for
 from flaskr.init_db import DBManager
 
 publicKey, privateKey = rsa.newkeys(512)
@@ -500,7 +500,16 @@ def custMenu():
 
     db_manager.close()
 
-    return render_template('customerMenu.html', foods=foods, user=session.get('user'))
+     # Create a new list that contains the original items from the tuple plus the image URL
+    new_foods = []
+    for food in foods:
+        food_image_url = url_for('static', filename=f"images/{food[1]}.jpg")
+        new_food = list(food)
+        new_food.append(food_image_url)
+        new_foods.append(new_food)
+
+    return render_template('customerMenu.html', foods=new_foods, user=session.get('user'))
+
 
 
 @app.route('/about')
