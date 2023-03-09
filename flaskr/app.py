@@ -88,8 +88,16 @@ def menu():
 
     db_manager.close()
 
+    # Create a new list that contains the original items from the tuple plus the image URL
+    new_rows = []
+    for row in rows:
+        row_image_url = url_for('static', filename=f"images/{row[1]}.jpg")
+        new_row = list(row)
+        new_row.append(row_image_url)
+        new_rows.append(new_row)
+
     # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows, user=session.get('user'))
+    return render_template('menu.html', rows=new_rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
