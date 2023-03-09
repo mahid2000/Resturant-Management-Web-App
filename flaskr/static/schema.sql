@@ -42,3 +42,9 @@ CREATE TABLE orderDetails (
 INSERT INTO users
     (first_name, last_name, password_hash, role)
     VALUES ('John', 'Smith', 'password', 4);
+
+CREATE TABLE tableAssignments (
+    waiter_id INTEGER PRIMARY KEY,
+    tableNum TINYINT NOT NULL,
+    FOREIGN KEY (tableNum) REFERENCES orders(tableNum)
+);

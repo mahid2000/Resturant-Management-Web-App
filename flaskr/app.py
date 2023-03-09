@@ -675,3 +675,21 @@ def manage_accounts_edit():
         db_manager.close()
 
         return redirect('/manageAccounts')
+
+@app.route('/assign_table', methods=['POST'])
+def assign_table():
+    waiter_id = request.form.get('waiter_id')
+    tableNum = request.form.get('tableNum')
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    result = sql_connection.fetchone()
+    if result:
+        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
+    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    return 'Table', tableNum, 'has been assigned to waiter', waiter_id
