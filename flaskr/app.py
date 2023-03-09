@@ -274,6 +274,7 @@ def create_login():
 
         return redirect('/home')
 
+
 @app.route('/logout')
 def logout():
     session['user'] = ['', '', '', 0]
@@ -529,14 +530,15 @@ def waiter_order_confirm():
             sql_connection.execute(
                 "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
-            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
             tableNum = sql_connection.fetchone()
-            temp_list = [name[0],tableNum[0], row[2], row[3]]
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
 
-        return render_template('waiterOrderConfirm.html', all_orders=all_orders)
+        return render_template('waiterOrderConfirm.html', all_orders=all_orders, user=session.get('user'))
 
     elif request.method == 'POST':
         db_manager = DBManager(app)
@@ -595,7 +597,8 @@ def waiter_order_delivered():
             sql_connection.execute(
                 "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
-            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
             tableNum = sql_connection.fetchone()
             temp_list = [name[0], tableNum[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
@@ -627,12 +630,14 @@ def manage_accounts():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("SELECT userID, first_name, last_name, role FROM users")
+        sql_connection.execute(
+            "SELECT userID, first_name, last_name, role FROM users")
         rows = sql_connection.fetchall()
 
         db_manager.close()
 
-        return render_template('managerAccounts.html', rows=rows)
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+
     elif request.method == 'POST':
 
         firstName = request.form['firstName']
@@ -647,7 +652,7 @@ def manage_accounts():
 
         db_manager.close()
 
-        return render_template('managerAccounts.html', rows=rows)
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/manageAccountsEdit', methods=['GET', 'POST'])
@@ -663,7 +668,8 @@ def manage_accounts_edit():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("UPDATE users SET role=? WHERE userID=?", (role, userID))
+        sql_connection.execute(
+            "UPDATE users SET role=? WHERE userID=?", (role, userID))
         db_manager.get_db().commit()
 
         db_manager.close()
