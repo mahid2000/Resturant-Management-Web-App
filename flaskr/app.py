@@ -54,10 +54,10 @@ def call():
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                               + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
+                               + " VALUES (69, 'Mahid', 'Gondal', '###', 2)")
 
         sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                               + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
+                               + " VALUES (96, 'Jhon', 'Snow', '##1', 2)")
 
         sql_connection.execute("SELECT first_name, last_name FROM users"
                                + " WHERE  role = 2"
@@ -506,3 +506,21 @@ def custMenu():
     db_manager.close()
 
     return render_template('customerMenu.html', foods=foods)
+
+
+@app.route('/calling', methods=['GET', 'POST'])
+def callWaiter():
+    #if request.method == 'POST':
+        #table = request.form['tableNumber']
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT first_name, last_name FROM users"
+                               + " WHERE  role = 2"
+                               + " ORDER BY RANDOM()"
+                               + "  LIMIT 1;")
+        rows = sql_connection.fetchall()
+        db_manager.close()
+        print(rows)
+        return render_template('calling.html', confirm=True, rows=rows)
+
+#def confirmAlert():
