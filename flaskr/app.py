@@ -180,7 +180,9 @@ def fetch_login():
         try:
             user_account = UserAccountModel(request.form['fname'],
                                             request.form['sname'],
-                                            request.form['pass'])
+                                            request.form['pass'],
+                                            # UserAccountModel is used for logging in and creating an account.
+                                            None)  # This is the role, which is irrelevant for logging in.
             try:
                 login(user_account)
             except Exception as ex:
@@ -195,7 +197,7 @@ def login(user_account):
     sql_connection = db_manager.get_connection()
 
     sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
-                               (user_account.first_name, user_account.last_name))
+                           (user_account.first_name, user_account.last_name))
     hashed_password_db = sql_connection.fetchone()[0]
 
     if user_account.password == hashed_password_db:
@@ -216,47 +218,39 @@ def login(user_account):
 def create_login():
     if request.method == 'GET':
         return redirect('/login')
+
     elif request.method == 'POST':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        firstName = request.form['firstName']
-        if not firstName:
-            error = "Please enter your first name."
-            return render_template('createLogin.html', error=error)
-
-        surname = request.form['surname']
-        if not surname:
-            error = "Please enter your surname."
-            return render_template('createLogin.html', error=error)
-
-        password = request.form['password']
-        if not password:
-            error = "Choose your password."
-            return render_template('createLogin.html', error=error)
-
-        encPass = rsa.encrypt(password.encode(), publicKey)
-        hashed_password = hash(password)
-
-        role = request.form['role']
-        if not role:
-            error = "what kind of user are you?"
-            return render_template('createLogin.html', error=error)
-
-        sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                               + " VALUES (?, ?, ?,?)", (firstName, surname, hashed_password, role))
-        db_manager.get_db().commit()
-
-        sql_connection.execute(
-            "SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
-        user = sql_connection.fetchone()
-
-        session['user'] = [user[0], user[1], user[2], user[4]]
-
-        db_manager.close()
-
+        try:
+            user_account = UserAccountModel(request.form['fname'],
+                                            request.form['sname'],
+                                            request.form['pass'],
+                                            request.form['role'])
+            try:
+                create_account(user_account)
+            except Exception as ex:
+                return render_template('login.html', error="Invalid credentials")
+        except Exception as ex:
+            return render_template('login.html', error=str(ex))
         return redirect('/home')
+
+
+def create_account(user_account):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("""INSERT INTO users (first_name, last_name, password_hash, role)
+                           VALUES (?, ?, ?,?)""",
+                           (user_account.first_name,
+                            user_account.last_name,
+                            user_account.password,
+                            user_account.role))
+
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    login(user_account)
+
+    return redirect('/home')
 
 
 @app.route('/logout')

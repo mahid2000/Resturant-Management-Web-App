@@ -5,14 +5,14 @@ os.environ["PYTHONHASHSEED"] = "0"
 
 
 class UserAccountModel:
-    def __init__(self, first_name, last_name, password):
+    def __init__(self, first_name, last_name, password, role):
         self.validate_name(first_name, last_name)
         self.validate_password(password)
 
         self.first_name = first_name
         self.last_name = last_name
         self.password = self.hash_password(password)
-        print(self.password)
+        self.role = role
 
     @staticmethod
     def validate_name(first_name, last_name):

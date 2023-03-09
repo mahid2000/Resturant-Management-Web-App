@@ -5,19 +5,19 @@ from flaskr.user_account_model import UserAccountModel
 class MyTestCase(unittest.TestCase):
     def test_all_blank(self):
         """Test that an exception is raised if invalid data (All None) is provided."""
-        self.assertRaises(Exception, UserAccountModel, (None, None, None))
+        self.assertRaises(Exception, UserAccountModel, (None, None, None, None))
 
     def test_first_name_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, (None, "Wilson", "Waiter1!"))
+        self.assertRaises(Exception, UserAccountModel, (None, "Wilson", "Waiter1!", None))
 
     def test_last_name_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, ("Melissa", None, "Waiter1!"))
+        self.assertRaises(Exception, UserAccountModel, ("Melissa", None, "Waiter1!", None))
 
     def test_password_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, ("Melissa", "Wilson", None))
+        self.assertRaises(Exception, UserAccountModel, ("Melissa", "Wilson", None, None))
 
     def test_hashing(self):
         """Test that the hash function correctly maps the test data passwords to the hashes in the database."""
@@ -42,7 +42,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_correct_data(self):
         """Test that an exception is not thrown, and values are correctly assigned for valid data."""
-        user_account = UserAccountModel("Melissa", "Wilson", "Waiter1!")
+        user_account = UserAccountModel("Melissa", "Wilson", "Waiter1!", None)
         self.assertEqual(user_account.first_name, "Melissa")
         self.assertEqual(user_account.last_name, "Wilson")
         self.assertEqual(user_account.password, "15eb3b49fce780facecf0b761712328b0ae12e62a41c573a9629523fa2709dd7")
