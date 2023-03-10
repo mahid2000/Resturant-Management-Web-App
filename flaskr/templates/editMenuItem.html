@@ -1,29 +1,56 @@
 <!DOCTYPE html>
-<html lang = "en">
-	<head>
-		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
-		<title>Edit Menu Item</title>
-	</head>
-	<body>
+<html lang="en">
+<!-- Edit Menu Items page -->
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    <title>Edit Menu Item</title>
+</head>
 
-        <div class="navbar">
-            <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('menu') }}">MENU</a>
-            {% if user[3] == 3 %}
-                <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
-            {% endif %}
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
+<body>
+
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('custMenu') }}">MENU</a>
+
+        <!-- Waiter additional buttons -->
+        {% if user[3] == 2 %}
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
+        <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
+        <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Logout button at the end -->
+        {% endif %}
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+
+    <div class="main">
+        <!-- Header -->
+        <div class="header">
+            <p>EDIT MENU ITEMS</p>
         </div>
-        <div class="main">
-            <div class="header">
-                <p>EDIT MENU ITEMS</p>
-            </div>
-            <div class="body">
-                <a class="button" href="{{ url_for('menu') }}">< BACK TO MENU</a>
 
-                <div class="editmenu-grid">
-                    {% for row in rows %}
+        <div class="body">
+            <!-- Back to custMenu page in this page -->
+            <a class="button" href="{{ url_for('custMenu') }}">
+                < BACK TO MENU</a>
+
+                <!-- Content -->
+                    <div class="editmenu-grid">
+                        {% for row in rows %}
                         <div class="editmenu-grid-item">
                             <form action="{{ url_for('edit_menu_item') }}" method="POST">
                                 <p style="font-weight: bold">{{ row[1] }}</p>
@@ -35,12 +62,17 @@
                                 <input class="kitchen-submit text-size-16px" type="submit" value="Delete Item">
                             </form>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
+                        {% endfor %}
+                    </div>
         </div>
-        <div class="footer">
-            <p>Oaxaca Group</p>
-        </div>
-	</body>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
+</body>
+
 </html>

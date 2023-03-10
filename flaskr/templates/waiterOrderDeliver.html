@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Kitchen Orders page -->
+
+<!-- Waiter order deliver page -->
 
 <head>
     <meta charset="UTF-8">
@@ -40,31 +41,34 @@
     <!-- Content -->
     <div class="main">
         <div class="header">
-            <p>MANAGE ORDERS - KITCHEN</p>
-        </div>
-        <div class="body-header">
-            <p>Orders To Be Made:</p>
+            <p>MANAGE ORDERS - WAITER</p>
         </div>
         <div class="body">
+            <div class="waiter-orders-bar">
+                <a href="{{ url_for('waiter_order_confirm') }}">TO CONFIRM</a>
+                <a href="{{ url_for('waiter_order_delivered') }}">TO DELIVER</a>
+            </div>
+            <p class="text-size-32px">ORDERS TO DELIVER</p>
             {% for key, value in all_orders.items() %}
             <div class="kitchen-order-boxes">
                 <table class="kitchen-order-contents">
                     <tr>
                         <td>
                             <p class="text-size-32px">Order: {{ key }}</p>
-                            <p>Placed: {{ all_orders[key][0][2] }}</p>
+                            <p class="text-size-16px">Table: {{ all_orders[key][0][1] }}</p>
+                            <p>Placed: {{ all_orders[key][0][3] }}</p>
                         </td>
                         <td>
                             <ul style="list-style: none">
                                 {% for row in value %}
-                                <li class="text-size-16px">{{ row[1] }} x {{ row[0] }}</li>
+                                <li class="text-size-16px">{{ row[2] }} x {{ row[0] }}</li>
                                 {% endfor %}
                             </ul>
                         </td>
                         <td>
-                            <form action="{{ url_for('kitchen_orders') }}" method="POST">
+                            <form action="{{ url_for('waiter_order_delivered') }}" method="POST">
                                 <input type="hidden" name="orderID" value="{{ key }}">
-                                <input class="kitchen-submit text-size-16px" type="submit" value="Order Finished">
+                                <input class="kitchen-submit text-size-16px" type="submit" value="Delivered Order">
                             </form>
                         </td>
                     </tr>
@@ -79,7 +83,7 @@
         <p>Oaxaca Group</p>
     </div>
 
-    <!-- End Content -->
+    <!-- End content -->
 </body>
 
 </html>

@@ -1,74 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Login</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
-    </head>
-    <body>
-        <div class="navbar">
-            <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('menu') }}">MENU</a>
-            <a href="{{ url_for('about') }}">ABOUT</a>
-            <a href="{{ url_for('fetch_login') }}">LOGIN</a>
+
+<!-- Login page -->
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('custMenu') }}">MENU</a>
+
+        <!-- Waiter additional buttons -->
+        {% if user[3] == 2 %}
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
+        <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
+        <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Logout button at the end -->
+        {% endif %}
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+
+    <!-- Header -->
+    <div class="main">
+        <div class="header">
+            <p>LOGIN</p>
         </div>
-        <div class="main">
-            <div class="header">
-                <p>LOGIN</p>
-            </div>
-            <div class="body" style="height: 500px">
-                <div class="addmenu-grid">
-                    <div class="addmenu-grid-item">
-                        <p class="text-size-32px">LOGIN</p>
 
-                        <form action="{{ url_for('fetch_login') }}" method="POST">
+        <!-- Inserting login credentials -->
+        <div class="body" style="height: 500px">
+            <div class="addmenu-grid">
+                <div class="addmenu-grid-item">
+                    <p class="text-size-32px">LOGIN</p>
 
-                            <input name="fname" type="text" id="firstname" placeholder="First Name...">
+                    <form action="{{ url_for('fetch_login') }}" method="POST">
 
-                            <input name="sname" type="text" id="surname" placeholder="Last Name...">
+                        <input name="fname" type="text" id="firstname" placeholder="First Name...">
 
-                            <input name="pass" type="password" id="password" minlength="8" required placeholder="Password...">
+                        <input name="sname" type="text" id="surname" placeholder="Last Name...">
 
-                            {% if error %}
-                                <h2>{{ error }}</h2>
-                            {% endif %}
+                        <!-- Decline credentials when passwords does not contains 8 characters  -->
+                        <input name="pass" type="password" id="password" minlength="8" required
+                            placeholder="Password...">
 
-                            <input style="margin-top: 74px " class="addmenu-submit" type="submit" value="Login">
-                        </form>
-                    </div>
-                    <div class="addmenu-grid-item">
-                        <p class="text-size-32px">CREATE LOGIN</p>
+                        {% if error %}
+                        <h2>{{ error }}</h2>
+                        {% endif %}
 
-                        <form action="{{ url_for('create_login') }}" method="POST">
+                        <input style="margin-top: 74px " class="addmenu-submit" type="submit" value="Login">
+                    </form>
+                </div>
 
-                            <input type="text" name="firstName" placeholder="First Name..."><br>
+                <!-- Creating new login credentials -->
+                <div class="addmenu-grid-item">
+                    <p class="text-size-32px">CREATE LOGIN</p>
 
-                            <input type="text" name="surname" placeholder="Last Name..."><br>
+                    <form action="{{ url_for('create_login') }}" method="POST">
 
-                            <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
+                        <input type="text" name="firstName" placeholder="First Name..."><br>
 
-                            <div>
-                                <label for="role">Role:</label>
-                                <select name="role" id="role">
-                                    <option value="1">Customer</option>
-                                    <option value="2">Waiter</option>
-                                    <option value="3">Kitchen</option>
-                                    <option value="4">Manager</option>
-                                </select>
-                            </div><br>
+                        <input type="text" name="surname" placeholder="Last Name..."><br>
 
-                            {% if error %}
-                                <h2>{{ error }}</h2>
-                            {% endif %}
+                        <!-- Decline credentials when passwords does not contains 8 characters  -->
+                        <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
 
-                            <input class="addmenu-submit" type="submit" value="Create Login">
+                        <!-- Roles to login as : -->
+                        <div>
+                            <label for="role">Role:</label>
+                            <select name="role" id="role">
+                                <option value="1">Customer</option>
+                                <option value="2">Waiter</option>
+                                <option value="3">Kitchen</option>
+                                <option value="4">Manager</option>
+                            </select>
+                        </div><br>
 
-                        </form>
-                    </div>
+                        {% if error %}
+                        <h2>{{ error }}</h2>
+                        {% endif %}
+
+                        <!-- Create login button -->
+                        <input class="addmenu-submit" type="submit" value="Create Login">
+
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <p>Oaxaca Group</p>
-        </div>
-    </body>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
+</body>
+
 </html>

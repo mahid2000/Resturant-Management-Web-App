@@ -207,3 +207,97 @@ body {
 .kitchen-submit:hover {
   background-color: palegoldenrod;
 }
+
+/* CSS for the waiterOrder pages */
+
+.waiter-orders-bar {
+  overflow: hidden;
+  background-color: black;
+  width: fit-content;
+  opacity: 1;
+  z-index: 1;
+  margin: auto;
+  justify-content: center;
+}
+
+.waiter-orders-bar a {
+  display: inline-block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 20px 24px;
+  text-decoration: none;
+  font-size: 32px;
+}
+
+.waiter-orders-bar a:hover {
+  background: azure;
+  color: black;
+}
+
+.waiter-orders-confirm {
+  background-color: green;
+  border-radius: 10px;
+  padding: 16px 32px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.waiter-orders-confirm:hover {
+  background-color: lightgreen;
+}
+
+.waiter-orders-cancel {
+  background-color: red;
+  border-radius: 10px;
+  padding: 16px 32px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.waiter-orders-cancel:hover {
+  background-color: lightcoral;
+}
+
+
+/* CSS for the managerAccounts.html page */
+.accountSearch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  padding: 0 16px;
+}
+
+.accountSearch-grid-item {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+.accountSearch-text {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 16px 0;
+  border: hidden #333333;
+  border-bottom-style: solid;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: black;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+}
+
+.accountDisplay-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+/* CSS for the orderPayment.html page */
+.summary-table {
+  width: 100%;
+}

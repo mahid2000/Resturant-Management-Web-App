@@ -169,7 +169,7 @@ def fetch_login():
     """Renders the page to login."""
 
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', user=session.get('user'))
 
     elif request.method == 'POST':
         try:
@@ -180,10 +180,10 @@ def fetch_login():
                                             None)  # This is the role, which is irrelevant for logging in.
             try:
                 login(user_account)
-            except Exception as ex:
-                return render_template('login.html', error="Invalid credentials")
-        except Exception as ex:
-            return render_template('login.html', error=str(ex))
+            except TypeError as ex:
+                return render_template('login.html', error="Invalid credentials", user=session.get('user'))
+        except TypeError as ex:
+            return render_template('login.html', error=str(ex), user=session.get('user'))
         return redirect('/home')
 
 
@@ -206,7 +206,7 @@ def login(user_account):
         return redirect('/home')
 
     db_manager.close()
-    raise Exception("Invalid credentials")
+    raise TypeError("Invalid credentials")
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
@@ -223,9 +223,10 @@ def create_login():
             try:
                 create_account(user_account)
             except TypeError as ex:
-                return render_template('login.html', error="Invalid credentials")
+                return render_template('login.html', error="Invalid credentials", user=session.get('user'))
         except TypeError as ex:
-            return render_template('login.html', error=str(ex))
+            return render_template('login.html', error=str(ex), user=session.get('user'))
+
         return redirect('/home')
 
 
@@ -269,7 +270,7 @@ def order():
 
         db_manager.close()
 
-        return render_template('order.html', rows=rows)
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
 
@@ -299,7 +300,7 @@ def order():
                 if value != '0':
 
                     sql_connection.execute("INSERT INTO orderDetails "
-                                           "(orderID, itemID, customerID, qty, state, timestamp) "
+                                           "(orderID, itemID, customerID, qty, state, order_time) "
                                            "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                                            (session['order'][0], key, session['user'][0], value, 0))
 
@@ -337,7 +338,7 @@ def order_payment():
             rows.append(row)
             totalPrice += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice, user=session.get('user'))
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -347,7 +348,7 @@ def order_payment():
 def order_conformation():
 
     if request.method == 'GET':
-        return render_template('orderConformation.html')
+        return render_template('orderConformation.html', user=session.get('user'))
     elif request.method == 'POST':
         return redirect('/home')
 
@@ -362,7 +363,7 @@ def kitchen_orders():
 
         # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
@@ -377,7 +378,7 @@ def kitchen_orders():
 
         db_manager.close()
 
-        return render_template('kitchenOrders.html', all_orders=all_orders)
+        return render_template('kitchenOrders.html', all_orders=all_orders, user=session.get('user'))
     elif request.method == 'POST':
 
         orderID = request.form['orderID']
@@ -476,7 +477,193 @@ def custMenu():
 
     return render_template('customerMenu.html', foods=foods, user=session.get('user'))
 
+
 @app.route('/about')
 def about():
     """Render the about page."""
     return render_template('about.html', user=session.get('user'))
+
+
+@app.route('/waiterOrders', methods=['GET', 'POST'])
+def waiter_order_confirm():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('waiterOrderConfirm.html', all_orders=all_orders, user=session.get('user'))
+
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=1 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
+def waiter_order_cancel():
+
+    if request.method == 'GET':
+        return redirect('/waiterOrders')
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=5 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersDelivered', methods=['GET', 'POST'])
+def waiter_order_delivered():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=2 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('waiterOrderDeliver.html', all_orders=all_orders, user=session.get('user'))
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=3 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrdersDelivered')
+
+
+@app.route('/manageAccounts', methods=['GET', 'POST'])
+def manage_accounts():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute(
+            "SELECT userID, first_name, last_name, role FROM users")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+
+    elif request.method == 'POST':
+
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT userID, first_name, last_name, role"
+                               " FROM users WHERE first_name=? AND last_name=?;", (firstName, lastName))
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+
+
+@app.route('/manageAccountsEdit', methods=['GET', 'POST'])
+def manage_accounts_edit():
+
+    if request.method == 'GET':
+        return redirect('/manageAccounts')
+    elif request.method == 'POST':
+
+        userID = request.form['userID']
+        role = request.form['role']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute(
+            "UPDATE users SET role=? WHERE userID=?", (role, userID))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/manageAccounts')
+
+@app.route('/assign_table', methods=['POST'])
+def assign_table():
+    waiter_id = request.form.get('waiter_id')
+    tableNum = request.form.get('tableNum')
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    result = sql_connection.fetchone()
+    if result:
+        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
+    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    return 'Table', tableNum, 'has been assigned to waiter', waiter_id

@@ -20,11 +20,13 @@
                     <li><a href="{{ url_for('order') }}">Order</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 2 %}
+                    <li><a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 3 %}
                     <li><a href="{{ url_for('kitchen_orders') }}">Manage Orders</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 4 %}
+                    <li><a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>
