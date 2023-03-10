@@ -1,7 +1,4 @@
-import os
 import hashlib
-
-os.environ["PYTHONHASHSEED"] = "0"
 
 
 class UserAccountModel:
@@ -17,14 +14,14 @@ class UserAccountModel:
     @staticmethod
     def validate_name(first_name, last_name):
         if not first_name:
-            raise Exception("Please enter your first name")
+            raise TypeError("Please enter your first name")
         if not last_name:
-            raise Exception("Please enter your last name")
+            raise TypeError("Please enter your last name")
 
     @staticmethod
     def validate_password(password):
         if not password:
-            raise Exception("Please enter your password")
+            raise TypeError("Please enter your password")
 
     @staticmethod
     def hash_password(password):

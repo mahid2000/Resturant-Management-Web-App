@@ -8,11 +8,6 @@ from flaskr.user_account_model import UserAccountModel
 
 publicKey, privateKey = rsa.newkeys(512)
 
-hash_seed = os.getenv('PYTHONHASHSEED')
-if not hash_seed:
-    os.environ['PYTHONHASHSEED'] = '0'
-    os.execv(sys.executable, [sys.executable] + sys.argv)
-
 
 def create_app():
     """Creates and configures the flask app."""
@@ -221,15 +216,15 @@ def create_login():
 
     elif request.method == 'POST':
         try:
-            user_account = UserAccountModel(request.form['fname'],
-                                            request.form['sname'],
-                                            request.form['pass'],
+            user_account = UserAccountModel(request.form['firstName'],
+                                            request.form['surname'],
+                                            request.form['password'],
                                             request.form['role'])
             try:
                 create_account(user_account)
-            except Exception as ex:
+            except TypeError as ex:
                 return render_template('login.html', error="Invalid credentials")
-        except Exception as ex:
+        except TypeError as ex:
             return render_template('login.html', error=str(ex))
         return redirect('/home')
 
