@@ -389,7 +389,7 @@ def kitchen_orders():
 
         # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+            "SELECT orderID, itemID, qty, ordertime FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
