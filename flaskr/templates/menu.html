@@ -14,7 +14,7 @@
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('menu') }}">Menu</a></li>
                 {% if user[3] == 0 %}
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('fetch_login') }}">Login</a></li>
                 {% elif user[3] == 1 %}
                     <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
                     <li><a href="{{ url_for('order') }}">Order</a></li>
