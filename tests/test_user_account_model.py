@@ -19,6 +19,19 @@ class MyTestCase(unittest.TestCase):
         """Test that an exception is raised if a first_name is not provided."""
         self.assertRaises(Exception, UserAccountModel, ("Melissa", "Wilson", None, None))
 
+    def test_role(self):
+        """Test that a role can be correctly assigned, but also does not need to be."""
+        account0 = UserAccountModel("Melissa", "Wilson", "Waiter1!", None)
+        account1 = UserAccountModel("Melissa", "Wilson", "Waiter1!", 1)
+        account2 = UserAccountModel("Melissa", "Wilson", "Waiter1!", 2)
+        account3 = UserAccountModel("Melissa", "Wilson", "Waiter1!", 3)
+        account4 = UserAccountModel("Melissa", "Wilson", "Waiter1!", 4)
+        self.assertEquals(account0.role, None)
+        self.assertEquals(account1.role, 1)
+        self.assertEquals(account2.role, 2)
+        self.assertEquals(account3.role, 3)
+        self.assertEquals(account4.role, 4)
+
     def test_hashing(self):
         """Test that the hash function correctly maps the test data passwords to the hashes in the database."""
         self.assertEqual(UserAccountModel.hash_password("Waiter1!"),
