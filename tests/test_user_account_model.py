@@ -5,21 +5,21 @@ from flaskr.user_account_model import UserAccountModel
 class MyTestCase(unittest.TestCase):
     def test_all_blank(self):
         """Test that an exception is raised if invalid data (All None) is provided."""
-        self.assertRaises(Exception, UserAccountModel, (None, None, None, None))
+        self.assertRaises(TypeError, UserAccountModel, (None, None, None, None))
 
     def test_first_name_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, (None, "Wilson", "Waiter1!", None))
+        self.assertRaises(TypeError, UserAccountModel, (None, "Wilson", "Waiter1!", None))
 
     def test_last_name_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, ("Melissa", None, "Waiter1!", None))
+        self.assertRaises(TypeError, UserAccountModel, ("Melissa", None, "Waiter1!", None))
 
     def test_password_blank(self):
         """Test that an exception is raised if a first_name is not provided."""
-        self.assertRaises(Exception, UserAccountModel, ("Melissa", "Wilson", None, None))
+        self.assertRaises(TypeError, UserAccountModel, ("Melissa", "Wilson", None, None))
 
-    def test_role(self):
+    def test_valid_role(self):
         """Test that a role can be correctly assigned, but also does not need to be."""
         account0 = UserAccountModel("Melissa", "Wilson", "Waiter1!", None)
         account1 = UserAccountModel("Melissa", "Wilson", "Waiter1!", 1)
@@ -31,6 +31,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEquals(account2.role, 2)
         self.assertEquals(account3.role, 3)
         self.assertEquals(account4.role, 4)
+
+    def test_invalid_role(self):
+        self.assertRaises(TypeError, UserAccountModel, ("Melissa", "Wilson", "Waiter2!", 5))
+        self.assertRaises(TypeError, UserAccountModel, ("Melissa", "Wilson", "Waiter2!", -1))
+        self.assertRaises(TypeError, UserAccountModel, ("Melissa", "Wilson", "Waiter2!", "Test"))
 
     def test_hashing(self):
         """Test that the hash function correctly maps the test data passwords to the hashes in the database."""

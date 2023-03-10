@@ -5,6 +5,7 @@ class UserAccountModel:
     def __init__(self, first_name, last_name, password, role):
         self.validate_name(first_name, last_name)
         self.validate_password(password)
+        self.validate_role(role)
 
         self.first_name = first_name
         self.last_name = last_name
@@ -24,6 +25,13 @@ class UserAccountModel:
             raise TypeError("Please enter your password")
 
     @staticmethod
+    def validate_role(role):
+        if role is not None:
+            if 4 <= role <= 0:
+                raise TypeError("Invalid role")
+
+    @staticmethod
     def hash_password(password):
         salt = "0"
         return hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 5).hex()
+
