@@ -135,6 +135,7 @@ def add_item(menu_item):
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
+    """Displays all menu items, and allows you to select and delete them."""
     if request.method == 'GET':
         # Render the page to edit the menu.
         db_manager = DBManager(app)
@@ -166,7 +167,7 @@ def edit_menu_item():
 
 @app.route('/login', methods=['GET', 'POST'])
 def fetch_login():
-    """Renders the page to login."""
+    """Loads the login page. Fetches the user details and logs them in,"""
 
     if request.method == 'GET':
         return render_template('login.html', user=session.get('user'))
@@ -188,6 +189,7 @@ def fetch_login():
 
 
 def login(user_account):
+    """Logs in a provided user."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -211,6 +213,7 @@ def login(user_account):
 
 @app.route('/createLogin', methods=['GET', 'POST'])
 def create_login():
+    """Loads the page to create a login. Fetches entered details, creates the account, and logs them in."""
     if request.method == 'GET':
         return redirect('/login')
 
@@ -231,6 +234,7 @@ def create_login():
 
 
 def create_account(user_account):
+    """Creates a user account with a provided user. Logs that user in after account creation."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -251,6 +255,7 @@ def create_account(user_account):
 
 @app.route('/logout')
 def logout():
+    """Logs out the current logged-in user."""
     session['user'] = ['', '', '', 0]
     session['order'] = [0, 0, 0]
     return redirect('/home')
