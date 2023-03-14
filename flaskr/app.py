@@ -697,8 +697,6 @@ def customer_orders():
         temp_list = [name[0], row[2], row[3], row[4]]
         all_orders[row[0]].append(temp_list)
 
-    print(all_orders)
-
     db_manager.close()
 
     return render_template('customerOrderTracking.html', all_orders=all_orders, user=session.get('user'))
