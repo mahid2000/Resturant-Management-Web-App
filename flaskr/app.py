@@ -655,6 +655,7 @@ def manage_accounts_edit():
 
         return redirect('/manageAccounts')
 
+
 @app.route('/assign_table', methods=['POST'])
 def assign_table():
     waiter_id = request.form.get('waiter_id')
@@ -672,3 +673,32 @@ def assign_table():
     db_manager.close()
 
     return 'Table', tableNum, 'has been assigned to waiter', waiter_id
+
+
+@app.route('/customerOrders')
+def customer_orders():
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Gets all the rows from menu.
+    sql_connection.execute(
+        "SELECT orderID, itemID, qty, order_time, state FROM orderDetails WHERE customerID=? ORDER BY orderID ASC;",
+        (session['user'][0], ))
+    rows = sql_connection.fetchall()
+
+    all_orders = {}
+    for row in rows:
+        if row[0] not in all_orders:
+            all_orders[row[0]] = []
+        sql_connection.execute(
+            "SELECT name FROM menu WHERE itemID=?", (row[1],))
+        name = sql_connection.fetchone()
+        temp_list = [name[0], row[2], row[3], row[4]]
+        all_orders[row[0]].append(temp_list)
+
+    print(all_orders)
+
+    db_manager.close()
+
+    return render_template('customerOrderTracking.html', all_orders=all_orders, user=session.get('user'))
