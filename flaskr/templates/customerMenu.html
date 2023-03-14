@@ -5,48 +5,86 @@
 <!-- Menu page for customer side browsing -->
 
 <head>
-  <title>Customer Menu</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
-  <style>
-    body,
-    html {
-      height: 100%
-    }
+    <title>Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+    <style>
+        body,
+        html {
+            height: 100%
+        }
 
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: 'Courier New', monospace;
-    }
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Courier New', monospace;
+        }
 
-    .menu {
-      display: none
-    }
+        .menu {
+            display: none
+        }
 
-    .bgimg {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-image: ("customerMenuCover.jpg");
-      min-height: 90%;
-    }
-  </style>
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: ("customerMenuCover.jpg");
+            min-height: 90%;
+        }
+    </style>
 </head>
 
 <body>
 
-  <!-- Top navigation bar -->
+  <!-- Navbar (Sits on top) -->
   <div class="css-top css-hide-small">
     <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
-      <a href="#" class="css-bar-item css-button">HOME</a>
-      <a href="custMenu" class="css-bar-item css-button">MENU</a>
-      <a href="#about" class="css-bar-item css-button">ABOUT</a>
-      <a href="#myMap" class="css-bar-item css-button">CONTACT</a>
+        <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
+        <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
+
+        <!-- Additional buttons for no login credentials -->
+        {% if user[3] == 0 %}
+
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('fetch_login') }}" class="css-bar-item css-button">LOGIN</a>
+
+        <!-- Customer additional button -->
+        {% elif user[3] == 1 %}
+
+            <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
+            <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+        <!-- Waiter additional buttons -->
+        {% elif user[3] == 2 %}
+
+            <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
+
+            <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
+
+            <a href="{{ url_for('manage_accounts') }}" class="css-bar-item css-button">MANAGE ACCOUNTS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+        {% endif %}
     </div>
   </div>
 
@@ -119,30 +157,35 @@
         {% endif %}
         {% endfor %}
       </div>
-    </div>
 
-    <!-- Footer -->
-    <footer class="css-center css-black css-padding-48 css-xxlarge">
-      <p>Oaxaca Group</p>
-    </footer>
+      <!-- Footer -->
+      <footer class="css-center css-black css-padding-48 css-xxlarge">
+        <p><b>Allergens</b></p>
+        <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
+        <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
+        <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
+        <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
+        <p>---------------------------------------------</p>
+        <p>Oaxaca Group</p>
+      </footer>
 
-    <script>
-      // Tabbed Menu
-      function openMenu(evt, menuName) {
-        var i, x, tablinks;
-        x = document.getElementsByClassName("menu");
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "none";
+      <script>
+        // Tabbed Menu
+        function openMenu(evt, menuName) {
+          var i, x, tablinks;
+          x = document.getElementsByClassName("menu");
+          for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
+          }
+          document.getElementById(menuName).style.display = "block";
+          evt.currentTarget.firstElementChild.className += " css-blue";
         }
-        tablinks = document.getElementsByClassName("tablink");
-        for (i = 0; i < x.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" css-blue", "");
-        }
-        document.getElementById(menuName).style.display = "block";
-        evt.currentTarget.firstElementChild.className += " css-blue";
-      }
-      document.getElementById("myLink").click();
-    </script>
+        document.getElementById("myLink").click();
+      </script>
 
 </body>
 

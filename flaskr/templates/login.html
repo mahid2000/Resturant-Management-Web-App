@@ -1,42 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!-- Login page -->
+
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
 </head>
+
 <body>
-    <header>
-        <h1>Restaurant Name</h1>
-        <h2>Home</h2>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                </ul>
-            </nav>
-    </header>
-    <br>
-    <main>
-        <li><a href="{{ url_for('create_login') }}">Sign Up</a></li>
-        <form action="{{ url_for('login') }}" method="POST">
-            <label for="firstname">First name</label>
-            <input name="fname" type="text" id="firstname">
-            <br>
-            <label for="surname">Surname</label>
-            <input name="sname" type="text" id="surname">
-            <br>
-            <label for="password">Password</label>
-            <input name="pass" type="password" id="password" minlength="8" required></input>
-            <br>
-            {% if error %}
-                <h2>{{ error }}</h2>
-            {% endif %}
-            <br>
-            <input type="submit" value="Login">
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('custMenu') }}">MENU</a>
 
+        <!-- Waiter additional buttons -->
+        {% if user[3] == 2 %}
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
 
-        </form>
-    </main>
+        <!-- Kitchen staff additional buttons -->
+        {% elif user[3] == 3 %}
+        <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Manager additional buttons -->
+        {% elif user[3] == 4 %}
+        <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+
+        <!-- Logout button at the end -->
+        {% endif %}
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+
+    <!-- Header -->
+    <div class="main">
+        <div class="header">
+            <p>LOGIN</p>
+        </div>
+
+        <!-- Inserting login credentials -->
+        <div class="body" style="height: 500px">
+            <div class="addmenu-grid">
+                <div class="addmenu-grid-item">
+                    <p class="text-size-32px">LOGIN</p>
+
+                    <form action="{{ url_for('fetch_login') }}" method="POST">
+
+                        <input name="fname" type="text" id="firstname" placeholder="First Name...">
+
+                        <input name="sname" type="text" id="surname" placeholder="Last Name...">
+
+                        <!-- Decline credentials when passwords does not contains 8 characters  -->
+                        <input name="pass" type="password" id="password" minlength="8" required
+                            placeholder="Password...">
+
+                        {% if error %}
+                        <h2>{{ error }}</h2>
+                        {% endif %}
+
+                        <input style="margin-top: 74px " class="addmenu-submit" type="submit" value="Login">
+                    </form>
+                </div>
+
+                <!-- Creating new login credentials -->
+                <div class="addmenu-grid-item">
+                    <p class="text-size-32px">CREATE LOGIN</p>
+
+                    <form action="{{ url_for('create_login') }}" method="POST">
+
+                        <input type="text" name="firstName" placeholder="First Name..."><br>
+
+                        <input type="text" name="surname" placeholder="Last Name..."><br>
+
+                        <!-- Decline credentials when passwords does not contains 8 characters  -->
+                        <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
+
+                        <!-- Roles to login as : -->
+                        <div>
+                            <label for="role">Role:</label>
+                            <select name="role" id="role">
+                                <option value="1">Customer</option>
+                                <option value="2">Waiter</option>
+                                <option value="3">Kitchen</option>
+                                <option value="4">Manager</option>
+                            </select>
+                        </div><br>
+
+                        {% if error %}
+                        <h2>{{ error }}</h2>
+                        {% endif %}
+
+                        <!-- Create login button -->
+                        <input class="addmenu-submit" type="submit" value="Create Login">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
 </body>
+
 </html>

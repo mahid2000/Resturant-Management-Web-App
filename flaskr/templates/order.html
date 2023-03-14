@@ -1,48 +1,155 @@
 <!DOCTYPE html>
-<html lang = "en">
-	<head>
-		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
-		<title>Order</title>
-	</head>
-	<body>
-    <header>
-        <h1>Restaurant Name</h1>
-        <h2>Order</h2>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('menu') }}">Menu</a></li>
-                <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
-                <li><a href="{{ url_for('order') }}">Order</a></li>
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <br>
+<html>
+
+
+<!-- Order page -->
+
+<head>
+    <title>Order</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+    <style>
+        body,
+        html {
+            height: 100%
+        }
+
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Courier New', monospace;
+        }
+
+        .menu {
+            display: none
+        }
+
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: ("customerMenuCover.jpg");
+            min-height: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (Sits on top) -->
+    <div class="css-top css-hide-small">
+        <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
+            <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
+            <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
+
+            <!-- Additional buttons for no login credentials -->
+            {% if user[3] == 0 %}
+
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('fetch_login') }}" class="css-bar-item css-button">LOGIN</a>
+
+            <!-- Customer additional button -->
+            {% elif user[3] == 1 %}
+
+            <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
+            <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
+            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+
+            <!-- Waiter additional buttons -->
+            {% elif user[3] == 2 %}
+
+            <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+            <!-- Kitchen staff additional buttons -->
+            {% elif user[3] == 3 %}
+
+            <a href="{{ url_for('kitchen_orders') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+            <!-- Manager additional buttons -->
+            {% elif user[3] == 4 %}
+
+            <a href="{{ url_for('manage_accounts') }}" class="css-bar-item css-button">MANAGE ACCOUNTS</a>
+            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+            <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
+            <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Content -->
     <main>
-        <form action="{{ url_for('order') }}" method="POST">
-            <h3>Table Number:</h3>
-            <input type="number" name="tableNumber" min="1" max="100" value="0">
-            <table>
-                <tbody>
-                    {% for row in rows %}
-                        <tr>
-                            <td>
-                                <h2>{{ row[1] }}</h2>
-                                <p>£{{ row[2] }}</p>
-                                <p>{{ row[4] }}kcal</p>
-                                <p><b>{{ row[5] }}</b></p>
-                            </td>
-                            <td>
-                                <input type="number" name="{{ row[0] }}" min="0" max="10" value="0">
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <input type="submit" value="Finish Order">
-        </form>
+        <div class="css-container css-black css-padding-64 css-xxlarge" id="order">
+            <div class="css-content">
+
+                <!-- Header -->
+                <h1 class="css-center css-jumbo" style="margin-bottom:64px">ORDER</h1>
+
+                <div class="css-row css-center css-border css-border-dark-grey">
+                    <form action="{{ url_for('order') }}" method="POST">
+                        <h1>Table Number:</h1>
+                        <input type="number" name="tableNumber" min="1" max="100" value="0">
+                        <table>
+                            <tbody>
+                                <div class="css-container menu-container">
+                                    <div id="Main" class="css-container menu css-padding-32 css-white">
+                                        {% for food in foods %}
+                                        {% if food[3] == "Mains" %}
+                                        <h1><b>{{ food[1] }}</b> <span
+                                                class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span>
+                                        </h1>
+                                        <p class="css-text-grey">{{ food[4] }}kcal <span
+                                                class="css-left css-tag css-amber css-round">Allergens: {{
+                                                food[5] }}</span></p>
+                                        <hr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% for row in rows %}
+                                <tr>
+                                    <td>
+                                        <h2>{{ row[1] }}</h2>
+                                        <p>£{{ row[2] }}</p>
+                                        <p>{{ row[4] }}kcal</p>
+                                        <p><b>{{ row[5] }}</b></p>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="{{ row[0] }}" min="0" max="10" value="0">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <input type="submit" value="Finish Order">
+                    </form>
+                </div>
+            </div>
     </main>
-	</body>
+
+    <!-- Footer -->
+    <footer class="css-center css-black css-padding-48 css-xxlarge">
+        <p><b>Allergens</b></p>
+        <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
+        <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
+        <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
+        <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
+        <p>---------------------------------------------</p>
+        <p>Oaxaca Group</p>
+    </footer>
+
+    <!-- End content -->
+</body>
+
 </html>

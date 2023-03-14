@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS menu;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS orderDetails;
+DROP TABLE IF EXISTS tableAssignments;
 
 CREATE TABLE menu (
     itemID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +34,7 @@ CREATE TABLE orderDetails (
     customerID INTEGER NOT NULL,
     qty TINYINT NOT NULL,
     state TINYINT NOT NULL,
-    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    order_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (orderID) REFERENCES orders(orderID),
     FOREIGN KEY (itemID) REFERENCES menu(itemID),
     FOREIGN KEY (customerID) REFERENCES users(userID)
@@ -42,3 +43,9 @@ CREATE TABLE orderDetails (
 INSERT INTO users
     (first_name, last_name, password_hash, role)
     VALUES ('John', 'Smith', 'password', 4);
+
+CREATE TABLE tableAssignments (
+    waiter_id INTEGER PRIMARY KEY,
+    tableNum TINYINT NOT NULL,
+    FOREIGN KEY (tableNum) REFERENCES orders(tableNum)
+);
