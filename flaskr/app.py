@@ -205,10 +205,10 @@ def login(user_account):
 
         session['user'] = [user[0], user[1], user[2], user[4]]
 
-            if user[4] == 1:
-                return redirect('/menu')
-            else:
-                return redirect('/home')
+        if user[4] == 1:
+            return redirect('/menu')
+        else:
+            return redirect('/home')
 
     db_manager.close()
     raise TypeError("Invalid credentials")
@@ -253,10 +253,10 @@ def create_account(user_account):
 
     login(user_account)
 
-        if user[4] == 1:
-            return redirect('/menu')
-        else:
-            return redirect('/home')
+    if user[4] == 1:
+        return redirect('/menu')
+    else:
+        return redirect('/home')
 
 
 @app.route('/logout')
