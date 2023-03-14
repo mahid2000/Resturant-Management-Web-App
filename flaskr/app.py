@@ -95,7 +95,7 @@ def menu():
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
     if request.method == 'GET':
-        return render_template('addMenuItem.html')
+        return render_template('addMenuItem.html', user=session.get('user'))
     elif request.method == 'POST':
         # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
         db_manager = DBManager(app)
@@ -105,25 +105,25 @@ def add_menu_item():
         name = request.form['name']
         if not name:
             error = "Name cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         price = request.form['price']
         if not price:
             error = "Price cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
         elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
             error = "Price must be a valid decimal number eg. 12.34"
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         category = request.form['category']
 
         calories = request.form['calories']
         if not calories:
             error = "Calories cannot be left blank."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
         elif not calories.isdigit():
             error = "Calories must be a valid whole number."
-            return render_template('addMenuItem.html', error=error)
+            return render_template('addMenuItem.html', error=error, user=session.get('user'))
 
         # Changes the list of allergens to a string.
         allergensList = request.form.getlist('options')
@@ -172,14 +172,14 @@ def edit_menu_item():
 
         db_manager.close()
 
-        return redirect('/menu')
+        return redirect('/editMenuItem')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Renders the page to login."""
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', user=session.get('user'))
 
     elif request.method == 'POST':
         db_manager = DBManager(app)
@@ -188,17 +188,17 @@ def login():
         firstname = request.form['fname']
         if not firstname:
             error = "Enter first name."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         surname = request.form['sname']
         if not surname:
             error = "Enter surname."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         password = request.form['pass']
         if not password:
             error = "Enter password."
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
                                (firstname, surname))
@@ -206,7 +206,7 @@ def login():
         print(encryptedPass)
         if encryptedPass is None:
             error = "Invalid Credentials"
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, user=session.get('user'))
 
         decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
         if decPass == password:
@@ -224,13 +224,13 @@ def login():
 
         db_manager.close()
         error = "Invalid credentials"
-        return render_template('login.html', error=error)
+        return render_template('login.html', error=error, user=session.get('user'))
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
 def create_login():
     if request.method == 'GET':
-        return render_template('createLogin.html')
+        return redirect('/login')
     elif request.method == 'POST':
 
         db_manager = DBManager(app)
@@ -239,24 +239,24 @@ def create_login():
         firstName = request.form['firstName']
         if not firstName:
             error = "Please enter your first name."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         surname = request.form['surname']
         if not surname:
             error = "Please enter your surname."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         password = request.form['password']
         if not password:
             error = "Choose your password."
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         encPass = rsa.encrypt(password.encode(), publicKey)
 
         role = request.form['role']
         if not role:
             error = "what kind of user are you?"
-            return render_template('createLogin.html', error=error)
+            return render_template('createLogin.html', error=error, user=session.get('user'))
 
         sql_connection.execute("SELECT count(*) FROM users")
         count = sql_connection.fetchone()
@@ -307,7 +307,7 @@ def order():
 
         db_manager.close()
 
-        return render_template('order.html', rows=rows)
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
 
@@ -317,16 +317,18 @@ def order():
         table_number = int(request.form['tableNumber'])
 
         sql_connection.execute("INSERT INTO orders (tableNum, paid)"
-                                   " VALUES (?, ?)", (table_number, 0))
+                               " VALUES (?, ?)", (table_number, 0))
 
         db_manager.get_db().commit()
 
         last_row = sql_connection.lastrowid
 
-        sql_connection.execute("SELECT * FROM orders WHERE orderID=?", (last_row,))
+        sql_connection.execute(
+            "SELECT * FROM orders WHERE orderID=?", (last_row,))
         current_order = sql_connection.fetchone()
 
-        session['order'] = [current_order[0], current_order[1], current_order[2]]
+        session['order'] = [current_order[0],
+                            current_order[1], current_order[2]]
 
         for key, value in request.form.items():
 
@@ -354,12 +356,14 @@ def order_payment():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
+        sql_connection.execute(
+            "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
         orderRows = sql_connection.fetchall()
 
         menuRows = []
         for orderRow in orderRows:
-            sql_connection.execute("SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
+            sql_connection.execute(
+                "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
             menuRow = sql_connection.fetchone()
             menuRows.append(menuRow)
 
@@ -371,7 +375,7 @@ def order_payment():
             rows.append(row)
             totalPrice += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice, user=session.get('user'))
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -381,7 +385,7 @@ def order_payment():
 def order_conformation():
 
     if request.method == 'GET':
-        return render_template('orderConformation.html')
+        return render_template('orderConformation.html', user=session.get('user'))
     elif request.method == 'POST':
         return redirect('/home')
 
@@ -395,14 +399,15 @@ def kitchen_orders():
         sql_connection = db_manager.get_connection()
 
         # Gets all the rows from menu.
-        sql_connection.execute("SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+        sql_connection.execute("SELECT orderID, itemID, qty, ordertime FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
         for row in rows:
             if row[0] not in all_orders:
                 all_orders[row[0]] = []
-            sql_connection.execute("SELECT name FROM menu WHERE itemID=?", (row[1],))
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
             temp_list = [name[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
@@ -417,7 +422,8 @@ def kitchen_orders():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -505,7 +511,199 @@ def custMenu():
 
     db_manager.close()
 
-    return render_template('customerMenu.html', foods=foods)
+    return render_template('customerMenu.html', foods=foods, user=session.get('user'))
+
+
+@app.route('/about')
+def about():
+    """Render the about page."""
+    return render_template('about.html', user=session.get('user'))
+
+
+@app.route('/waiterOrders', methods=['GET', 'POST'])
+def waiter_order_confirm():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('waiterOrderConfirm.html', all_orders=all_orders, user=session.get('user'))
+
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=1 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
+def waiter_order_cancel():
+
+    if request.method == 'GET':
+        return redirect('/waiterOrders')
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=5 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrders')
+
+
+@app.route('/waiterOrdersDelivered', methods=['GET', 'POST'])
+def waiter_order_delivered():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        # Gets all the rows from menu.
+        sql_connection.execute(
+            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=2 ORDER BY orderID ASC;")
+        rows = sql_connection.fetchall()
+
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            tableNum = sql_connection.fetchone()
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            all_orders[row[0]].append(temp_list)
+
+        db_manager.close()
+
+        return render_template('waiterOrderDeliver.html', all_orders=all_orders)
+    elif request.method == 'POST':
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        orderID = request.form['orderID']
+
+        # Update the orderDetails table
+        sql_connection.execute(
+            "UPDATE orderDetails SET state=3 WHERE orderID=?", (orderID,))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/waiterOrdersDelivered')
+
+
+@app.route('/manageAccounts', methods=['GET', 'POST'])
+def manage_accounts():
+
+    if request.method == 'GET':
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute(
+            "SELECT userID, first_name, last_name, role FROM users")
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+
+    elif request.method == 'POST':
+
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute("SELECT userID, first_name, last_name, role"
+                               " FROM users WHERE first_name=? AND last_name=?;", (firstName, lastName))
+        rows = sql_connection.fetchall()
+
+        db_manager.close()
+
+        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+
+
+@app.route('/manageAccountsEdit', methods=['GET', 'POST'])
+def manage_accounts_edit():
+
+    if request.method == 'GET':
+        return redirect('/manageAccounts')
+    elif request.method == 'POST':
+
+        userID = request.form['userID']
+        role = request.form['role']
+
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+
+        sql_connection.execute(
+            "UPDATE users SET role=? WHERE userID=?", (role, userID))
+        db_manager.get_db().commit()
+
+        db_manager.close()
+
+        return redirect('/manageAccounts')
+
+@app.route('/assign_table', methods=['POST'])
+def assign_table():
+    waiter_id = request.form.get('waiter_id')
+    tableNum = request.form.get('tableNum')
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    result = sql_connection.fetchone()
+    if result:
+        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
+    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+    db_manager.get_db().commit()
+    db_manager.close()
+
+
+    return 'Table', tableNum, 'has been assigned to waiter', waiter_id
 
 
 @app.route('/calling', methods=['GET', 'POST'])
@@ -524,5 +722,3 @@ def callWaiter():
         print(rows)
         return render_template('calling.html', confirm=True, rows=rows)
     return render_template('calling.html', confirm=False)
-
-#def confirmAlert():
