@@ -27,7 +27,7 @@ class UserAccountModel:
     @staticmethod
     def validate_role(role):
         if role is not None:
-            if 4 <= role <= 0:
+            if 4 <= int(role) <= 0:
                 raise TypeError("Invalid role")
 
     @staticmethod
