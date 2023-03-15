@@ -222,7 +222,7 @@ def create_login():
             user_account = UserAccountModel(request.form['firstName'],
                                             request.form['surname'],
                                             request.form['password'],
-                                            request.form['role'])
+                                            1)
             try:
                 create_account(user_account)
             except TypeError as ex:

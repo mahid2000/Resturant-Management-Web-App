@@ -43,7 +43,7 @@
                         <h2>{{ error }}</h2>
                         {% endif %}
 
-                        <input style="margin-top: 74px " class="addmenu-submit" type="submit" value="Login">
+                        <input class="addmenu-submit" type="submit" value="Login">
                     </form>
                 </div>
 
@@ -59,17 +59,6 @@
 
                         <!-- Decline credentials when passwords does not contains 8 characters  -->
                         <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
-
-                        <!-- Roles to login as : -->
-                        <div>
-                            <label for="role">Role:</label>
-                            <select name="role" id="role">
-                                <option value="1">Customer</option>
-                                <option value="2">Waiter</option>
-                                <option value="3">Kitchen</option>
-                                <option value="4">Manager</option>
-                            </select>
-                        </div><br>
 
                         {% if error %}
                         <h2>{{ error }}</h2>
