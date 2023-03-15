@@ -13,28 +13,8 @@
     <div class="navbar">
         <a href="{{ url_for('home') }}">HOME</a>
         <a href="{{ url_for('custMenu') }}">MENU</a>
-
-        <!-- Waiter additional buttons -->
-        {% if user[3] == 2 %}
-        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
-        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
-        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
-
-        <!-- Kitchen staff additional buttons -->
-        {% elif user[3] == 3 %}
-        <a href="{{ url_for('kitchen_orders') }}">MANAGE ORDERS</a>
-        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
-        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
-
-        <!-- Manager additional buttons -->
-        {% elif user[3] == 4 %}
-        <a href="{{ url_for('manage_accounts') }}">MANAGE ACCOUNTS</a>
-        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
-        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
-
-        <!-- Logout button at the end -->
-        {% endif %}
-        <a href="{{ url_for('logout') }}">LOGOUT</a>
+        <a href="{{ url_for('about') }}">ABOUT</a>
+        <a href="{{ url_for('fetch_login') }}">LOGIN</a>
     </div>
 
     <!-- Header -->

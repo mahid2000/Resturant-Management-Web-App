@@ -111,7 +111,7 @@ def add_menu_item():
                                       request.form.getlist('options'))
             add_item(menu_item)
         except Exception as ex:
-            return render_template('addMenuItem.html', error=str(ex))
+            return render_template('addMenuItem.html', error=str(ex), user=session.get('user'))
 
         return redirect('/custMenu')
 
@@ -182,9 +182,9 @@ def fetch_login():
             try:
                 login(user_account)
             except TypeError as ex:
-                return render_template('login.html', error="Invalid credentials", user=session.get('user'))
+                return render_template('login.html', error="Invalid credentials")
         except TypeError as ex:
-            return render_template('login.html', error=str(ex), user=session.get('user'))
+            return render_template('login.html', error=str(ex))
         return redirect('/home')
 
 
@@ -343,7 +343,7 @@ def order_payment():
             rows.append(row)
             totalPrice += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice, user=session.get('user'))
+        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -353,7 +353,7 @@ def order_payment():
 def order_conformation():
 
     if request.method == 'GET':
-        return render_template('orderConformation.html', user=session.get('user'))
+        return render_template('orderConformation.html')
     elif request.method == 'POST':
         return redirect('/home')
 
@@ -383,7 +383,7 @@ def kitchen_orders():
 
         db_manager.close()
 
-        return render_template('kitchenOrders.html', all_orders=all_orders, user=session.get('user'))
+        return render_template('kitchenOrders.html', all_orders=all_orders)
     elif request.method == 'POST':
 
         orderID = request.form['orderID']
@@ -517,7 +517,7 @@ def waiter_order_confirm():
 
         db_manager.close()
 
-        return render_template('waiterOrderConfirm.html', all_orders=all_orders, user=session.get('user'))
+        return render_template('waiterOrderConfirm.html', all_orders=all_orders)
 
     elif request.method == 'POST':
         db_manager = DBManager(app)
@@ -584,7 +584,7 @@ def waiter_order_delivered():
 
         db_manager.close()
 
-        return render_template('waiterOrderDeliver.html', all_orders=all_orders, user=session.get('user'))
+        return render_template('waiterOrderDeliver.html', all_orders=all_orders)
     elif request.method == 'POST':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -615,7 +615,7 @@ def manage_accounts():
 
         db_manager.close()
 
-        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+        return render_template('managerAccounts.html', rows=rows)
 
     elif request.method == 'POST':
 
@@ -631,7 +631,7 @@ def manage_accounts():
 
         db_manager.close()
 
-        return render_template('managerAccounts.html', rows=rows, user=session.get('user'))
+        return render_template('managerAccounts.html', rows=rows)
 
 
 @app.route('/manageAccountsEdit', methods=['GET', 'POST'])
@@ -699,4 +699,4 @@ def customer_orders():
 
     db_manager.close()
 
-    return render_template('customerOrderTracking.html', all_orders=all_orders, user=session.get('user'))
+    return render_template('customerOrderTracking.html', all_orders=all_orders)
