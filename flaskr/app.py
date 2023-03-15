@@ -182,9 +182,9 @@ def fetch_login():
             try:
                 login(user_account)
             except TypeError as ex:
-                return render_template('login.html', error="Invalid credentials")
+                return render_template('login.html', loginError="Invalid credentials")
         except TypeError as ex:
-            return render_template('login.html', error=str(ex))
+            return render_template('login.html', loginError=str(ex))
         return redirect('/home')
 
 
@@ -226,9 +226,9 @@ def create_login():
             try:
                 create_account(user_account)
             except TypeError as ex:
-                return render_template('login.html', error="Invalid credentials", user=session.get('user'))
+                return render_template('login.html', createError="Invalid credentials", user=session.get('user'))
         except TypeError as ex:
-            return render_template('login.html', error=str(ex), user=session.get('user'))
+            return render_template('login.html', createError=str(ex), user=session.get('user'))
 
         return redirect('/home')
 

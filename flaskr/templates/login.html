@@ -39,8 +39,8 @@
                         <input name="pass" type="password" id="password" minlength="8" required
                             placeholder="Password...">
 
-                        {% if error %}
-                        <h2>{{ error }}</h2>
+                        {% if loginError %}
+                        <h2>{{ loginError }}</h2>
                         {% endif %}
 
                         <input class="addmenu-submit" type="submit" value="Login">
@@ -60,8 +60,8 @@
                         <!-- Decline credentials when passwords does not contains 8 characters  -->
                         <input type="password" name="password" minlength="8" required placeholder="Password..."><br>
 
-                        {% if error %}
-                        <h2>{{ error }}</h2>
+                        {% if createError %}
+                        <h2>{{ createError }}</h2>
                         {% endif %}
 
                         <!-- Create login button -->
