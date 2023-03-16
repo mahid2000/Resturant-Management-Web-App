@@ -45,12 +45,13 @@ def index():
 
 @app.route('/home')
 def home():
-    #Render the home page.
+    """Render the home page."""
     return render_template('home.html', user=session.get('user'))
 
 
 @app.route('/call', methods=['GET', 'POST'])
 def call():
+    """Assigns a waiter to a customer table, should they need help."""
     if request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -263,6 +264,7 @@ def logout():
 
 @app.route('/order', methods=['GET', 'POST'])
 def order():
+    """Takes the details of a customer's order."""
 
     if request.method == 'GET':
 
@@ -318,6 +320,7 @@ def order():
 
 @app.route('/orderPayment', methods=['GET', 'POST'])
 def order_payment():
+    """Summarises the customer's order, provides a total cost, and requests payment details."""
 
     if request.method == 'GET':
 
@@ -351,6 +354,7 @@ def order_payment():
 
 @app.route('/orderConformation', methods=['GET', 'POST'])
 def order_conformation():
+    """Tells the customer their order has been confirmed."""
 
     if request.method == 'GET':
         return render_template('orderConformation.html')
@@ -360,6 +364,7 @@ def order_conformation():
 
 @app.route('/kitchenOrders', methods=['GET', 'POST'])
 def kitchen_orders():
+    """Displays the orders that kitchen staff need to work on."""
 
     if request.method == 'GET':
 
@@ -400,6 +405,7 @@ def kitchen_orders():
         return redirect('/kitchenOrders')
 
 
+# TODO: I'm fairly sure this never gets used, and also wouldn't work if it was...
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
     if request.method == 'GET':
@@ -407,7 +413,7 @@ def update_order_status():
         sql_connection = db_manager.get_connection()
         sql_connection.execute("SELECT state FROM orderDetails;")
 
-    # Update the order status in the database
+        # Update the order status in the database
         order_state = 0
         sql_connection.execute("UPDATE orderDetails SET (state)"
                                " WHERE (?)", order_state)
@@ -417,6 +423,7 @@ def update_order_status():
 
 
 def filter_menu():
+    """Filters the menu by allergens, price, or calories."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     # Initial SQL command Built up over filtering
@@ -472,6 +479,7 @@ def filter_menu():
 
 @app.route('/custMenu')
 def cust_menu():
+    """Displays the menu."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -491,6 +499,7 @@ def about():
 
 @app.route('/waiterOrders', methods=['GET', 'POST'])
 def waiter_order_confirm():
+    """Shows the waiters the orders taken, and lets them confirm them."""
 
     if request.method == 'GET':
 
@@ -537,6 +546,7 @@ def waiter_order_confirm():
 
 @app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
 def waiter_order_cancel():
+    """Cancels the selected order."""
 
     if request.method == 'GET':
         return redirect('/waiterOrders')
@@ -558,6 +568,7 @@ def waiter_order_cancel():
 
 @app.route('/waiterOrdersDelivered', methods=['GET', 'POST'])
 def waiter_order_delivered():
+    """Shows the orders to be delivered, and allows them to be marked as such."""
 
     if request.method == 'GET':
 
@@ -603,6 +614,8 @@ def waiter_order_delivered():
 
 @app.route('/manageAccounts', methods=['GET', 'POST'])
 def manage_accounts():
+    """Managers can change the admin level of accounts here to hire or fire kitchen staff, waiters, and managers. This
+    displays all accounts and their current privilege level."""
 
     if request.method == 'GET':
 
@@ -636,6 +649,7 @@ def manage_accounts():
 
 @app.route('/manageAccountsEdit', methods=['GET', 'POST'])
 def manage_accounts_edit():
+    """Allows managers to edit the admin level of an account."""
 
     if request.method == 'GET':
         return redirect('/manageAccounts')
@@ -656,6 +670,7 @@ def manage_accounts_edit():
         return redirect('/manageAccounts')
 
 
+# TODO: I don't think this method/page exists. This method might be able to be deleted.
 @app.route('/assign_table', methods=['POST'])
 def assign_table():
     waiter_id = request.form.get('waiter_id')
@@ -677,6 +692,7 @@ def assign_table():
 
 @app.route('/customerOrders')
 def customer_orders():
+    """Shows a customer the details of their orders, along with their current statuses."""
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
