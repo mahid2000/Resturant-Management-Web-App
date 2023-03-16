@@ -61,39 +61,22 @@
                 <!-- Header -->
                 <h1 class="css-center css-jumbo" style="margin-bottom:64px">ORDER</h1>
 
-                <div class="css-row css-center css-border css-border-dark-grey">
+                <div class="css-row css-border css-border-black css-center">
                     <form action="{{ url_for('order') }}" method="POST">
-                        <h1>Table Number:</h1>
+                        <h1><span class="css-center ">Table Number :</span></h1>
                         <input type="number" name="tableNumber" min="1" max="100" value="0">
+                        </form>
+                    </div>
                         <table>
                             <tbody>
-                                <div class="css-container menu-container">
-                                    <div id="Main" class="css-container menu css-padding-32 css-white">
-                                        {% for food in foods %}
-                                        {% if food[3] == "Mains" %}
-                                        <h1><b>{{ food[1] }}</b> <span
-                                                class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span>
-                                        </h1>
-                                        <p class="css-text-grey">{{ food[4] }}kcal <span
-                                                class="css-left css-tag css-amber css-round">Allergens: {{
-                                                food[5] }}</span></p>
-                                        <hr>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
                                 {% for row in rows %}
-                                <tr>
-                                    <td>
-                                        <h2>{{ row[1] }}</h2>
-                                        <p>£{{ row[2] }}</p>
-                                        <p>{{ row[4] }}kcal</p>
-                                        <p><b>{{ row[5] }}</b></p>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="{{ row[0] }}" min="0" max="10" value="0">
-                                    </td>
-                                </tr>
+                                <h1>{{ row[1] }}<span class="css-right css-tag css-dark-grey css-round">£{{ row[2] }}</span></h1>
+                                <p><span class="css-center css-tag css-dark-grey css-round">{{ row[4] }}kcal</span></p>
+                                <p><span class="css-left css-tag css-amber css-round">Allergens: {{ row[5] }}</span><b></b><span class="css-right css-tag">
+                                    <input type="number" name="{{ row[0] }}" min="0" max="10" value="0"></span><br></p>
+
+                                <br>
+
                                 {% endfor %}
                             </tbody>
                         </table>
