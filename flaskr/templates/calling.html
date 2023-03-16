@@ -23,16 +23,18 @@
     </header>
     <br>
     <main>
-
-
-        <p>-</p>
-        <h1>Your Waiter Today Is ...</h1>
-        {% for row in rows %}
-        <h1>{{ row[0] }}</h1>
-        <h1>{{ row[1] }}</h1>
-        <p>-</p>
-        {% endfor %}
-
+{% if not confirm %}
+             <form action ="calling" method="POST">
+                <p>Please add your table Number: </p>
+                <input type="number" name="tableNum" min="1" max="100" value="0">
+                <input onclick="callWaiter()" type="submit" value="Call">
+            </form>
+        {% else %}
+            <p>-</p>
+            <h1>Your Waiter Today Is </h1>
+            <h1>{{ row[0] }}</h1>
+            <p>-</p>
+        {% endif %}
     </main>
 	</body>
 </html>

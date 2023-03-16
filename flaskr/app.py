@@ -700,3 +700,21 @@ def customer_orders():
     db_manager.close()
 
     return render_template('customerOrderTracking.html', all_orders=all_orders)
+
+
+@app.route('/calling', methods=['GET', 'POST'])
+def callWaiter():
+    if request.method == 'POST':
+        table = request.form['tableNum']
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT first_name FROM users"
+                               + " WHERE  role = 2"
+                               + " ORDER BY RANDOM()"
+                               + "  LIMIT 1;")
+        rows = sql_connection.fetchall()
+        db_manager.close()
+        row = rows[0]
+        print(row)
+        return render_template('calling.html', confirm=True, row=row)
+    return render_template('calling.html', confirm=False)
