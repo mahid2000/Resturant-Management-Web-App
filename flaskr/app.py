@@ -152,12 +152,12 @@ def edit_menu_item():
 
     elif request.method == 'POST':
 
-        itemID = request.form['itemID']
+        item_id = request.form['itemID']
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (itemID, ))
+        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (item_id, ))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -326,24 +326,24 @@ def order_payment():
 
         sql_connection.execute(
             "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
-        orderRows = sql_connection.fetchall()
+        order_rows = sql_connection.fetchall()
 
-        menuRows = []
-        for orderRow in orderRows:
+        menu_rows = []
+        for orderRow in order_rows:
             sql_connection.execute(
                 "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
-            menuRow = sql_connection.fetchone()
-            menuRows.append(menuRow)
+            menu_row= sql_connection.fetchone()
+            menu_rows.append(menu_row)
 
         rows = []
-        totalPrice = 0
-        for i in range(0, len(menuRows)):
-            price = menuRows[i][1] * orderRows[i][1]
-            row = [menuRows[i][0], orderRows[i][1], price]
+        total_price = 0
+        for i in range(0, len(menu_rows)):
+            price = menu_rows[i][1] * order_rows[i][1]
+            row = [menu_rows[i][0], order_rows[i][1], price]
             rows.append(row)
-            totalPrice += price
+            total_price += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+        return render_template('orderPayment.html', rows=rows, totalPrice=total_price)
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -386,13 +386,13 @@ def kitchen_orders():
         return render_template('kitchenOrders.html', all_orders=all_orders)
     elif request.method == 'POST':
 
-        orderID = request.form['orderID']
+        order_id = request.form['orderID']
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute(
-            "UPDATE orderDetails SET state=2 WHERE orderID=?", (orderID,))
+            "UPDATE orderDetails SET state=2 WHERE orderID=?", (order_id,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -471,7 +471,7 @@ def filter_menu():
 
 
 @app.route('/custMenu')
-def custMenu():
+def cust_menu():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -511,8 +511,8 @@ def waiter_order_confirm():
             name = sql_connection.fetchone()
             sql_connection.execute(
                 "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
-            tableNum = sql_connection.fetchone()
-            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            table_num = sql_connection.fetchone()
+            temp_list = [name[0], table_num[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
@@ -523,11 +523,11 @@ def waiter_order_confirm():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        orderID = request.form['orderID']
+        order_id = request.form['orderID']
 
         # Update the orderDetails table
         sql_connection.execute(
-            "UPDATE orderDetails SET state=1 WHERE orderID=?", (orderID,))
+            "UPDATE orderDetails SET state=1 WHERE orderID=?", (order_id,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -544,11 +544,11 @@ def waiter_order_cancel():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        orderID = request.form['orderID']
+        order_id = request.form['orderID']
 
         # Update the orderDetails table
         sql_connection.execute(
-            "UPDATE orderDetails SET state=5 WHERE orderID=?", (orderID,))
+            "UPDATE orderDetails SET state=5 WHERE orderID=?", (order_id,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -578,8 +578,8 @@ def waiter_order_delivered():
             name = sql_connection.fetchone()
             sql_connection.execute(
                 "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
-            tableNum = sql_connection.fetchone()
-            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            table_num = sql_connection.fetchone()
+            temp_list = [name[0], table_num[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
@@ -589,11 +589,11 @@ def waiter_order_delivered():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        orderID = request.form['orderID']
+        order_id = request.form['orderID']
 
         # Update the orderDetails table
         sql_connection.execute(
-            "UPDATE orderDetails SET state=3 WHERE orderID=?", (orderID,))
+            "UPDATE orderDetails SET state=3 WHERE orderID=?", (order_id,))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -619,14 +619,14 @@ def manage_accounts():
 
     elif request.method == 'POST':
 
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
+        first_name = request.form['firstName']
+        last_name = request.form['lastName']
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute("SELECT userID, first_name, last_name, role"
-                               " FROM users WHERE first_name=? AND last_name=?;", (firstName, lastName))
+                               " FROM users WHERE first_name=? AND last_name=?;", (first_name, last_name))
         rows = sql_connection.fetchall()
 
         db_manager.close()
@@ -641,14 +641,14 @@ def manage_accounts_edit():
         return redirect('/manageAccounts')
     elif request.method == 'POST':
 
-        userID = request.form['userID']
+        user_id = request.form['userID']
         role = request.form['role']
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute(
-            "UPDATE users SET role=? WHERE userID=?", (role, userID))
+            "UPDATE users SET role=? WHERE userID=?", (role, user_id))
         db_manager.get_db().commit()
 
         db_manager.close()
@@ -659,20 +659,20 @@ def manage_accounts_edit():
 @app.route('/assign_table', methods=['POST'])
 def assign_table():
     waiter_id = request.form.get('waiter_id')
-    tableNum = request.form.get('tableNum')
+    table_num = request.form.get('tableNum')
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (table_num,))
     result = sql_connection.fetchone()
     if result:
-        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
-    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+        return 'Table', table_num, 'is already assigned to waiter', (result[0])
+    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (table_num, waiter_id))
     db_manager.get_db().commit()
     db_manager.close()
 
-    return 'Table', tableNum, 'has been assigned to waiter', waiter_id
+    return 'Table', table_num, 'has been assigned to waiter', waiter_id
 
 
 @app.route('/customerOrders')
