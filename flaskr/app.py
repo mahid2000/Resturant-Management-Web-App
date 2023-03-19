@@ -72,26 +72,12 @@ def call():
         return render_template('calling.html', rows=rows)
 
 
-@app.route('/menu', methods=['GET', 'POST'])
+@app.route('/menuFilter', methods=['GET', 'POST'])
 def menu():
-    """Render the menu page. Get menu items from the database."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Gets all the rows from menu or apply the filter if made.
-    if not request.form:
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-    else:
-        if request.method == 'GET':
-            return render_template('menu.html')
-        elif request.method == 'POST':
-            rows = filter_menu()
-
-    db_manager.close()
-
-    # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows, user=session.get('user'))
+    """Filters the menu page. Get menu items from the database."""
+    if request.method == 'POST':
+        rows = filter_menu()
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
@@ -338,7 +324,7 @@ def order_payment():
         rows = []
         totalPrice = 0
         for i in range(0, len(menuRows)):
-            price = menuRows[i][1] * orderRows[i][1]
+            price = menuRows[i][1] * int(orderRows[i][1])
             row = [menuRows[i][0], orderRows[i][1], price]
             rows.append(row)
             totalPrice += price
