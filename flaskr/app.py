@@ -116,7 +116,7 @@ def add_item(menu_item):
     db_manager.get_db().commit()
     db_manager.close()
 
-    return redirect('/menu')
+    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
