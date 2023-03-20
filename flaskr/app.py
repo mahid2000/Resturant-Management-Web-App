@@ -79,6 +79,7 @@ def menu():
 
     if not request.form:  # if the filter is not applied
         rows = get_menu()
+
     else:  # if the filter is applied
         if request.method == 'GET':
             return render_template('menu.html')
@@ -276,54 +277,64 @@ def order():
 
     if request.method == 'GET':
 
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        # Gets all the rows from menu.
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-
-        db_manager.close()
-
+        rows = get_menu()
         return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
 
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
         table_number = int(request.form['tableNumber'])
+        setup_order(table_number)
 
-        sql_connection.execute("INSERT INTO orders (tableNum, paid)"
-                               " VALUES (?, ?)", (table_number, 0))
-
-        db_manager.get_db().commit()
-
-        last_row = sql_connection.lastrowid
-
-        sql_connection.execute(
-            "SELECT * FROM orders WHERE orderID=?", (last_row,))
-        current_order = sql_connection.fetchone()
-
-        session['order'] = [current_order[0],
-                            current_order[1], current_order[2]]
-
-        for key, value in request.form.items():
-
-            if key != 'tableNumber':
-
-                if value != '0':
-
-                    sql_connection.execute("INSERT INTO orderDetails "
-                                           "(orderID, itemID, customerID, qty, state, order_time) "
-                                           "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-                                           (session['order'][0], key, session['user'][0], value, 0))
-
-                    db_manager.get_db().commit()
-
-        db_manager.close()
+        take_order()
 
         return redirect('/orderPayment')
+
+
+def setup_order(table_num):
+    """Insert the table number into the database, then set an order session using the ID of the order."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Insert the table number, and the unpaid state into orders.
+    sql_connection.execute("INSERT INTO orders (tableNum, paid)"
+                           " VALUES (?, ?)", (table_num, 0))
+    db_manager.get_db().commit()
+
+    # The database autoincrements IDs.
+    # Fetch the ID of the order just inserted.
+    latest_order = sql_connection.lastrowid
+
+    sql_connection.execute("SELECT * FROM orders WHERE orderID=?", (latest_order,))
+    current_order = sql_connection.fetchone()
+
+    session['order'] = [current_order[0],  # ID
+                        current_order[1],  # table number
+                        current_order[2]]  # paid/unpaid boolean
+
+    db_manager.close()
+
+
+def take_order():
+    """From the HTML order form, insert every item with a quantity > 0 into the database for the order in the current
+    session."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    for key, value in request.form.items():
+        # Ignore the table number of the form, we only care about menu items here.
+        if key != 'tableNumber':
+            # A valid quantity for each item is greater than 0.
+            if value != '0':
+                sql_connection.execute("INSERT INTO orderDetails "
+                                       "(orderID, itemID, customerID, qty, state, order_time) "
+                                       "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                                       (session['order'][0], key, session['user'][0], value, 0))
+
+                db_manager.get_db().commit()
+
+    db_manager.close()
 
 
 @app.route('/orderPayment', methods=['GET', 'POST'])
