@@ -668,6 +668,7 @@ def assign_table(tableNum, waiter_id):
         sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, result[0], 1))
     else:
         sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, waiter_id, 1))
+        print(tableNum, waiter_id)
     db_manager.get_db().commit()
     db_manager.close()
 
@@ -717,8 +718,9 @@ def callWaiter():
                                + " ORDER BY RANDOM()"
                                + "  LIMIT 1;")
         waiterName = sql_connection.fetchone()
-        waiter_name = waiterName[0]
+        waiter_name = waiterName
         db_manager.close()
+        print(table, waiter_id)
         assign_table(table, waiter_id)
         return render_template('calling.html', confirm=True, row=waiter_name)
     return render_template('calling.html', confirm=False)
@@ -726,10 +728,22 @@ def callWaiter():
 
 @app.route('/called', methods=['GET', 'POST'])
 def callingConfirm():
+    rows = []
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    sql_connection.execute("SELECT * FROM tableAssignments WHERE waiter_id=?;",
+                           (session['user'][0], ))
+    rows = sql_connection.fetchall()
+    db_manager.close()
+    print(rows)
+    return render_template('waiterCalled.html', rows=rows)
+
+
+def ansCall(waiter_id, tableNum):
+    print(waiter_id, tableNum)
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     sql_connection.execute(
-        "SELECT tableNum FROM tableAssignments WHERE waiter_id=? AND called = 1;",
-        (session['user'][0],))
-    rows = sql_connection.fetchall()
-    return render_template('waiterCalled.html', rows=rows)
+        "DELETE FROM tableAssignments WHERE waiter_id=? AND tableNum=?;",f
+        (waiter_id, tableNum))
+    db_manager.close()

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
-    <title>Manage Orders</title>
+    <title>Calling Tables</title>
 </head>
 
 <body>
@@ -30,12 +30,10 @@
         <!-- Content -->
         <div class="body">
             {% for row in rows %}
-                <h2>{{ row[1] }}</h2>
-                <p>£{{ row[2] }}</p>
-                <p>{{ row[3] }}</p>
-                <p><b>{{ row[4] }}kcal</b></p>
-                <p>{{ row[5] }}</p>
-                <p>-</p>
+                <p>Table </p>
+                <p>{{ row[1] }}</p>
+                <p> Is calling</p>
+                <input onclick="ansCall(row[0], row[1])" type="submit" value="Answer">
             {% endfor %}
         </div>
     </div>
