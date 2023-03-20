@@ -1,120 +1,142 @@
 <!DOCTYPE html>
 <html>
 
-
 <!-- Order page -->
 
-<head>
-    <title>Order</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
-    <style>
-        body,
-        html {
-            height: 100%
-        }
+    <head>
+        <title>Order</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    </head>
 
-        body,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Courier New', monospace;
-        }
-
-        .menu {
-            display: none
-        }
-
-        .bgimg {
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-image: ("customerMenuCover.jpg");
-            min-height: 90%;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Navbar (Sits on top) -->
-    <div class="css-top css-hide-small">
-        <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
-            <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
-            <a href="{{ url_for('cust_menu') }}" class="css-bar-item css-button">MENU</a>
-            <a href="{{ url_for('call') }}" class="css-bar-item css-button">CALL WAITER</a>
-            <a href="{{ url_for('order') }}" class="css-bar-item css-button">ORDER</a>
-            <a href="{{ url_for('customer_orders') }}" class="css-bar-item css-button">MY ORDERS</a>
-            <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
-            <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
+    <body>
+        <!-- Navbar (Sits on top) -->
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('cust_menu') }}">MENU</a>
+            <a href="{{ url_for('call') }}">CALL WAITER</a>
+            <a href="{{ url_for('order') }}">ORDER</a>
+            <a href="{{ url_for('customer_orders') }}">MY ORDERS</a>
+            <a href="{{ url_for('about') }}">ABOUT</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
         </div>
-    </div>
 
-    <!-- Content -->
-    <main>
-        <div class="css-container css-black css-padding-64 css-xxlarge" id="order">
-            <div class="css-content">
-
-                <!-- Header -->
-                <h1 class="css-center css-jumbo" style="margin-bottom:64px">ORDER</h1>
-
-                <div class="css-row css-center css-border css-border-dark-grey">
+        <!-- Content -->
+        <div class="main">
+            <div class="header">
+                <p>ORDER</p>
+            </div>
+            <div style="background-color: white; padding: 10px;">
+                <form action="{{ url_for('menu') }}" method="POST">
+                    <div class="addmenu-grid">
+                        <div class="addmenu-grid-item">
+                            <p style="font-weight: bold; font-size: 16px; text-align: center">Allergens</p>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="Ce">Celery</label>
+                                <label><input type="checkbox" name="options" value="Cr">Crustaceans</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="E">Egg</label>
+                                <label><input type="checkbox" name="options" value="F">Fish</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="G">Gluten</label>
+                                <label><input type="checkbox" name="options" value="L">Lupin</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="Mi">Milk</label>
+                                <label><input type="checkbox" name="options" value="Mo">Molluscs</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="Mu">Mustard</label>
+                                <label><input type="checkbox" name="options" value="N">Nuts</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="P">Peanuts</label>
+                                <label><input type="checkbox" name="options" value="Se">Sesame Seeds</label>
+                            </div>
+                            <br>
+                            <div class="addmenu-allergens" style="margin-top: 12px">
+                                <label><input type="checkbox" name="options" value="Su">Sulphur Dioxide</label>
+                                <label><input type="checkbox" name="options" value="S">Soya</label>
+                            </div>
+                        </div>
+                        <div class="addmenu-grid-item">
+                            <div>
+                                <label><b>Price:</b></label>
+                                <input type="text" name="Price_Min" placeholder="Min...">
+                                <input type="text" name="Price_Max" placeholder="Max...">
+                                <label><b>Calories:</b></label>
+                                <input type="text" name="Calories_Min" placeholder="Min...">
+                                <input type="text" name="Calories_Max" placeholder="Max...">
+                                <label><b>Sort By:</b></label>
+                                <select name="Sort" id="Sort">
+                                    <option>Select</option>>
+                                    <option value="HPrice">Highest Price</option>
+                                    <option value="LPrice">Lowest Price</option>
+                                    <option value="HCalorie">Highest Calorie</option>
+                                    <option value="LCalorie">Lowest Calorie</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="addmenu-submit" onclick="filter_menu()" type="submit" value="Filter">
+                </form>
+            </div>
+            <div class="body">
+                <div class="order-grid">
                     <form action="{{ url_for('order') }}" method="POST">
-                        <h1>Table Number:</h1>
-                        <input type="number" name="tableNumber" min="1" max="100" value="0">
-                        <table>
-                            <tbody>
-                                <div class="css-container menu-container">
-                                    <div id="Main" class="css-container menu css-padding-32 css-white">
-                                        {% for food in foods %}
-                                        {% if food[3] == "Mains" %}
-                                        <h1><b>{{ food[1] }}</b> <span
-                                                class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span>
-                                        </h1>
-                                        <p class="css-text-grey">{{ food[4] }}kcal <span
-                                                class="css-left css-tag css-amber css-round">Allergens: {{
-                                                food[5] }}</span></p>
-                                        <hr>
-                                        {% endif %}
-                                        {% endfor %}
+                        <div class="order-table-grid" style="display: inline-block">
+                            <p class="text-size-32px" style="font-weight: bold">
+                                Table Number :
+                                <input style="width: 50px; height: 50px; font-size: 10px" type="number" name="tableNumber" min="1" max="100" value="0">
+                            </p>
+                        </div>
+                        {% for row in rows %}
+                            <div class="order-grid-items">
+                                <div class="order-name-box">
+                                    <p class="name-text">{{ row[1] }}</p>
+                                </div>
+                                <div class="order-price-box">
+                                    <div class="order-price-box-left">
+                                        <p class="price-text">£{{ row[2] }}</p>
+                                    </div>
+                                    <div class="order-price-box-right">
+                                        <input class="number" type="number" name="{{ row[0] }}" min="0" max="10" value="0"></p>
                                     </div>
                                 </div>
-                                {% for row in rows %}
-                                <tr>
-                                    <td>
-                                        <h2>{{ row[1] }}</h2>
-                                        <p>£{{ row[2] }}</p>
-                                        <p>{{ row[4] }}kcal</p>
-                                        <p><b>{{ row[5] }}</b></p>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="{{ row[0] }}" min="0" max="10" value="0">
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <input type="submit" value="Finish Order">
+                                <div class="order-calories-box">
+                                    <p class="calories-text">{{ row[4] }}kcal</p>
+                                </div>
+                                <div class="order-allergens-box">
+                                    {% if row[5] != "" %}
+                                        <p class="allergens-text">Allergens: {{ row[5] }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <input type="submit" value="Submit Order" class="addmenu-submit">
                     </form>
                 </div>
             </div>
-    </main>
+        </div>
 
-    <!-- Footer -->
-    <footer class="css-center css-black css-padding-48 css-xxlarge">
-        <p><b>Allergens</b></p>
-        <p><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
-        <p><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
-        <p><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
-        <p><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
-        <p>---------------------------------------------</p>
-        <p>Oaxaca Group</p>
-    </footer>
+        <!-- Footer -->
+        <div class="footer">
+            <p><b>Allergens</b></p>
+            <p class="text-size-16px"><b>Ce</b>: Celery / <b>Cr</b>: Crustaceans / <b>E</b>: Egg / <b>F</b>: Fish</p>
+            <p class="text-size-16px"><b>G</b>: Cereals Containing Gluten / <b>L</b>: Lupin / <b>Mi</b>: Milk / <b>Mo</b>: Molluscs</p>
+            <p class="text-size-16px"><b>Mu</b>: Mustard / <b>N</b>: Nuts / <b>P</b>: Peanuts / <b>Se</b>: Sesame Seeds</p>
+            <p class="text-size-16px"><b>Su</b>: Sulphur Dioxide / <b>S</b>: Soya</p>
+            <hr>
+            <p>Oaxaca Group</p>
+        </div>
 
-    <!-- End content -->
-</body>
-
+    </body>
 </html>

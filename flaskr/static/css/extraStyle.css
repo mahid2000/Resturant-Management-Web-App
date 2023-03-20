@@ -301,3 +301,86 @@ body {
 .summary-table {
   width: 100%;
 }
+
+/* CSS for the order.html page */
+.order-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  grid-gap: 10px;
+}
+
+.order-grid-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 10px;
+  background-color: #9e9e9e;
+  padding: 10px;
+  border-radius: 10px;
+  border: 5px #333333;
+  margin: 10px;
+}
+
+.order-name-box {
+  text-align: left;
+}
+
+.order-price-box {
+  text-align: right;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.order-calories-box {
+  text-align: left;
+}
+
+.order-allergens-box {
+  text-align: right;
+}
+
+.name-text {
+  font-size: 32px;
+  text-align: left;
+  font-weight: bold;
+  padding: 10px;
+  margin: 0; !important;
+}
+
+.price-text {
+  font-size: 24px;
+  font-weight: bold;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 0; !important;
+}
+
+.calories-text {
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #9e9e9e;
+  padding: 10px;
+  width: 150px;
+  border-radius: 10px;
+  margin: 0; !important;
+}
+
+.allergens-text {
+  font-size: 24px;
+  font-weight: bold;
+  background-color: goldenrod;
+  padding: 10px;
+  width: 200px;
+  border-radius: 10px;
+  text-align: right;
+  margin: 0; !important;
+}
+
+.number {
+  width: 100%;
+  height: 100%;
+  margin: 2px;
+  border-radius: 10px;
+}

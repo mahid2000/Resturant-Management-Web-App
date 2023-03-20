@@ -73,21 +73,12 @@ def call():
         return render_template('calling.html', rows=rows)
 
 
-@app.route('/menu', methods=['GET', 'POST'])
+@app.route('/menuFilter', methods=['GET', 'POST'])
 def menu():
-    """Render the menu page. Get menu items from the database."""
-
-    if not request.form:  # if the filter is not applied
-        rows = get_menu()
-
-    else:  # if the filter is applied
-        if request.method == 'GET':
-            return render_template('menu.html')
-        elif request.method == 'POST':
-            rows = filter_menu()
-
-    # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows, user=session.get('user'))
+    """Filters the menu page. Get menu items from the database."""
+    if request.method == 'POST':
+        rows = filter_menu()
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
 
 def get_menu():
@@ -140,7 +131,7 @@ def add_item(menu_item):
     db_manager.get_db().commit()
     db_manager.close()
 
-    return redirect('/menu')
+    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])

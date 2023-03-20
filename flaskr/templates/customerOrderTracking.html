@@ -50,6 +50,8 @@
                                 <p>Status: Out for delivery</p>
                             {% elif all_orders[key][0][3] == 3 %}
                                 <p>Status: Delivered</p>
+                            {% elif all_orders[key][0][3] == 5 %}
+                                <p>Status: Cancelled</p>
                             {% endif %}
                         </td>
                     </tr>
