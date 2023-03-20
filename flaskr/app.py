@@ -76,23 +76,31 @@ def call():
 @app.route('/menu', methods=['GET', 'POST'])
 def menu():
     """Render the menu page. Get menu items from the database."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
 
-    # Gets all the rows from menu or apply the filter if made.
-    if not request.form:
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-    else:
+    if not request.form:  # if the filter is not applied
+        rows = get_menu()
+    else:  # if the filter is applied
         if request.method == 'GET':
             return render_template('menu.html')
         elif request.method == 'POST':
             rows = filter_menu()
 
-    db_manager.close()
-
     # Passes the rows of the table to the pages .html file.
     return render_template('menu.html', rows=rows, user=session.get('user'))
+
+
+def get_menu():
+    """Fetches every row of the menu from the database."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return rows
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
@@ -150,20 +158,6 @@ def edit_menu_item():
         delete_item(item_id)
 
         return redirect('/editMenuItem')
-
-
-def get_menu():
-    """Fetches every row of the menu from the database."""
-
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    sql_connection.execute("SELECT * FROM menu;")
-    rows = sql_connection.fetchall()
-
-    db_manager.close()
-
-    return rows
 
 
 def delete_item(item):
