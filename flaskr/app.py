@@ -392,41 +392,66 @@ def kitchen_orders():
 
     if request.method == 'GET':
 
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        # Gets all the rows from menu.
-        sql_connection.execute(
-            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
-        rows = sql_connection.fetchall()
-
-        all_orders = {}
-        for row in rows:
-            if row[0] not in all_orders:
-                all_orders[row[0]] = []
-            sql_connection.execute(
-                "SELECT name FROM menu WHERE itemID=?", (row[1],))
-            name = sql_connection.fetchone()
-            temp_list = [name[0], row[2], row[3]]
-            all_orders[row[0]].append(temp_list)
-
-        db_manager.close()
-
+        all_orders = get_orders_to_make()
         return render_template('kitchenOrders.html', all_orders=all_orders)
+
     elif request.method == 'POST':
 
         order_id = request.form['orderID']
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            "UPDATE orderDetails SET state=2 WHERE orderID=?", (order_id,))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        mark_as_finished(order_id)
 
         return redirect('/kitchenOrders')
+
+
+def get_orders_to_make():
+    """Fetch the orders that need to be made in the order they were placed, then return as a dictionary."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Gets all the rows from menu.  <-- No it fucking doesn't?
+    sql_connection.execute(
+        "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+    rows = sql_connection.fetchall()
+
+    all_orders = format_orders_in_dictionary(rows, sql_connection)
+
+    db_manager.close()
+
+    return all_orders
+
+
+def format_orders_in_dictionary(rows, sql_connection):
+    """Receives the orders to be made, and an sql cursor to fetch the name to add to a dictionary."""
+
+    all_orders = {}
+
+    for row in rows:
+
+        order_num = row[0]
+        if order_num not in all_orders:
+            all_orders[order_num] = []
+
+        sql_connection.execute(
+            "SELECT name FROM menu WHERE itemID=?", (row[1],))
+        name = sql_connection.fetchone()  # this is returned as a list - ('x',)
+
+        all_orders[order_num].append([name[0], row[2], row[3]])
+
+    return all_orders
+
+
+def mark_as_finished(order_id):
+    """Update the state of an order of a given ID to the 'ready to deliver' state in the database."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute(
+        "UPDATE orderDetails SET state=2 WHERE orderID=?", (order_id,))
+    db_manager.get_db().commit()
+
+    db_manager.close()
 
 
 # TODO: I'm fairly sure this never gets used, and also wouldn't work if it was...
