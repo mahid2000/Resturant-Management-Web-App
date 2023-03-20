@@ -342,33 +342,37 @@ def order_payment():
     """Summarises the customer's order, provides a total cost, and requests payment details."""
 
     if request.method == 'GET':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
-        order_rows = sql_connection.fetchall()
-
-        menu_rows = []
-        for orderRow in order_rows:
-            sql_connection.execute(
-                "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
-            menu_row= sql_connection.fetchone()
-            menu_rows.append(menu_row)
-
-        rows = []
-        total_price = 0
-        for i in range(0, len(menu_rows)):
-            price = menu_rows[i][1] * order_rows[i][1]
-            row = [menu_rows[i][0], order_rows[i][1], price]
-            rows.append(row)
-            total_price += price
-
+        rows, total_price = summarise_order()
         return render_template('orderPayment.html', rows=rows, totalPrice=total_price)
+
     elif request.method == 'POST':
         # This is where the payment information would be processed.
+
         return redirect('/orderConformation')
+
+
+def summarise_order():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute(
+        """SELECT menu.name, orderDetails.qty, menu.price
+           FROM menu
+           JOIN orderDetails ON menu.itemID=orderDetails.itemID
+           WHERE orderDetails.orderID=?""",
+        (session['order'][0],))
+    rows = sql_connection.fetchall()
+
+    return rows, calculate_total_price(rows)
+
+
+def calculate_total_price(order_details):
+    total_price = 0
+    for item in order_details:
+        price = item[2]
+        qty = item[1]
+        total_price += (price * qty)
+    return total_price
 
 
 @app.route('/orderConformation', methods=['GET', 'POST'])
