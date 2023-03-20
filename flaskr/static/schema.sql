@@ -47,5 +47,6 @@ INSERT INTO users
 CREATE TABLE tableAssignments (
     waiter_id INTEGER PRIMARY KEY,
     tableNum TINYINT NOT NULL,
+    called TINYINT NOT NULL,
     FOREIGN KEY (tableNum) REFERENCES orders(tableNum)
 );

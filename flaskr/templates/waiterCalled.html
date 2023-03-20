@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Waiter Order confirmation page -->
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    <title>Manage Orders</title>
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('custMenu') }}">MENU</a>
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+        <a href="{{ url_for('about') }}">ABOUT</a>
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+
+    <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+            <p>TABLE CALLED - WAITER</p>
+        </div>
+
+        <!-- Content -->
+        <div class="body">
+            {% for row in rows %}
+                <h2>{{ row[1] }}</h2>
+                <p>£{{ row[2] }}</p>
+                <p>{{ row[3] }}</p>
+                <p><b>{{ row[4] }}kcal</b></p>
+                <p>{{ row[5] }}</p>
+                <p>-</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
+</body>
+
+</html>

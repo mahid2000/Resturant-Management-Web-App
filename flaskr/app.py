@@ -657,22 +657,20 @@ def manage_accounts_edit():
 
 
 @app.route('/assign_table', methods=['POST'])
-def assign_table():
-    waiter_id = request.form.get('waiter_id')
-    tableNum = request.form.get('tableNum')
+def assign_table(tableNum, waiter_id):
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    sql_connection.execute('SELECT waiter_id FROM tableAssignments WHERE tableNum=?', (tableNum,))
     result = sql_connection.fetchone()
     if result:
-        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
-    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, result[0], 1))
+    else:
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, waiter_id, 1))
     db_manager.get_db().commit()
     db_manager.close()
 
-    return 'Table', tableNum, 'has been assigned to waiter', waiter_id
 
 
 @app.route('/customerOrders')
@@ -708,13 +706,30 @@ def callWaiter():
         table = request.form['tableNum']
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT userID FROM users"
+                               + " WHERE  role = 2"
+                               + " ORDER BY RANDOM()"
+                               + "  LIMIT 1;")
+        waiterId = sql_connection.fetchone()
+        waiter_id = waiterId[0]
         sql_connection.execute("SELECT first_name FROM users"
                                + " WHERE  role = 2"
                                + " ORDER BY RANDOM()"
                                + "  LIMIT 1;")
-        rows = sql_connection.fetchall()
+        waiterName = sql_connection.fetchone()
+        waiter_name = waiterName[0]
         db_manager.close()
-        row = rows[0]
-        print(row)
-        return render_template('calling.html', confirm=True, row=row)
+        assign_table(table, waiter_id)
+        return render_template('calling.html', confirm=True, row=waiter_name)
     return render_template('calling.html', confirm=False)
+
+
+@app.route('/called', methods=['GET', 'POST'])
+def callingConfirm():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    sql_connection.execute(
+        "SELECT tableNum FROM tableAssignments WHERE waiter_id=? AND called = 1;",
+        (session['user'][0],))
+    rows = sql_connection.fetchall()
+    return render_template('waiterCalled.html', rows=rows)
