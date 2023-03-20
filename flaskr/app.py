@@ -137,33 +137,47 @@ def add_item(menu_item):
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
     """Displays all menu items, and allows you to select and delete them."""
+
     if request.method == 'GET':
-        # Render the page to edit the menu.
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
 
-        # Gets all the rows in menu.
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
+        rows = get_menu()
 
-        db_manager.close()
-
-        # Passes the rows of the table to editMenuItem.html.
         return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
 
     elif request.method == 'POST':
 
         item_id = request.form['itemID']
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (item_id, ))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        delete_item(item_id)
 
         return redirect('/editMenuItem')
+
+
+def get_menu():
+    """Fetches every row of the menu from the database."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT * FROM menu;")
+    rows = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return rows
+
+
+def delete_item(item):
+    """Delete a menu item from the database."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("DELETE FROM menu WHERE itemID = ?", item)
+    db_manager.get_db().commit()
+
+    db_manager.close()
+
+    return redirect('/editMenuItem')
 
 
 @app.route('/login', methods=['GET', 'POST'])
