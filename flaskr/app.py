@@ -348,7 +348,7 @@ def order_payment():
     elif request.method == 'POST':
         # This is where the payment information would be processed.
 
-        return redirect('/orderConformation')
+        return redirect('/orderConfirmation')
 
 
 def summarise_order():
@@ -375,12 +375,13 @@ def calculate_total_price(order_details):
     return total_price
 
 
-@app.route('/orderConformation', methods=['GET', 'POST'])
-def order_conformation():
+@app.route('/orderConfirmation', methods=['GET', 'POST'])
+def order_confirmation():
     """Tells the customer their order has been confirmed."""
 
     if request.method == 'GET':
-        return render_template('orderConformation.html')
+        return render_template('orderConfirmation.html')
+
     elif request.method == 'POST':
         return redirect('/home')
 
