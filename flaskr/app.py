@@ -539,23 +539,34 @@ def waiter_order_confirm():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
+            """SELECT orderDetails.orderID,
+                      menu.name, 
+                      orders.tableNum,
+                      orderDetails.qty, 
+                      orderDetails.order_time
+               FROM orderDetails 
+               JOIN menu ON orderDetails.itemID=menu.itemID
+               JOIN orders ON orderDetails.orderID=orders.orderID
+               WHERE state=0
+               ORDER BY orderDetails.orderID;"""
+        )
         rows = sql_connection.fetchall()
+        db_manager.close()
 
         all_orders = {}
         for row in rows:
-            if row[0] not in all_orders:
-                all_orders[row[0]] = []
-            sql_connection.execute(
-                "SELECT name FROM menu WHERE itemID=?", (row[1],))
-            name = sql_connection.fetchone()
-            sql_connection.execute(
-                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
-            table_num = sql_connection.fetchone()
-            temp_list = [name[0], table_num[0], row[2], row[3]]
-            all_orders[row[0]].append(temp_list)
+
+            order_id = row[0]
+            if order_id not in all_orders:
+                all_orders[order_id] = []
+
+            name = row[1]
+            table_num = row[2]
+            qty = row[3]
+            order_time = row[4]
+
+            all_orders[order_id].append([name, table_num, qty, order_time])
 
         db_manager.close()
 
