@@ -520,14 +520,7 @@ def filter_menu():
 @app.route('/custMenu')
 def cust_menu():
     """Displays the menu."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    sql_connection.execute("SELECT * FROM menu;")
-    foods = sql_connection.fetchall()
-
-    db_manager.close()
-
+    foods = get_menu()
     return render_template('customerMenu.html', foods=foods, user=session.get('user'))
 
 
