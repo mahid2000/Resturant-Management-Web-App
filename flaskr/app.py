@@ -389,7 +389,7 @@ def kitchen_orders():
     elif request.method == 'POST':
 
         order_id = request.form['orderID']
-        mark_as_finished(order_id)
+        update_state_to('2', order_id)  # mark order as 'ready to deliver'
 
         return redirect('/kitchenOrders')
 
@@ -430,19 +430,6 @@ def format_kitchen_orders_in_dictionary(rows, sql_connection):
         all_orders[order_num].append([name[0], row[2], row[3]])
 
     return all_orders
-
-
-def mark_as_finished(order_id):
-    """Update the state of an order of a given ID to the 'ready to deliver' state in the database."""
-
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    sql_connection.execute(
-        "UPDATE orderDetails SET state=2 WHERE orderID=?", (order_id,))
-    db_manager.get_db().commit()
-
-    db_manager.close()
 
 
 # TODO: I'm fairly sure this never gets used, and also wouldn't work if it was...
@@ -539,17 +526,8 @@ def waiter_order_confirm():
         return render_template('waiterOrderConfirm.html', all_orders=all_orders)
 
     elif request.method == 'POST':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
         order_id = request.form['orderID']
-
-        # Update the orderDetails table
-        sql_connection.execute(
-            "UPDATE orderDetails SET state=1 WHERE orderID=?", (order_id,))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        update_state_to('1', order_id)
 
         return redirect('/waiterOrders')
 
@@ -599,18 +577,10 @@ def waiter_order_cancel():
 
     if request.method == 'GET':
         return redirect('/waiterOrders')
+
     elif request.method == 'POST':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
         order_id = request.form['orderID']
-
-        # Update the orderDetails table
-        sql_connection.execute(
-            "UPDATE orderDetails SET state=5 WHERE orderID=?", (order_id,))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        update_state_to('5', order_id)
 
         return redirect('/waiterOrders')
 
@@ -624,19 +594,22 @@ def waiter_order_delivered():
         return render_template('waiterOrderDeliver.html', all_orders=all_orders)
 
     elif request.method == 'POST':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
         order_id = request.form['orderID']
-
-        # Update the orderDetails table
-        sql_connection.execute(
-            "UPDATE orderDetails SET state=3 WHERE orderID=?", (order_id,))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        update_state_to('3', order_id)
 
         return redirect('/waiterOrdersDelivered')
+
+
+def update_state_to(state, order_id):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Update the orderDetails table
+    sql_connection.execute(
+        "UPDATE orderDetails SET state=? WHERE orderID=?", (state, order_id))
+    db_manager.get_db().commit()
+
+    db_manager.close()
 
 
 @app.route('/manageAccounts', methods=['GET', 'POST'])
