@@ -707,18 +707,13 @@ def callWaiter():
         table = request.form['tableNum']
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
-        sql_connection.execute("SELECT userID FROM users"
+        sql_connection.execute("SELECT * FROM users"
                                + " WHERE  role = 2"
                                + " ORDER BY RANDOM()"
                                + "  LIMIT 1;")
-        waiterId = sql_connection.fetchone()
-        waiter_id = waiterId[0]
-        sql_connection.execute("SELECT first_name FROM users"
-                               + " WHERE  role = 2"
-                               + " ORDER BY RANDOM()"
-                               + "  LIMIT 1;")
-        waiterName = sql_connection.fetchone()
-        waiter_name = waiterName
+        user = sql_connection.fetchone()
+        waiter_id = user[0]
+        waiter_name = user[1]
         db_manager.close()
         print(table, waiter_id)
         assign_table(table, waiter_id)
@@ -728,22 +723,21 @@ def callWaiter():
 
 @app.route('/called', methods=['GET', 'POST'])
 def callingConfirm():
-    rows = []
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     sql_connection.execute("SELECT * FROM tableAssignments WHERE waiter_id=?;",
-                           (session['user'][0], ))
+                           (session['user'][0]))
     rows = sql_connection.fetchall()
     db_manager.close()
     print(rows)
     return render_template('waiterCalled.html', rows=rows)
 
 
-def ansCall(waiter_id, tableNum):
-    print(waiter_id, tableNum)
+def ansCall():
+    tableNum = request.form['id']
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     sql_connection.execute(
-        "DELETE FROM tableAssignments WHERE waiter_id=? AND tableNum=?;",f
-        (waiter_id, tableNum))
+        "DELETE FROM tableAssignments WHERE waiter_id=? AND tableNum=?;",
+        (session['user'][0], tableNum))
     db_manager.close()
