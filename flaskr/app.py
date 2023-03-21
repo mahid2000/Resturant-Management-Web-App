@@ -1,8 +1,10 @@
 import os
-import re
+import sys
 import rsa
 from flask import Flask, render_template, redirect, request, session, url_for
 from flaskr.init_db import DBManager
+from flaskr.menu_item_model import MenuItemModel
+from flaskr.user_account_model import UserAccountModel
 
 publicKey, privateKey = rsa.newkeys(512)
 
@@ -43,7 +45,7 @@ def index():
 
 @app.route('/home')
 def home():
-    """Render the home page."""
+    #Render the home page.
     return render_template('home.html', user=session.get('user'))
 
 
@@ -70,85 +72,56 @@ def call():
         return render_template('calling.html', rows=rows)
 
 
-@app.route('/menu', methods=['GET', 'POST'])
+@app.route('/menuFilter', methods=['GET', 'POST'])
 def menu():
-    """Render the menu page. Get menu items from the database."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Gets all the rows from menu or apply the filter if made.
-    if not request.form:
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-    else:
-        if request.method == 'GET':
-            return render_template('menu.html')
-        elif request.method == 'POST':
-            rows = filter_menu()
-
-    db_manager.close()
-
-    # Create a new list that contains the original items from the tuple plus the image URL
-    new_rows = []
-    for row in rows:
-        row_image_url = url_for('static', filename=f"images/{row[1]}.jpg")
-        new_row = list(row)
-        new_row.append(row_image_url)
-        new_rows.append(new_row)
-
-    # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=new_rows, user=session.get('user'))
+    """Filters the menu page. Get menu items from the database."""
+    if request.method == 'POST':
+        rows = filter_menu()
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
+    """Render the page to add a menu item.
+    Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
     if request.method == 'GET':
         return render_template('addMenuItem.html', user=session.get('user'))
+
     elif request.method == 'POST':
-        # Render the page to add a menu item. Adds an item to menu based on items from an HTML form.
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
 
-        # Stores the items from the form in addMenuItem.html.
-        name = request.form['name']
-        if not name:
-            error = "Name cannot be left blank."
-            return render_template('addMenuItem.html', error=error, user=session.get('user'))
+        try:
+            menu_item = MenuItemModel(request.form['name'],
+                                      request.form['price'],
+                                      request.form['category'],
+                                      request.form['calories'],
+                                      request.form.getlist('options'))
+            add_item(menu_item)
+        except Exception as ex:
+            return render_template('addMenuItem.html', error=str(ex), user=session.get('user'))
 
-        price = request.form['price']
-        if not price:
-            error = "Price cannot be left blank."
-            return render_template('addMenuItem.html', error=error, user=session.get('user'))
-        elif not bool(re.match(r'^\d+(\.\d{0,2})?$', price)):
-            error = "Price must be a valid decimal number eg. 12.34"
-            return render_template('addMenuItem.html', error=error, user=session.get('user'))
+        return redirect('/custMenu')
 
-        category = request.form['category']
 
-        calories = request.form['calories']
-        if not calories:
-            error = "Calories cannot be left blank."
-            return render_template('addMenuItem.html', error=error, user=session.get('user'))
-        elif not calories.isdigit():
-            error = "Calories must be a valid whole number."
-            return render_template('addMenuItem.html', error=error, user=session.get('user'))
+def add_item(menu_item):
+    """Gets passed a menu item as an object and adds it to the database."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-        # Changes the list of allergens to a string.
-        allergensList = request.form.getlist('options')
-        allergens = ', '.join(allergensList)
+    # Add an item to the menu table.
+    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
+                           " VALUES (?, ?, ?, ?, ?)",
+                           (menu_item.name, menu_item.price, menu_item.category, menu_item.calories,
+                            menu_item.allergens))
 
-        # Add an item to the menu table.
-        sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
-                               " VALUES (?, ?, ?, ?, ?)", (name, price, category, calories, allergens))
+    db_manager.get_db().commit()
+    db_manager.close()
 
-        db_manager.get_db().commit()
-        db_manager.close()
-
-        return redirect('/menu')
+    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
+    """Displays all menu items, and allows you to select and delete them."""
     if request.method == 'GET':
         # Render the page to edit the menu.
         db_manager = DBManager(app)
@@ -179,111 +152,96 @@ def edit_menu_item():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    """Renders the page to login."""
+def fetch_login():
+    """Loads the login page. Fetches the user details and logs them in,"""
+
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', user=session.get('user'))
 
     elif request.method == 'POST':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
+        try:
+            user_account = UserAccountModel(request.form['fname'],
+                                            request.form['sname'],
+                                            request.form['pass'],
+                                            # UserAccountModel is used for logging in and creating an account.
+                                            None)  # This is the role, which is irrelevant for logging in.
+            try:
+                login(user_account)
+            except TypeError as ex:
+                return render_template('login.html', loginError="Invalid credentials")
+        except TypeError as ex:
+            return render_template('login.html', loginError=str(ex))
+        return redirect('/home')
 
-        firstname = request.form['fname']
-        if not firstname:
-            error = "Enter first name."
-            return render_template('login.html', error=error)
 
-        surname = request.form['sname']
-        if not surname:
-            error = "Enter surname."
-            return render_template('login.html', error=error)
+def login(user_account):
+    """Logs in a provided user."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
 
-        password = request.form['pass']
-        if not password:
-            error = "Enter password."
-            return render_template('login.html', error=error)
+    sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
+                           (user_account.first_name, user_account.last_name))
+    hashed_password_db = sql_connection.fetchone()[0]
 
-        sql_connection.execute("""SELECT DISTINCT password_hash FROM users WHERE first_name=? AND last_name=?""",
-                               (firstname, surname))
-        encryptedPass = sql_connection.fetchone()
-        print(encryptedPass)
-        if encryptedPass is None:
-            error = "Invalid Credentials"
-            return render_template('login.html', error=error)
-
-        decPass = rsa.decrypt(encryptedPass[0], privateKey).decode()
-        if decPass == password:
-            sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
-                                   (firstname, surname))
-            user = sql_connection.fetchone()
-            db_manager.close()
-
-            session['user'] = [user[0], user[1], user[2], user[4]]
-
-            return redirect('/home')
-
+    if user_account.password == hashed_password_db:
+        sql_connection.execute("""SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?""",
+                               (user_account.first_name, user_account.last_name))
+        user = sql_connection.fetchone()
         db_manager.close()
-        error = "Invalid credentials"
-        return render_template('login.html', error=error)
+
+        session['user'] = [user[0], user[1], user[2], user[4]]
+
+        return redirect('/home')
+
+    db_manager.close()
+    raise TypeError("Invalid credentials")
 
 
 @app.route('/createLogin', methods=['GET', 'POST'])
 def create_login():
+    """Loads the page to create a login. Fetches entered details, creates the account, and logs them in."""
     if request.method == 'GET':
         return redirect('/login')
+
     elif request.method == 'POST':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        firstName = request.form['firstName']
-        if not firstName:
-            error = "Please enter your first name."
-            return render_template('createLogin.html', error=error)
-
-        surname = request.form['surname']
-        if not surname:
-            error = "Please enter your surname."
-            return render_template('createLogin.html', error=error)
-
-        password = request.form['password']
-        if not password:
-            error = "Choose your password."
-            return render_template('createLogin.html', error=error)
-
-        encPass = rsa.encrypt(password.encode(), publicKey)
-
-        role = request.form['role']
-        if not role:
-            error = "what kind of user are you?"
-            return render_template('createLogin.html', error=error)
-
-        sql_connection.execute("SELECT count(*) FROM users")
-        count = sql_connection.fetchone()
-
-        if count == 0:
-            managerPass = '###'
-            encPassManager = rsa.encrypt(managerPass.encode(), publicKey)
-            sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                                   + " VALUES (?, ?, ?, ?)", ('manager', 'manager', encPassManager, 3))
-            db_manager.get_db().commit()
-
-        sql_connection.execute("INSERT INTO users (first_name, last_name, password_hash, role)"
-                               + " VALUES (?, ?, ?,?)", (firstName, surname, encPass, role))
-        db_manager.get_db().commit()
-
-        sql_connection.execute(
-            "SELECT DISTINCT * FROM users WHERE first_name=? AND last_name=?", (firstName, surname))
-        user = sql_connection.fetchone()
-
-        session['user'] = [user[0], user[1], user[2], user[4]]
-
-        db_manager.close()
+        try:
+            user_account = UserAccountModel(request.form['firstName'],
+                                            request.form['surname'],
+                                            request.form['password'],
+                                            1)
+            try:
+                create_account(user_account)
+            except TypeError as ex:
+                return render_template('login.html', createError="Invalid credentials", user=session.get('user'))
+        except TypeError as ex:
+            return render_template('login.html', createError=str(ex), user=session.get('user'))
 
         return redirect('/home')
 
+
+def create_account(user_account):
+    """Creates a user account with a provided user. Logs that user in after account creation."""
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("""INSERT INTO users (first_name, last_name, password_hash, role)
+                           VALUES (?, ?, ?,?)""",
+                           (user_account.first_name,
+                            user_account.last_name,
+                            user_account.password,
+                            user_account.role))
+
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    login(user_account)
+
+    return redirect('/home')
+
+
 @app.route('/logout')
 def logout():
+    """Logs out the current logged-in user."""
     session['user'] = ['', '', '', 0]
     session['order'] = [0, 0, 0]
     return redirect('/home')
@@ -303,7 +261,7 @@ def order():
 
         db_manager.close()
 
-        return render_template('order.html', rows=rows)
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
 
@@ -333,7 +291,7 @@ def order():
                 if value != '0':
 
                     sql_connection.execute("INSERT INTO orderDetails "
-                                           "(orderID, itemID, customerID, qty, state, timestamp) "
+                                           "(orderID, itemID, customerID, qty, state, order_time) "
                                            "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                                            (session['order'][0], key, session['user'][0], value, 0))
 
@@ -366,7 +324,7 @@ def order_payment():
         rows = []
         totalPrice = 0
         for i in range(0, len(menuRows)):
-            price = menuRows[i][1] * orderRows[i][1]
+            price = menuRows[i][1] * int(orderRows[i][1])
             row = [menuRows[i][0], orderRows[i][1], price]
             rows.append(row)
             totalPrice += price
@@ -396,7 +354,7 @@ def kitchen_orders():
 
         # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
@@ -536,7 +494,7 @@ def waiter_order_confirm():
 
         # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=0 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
@@ -546,9 +504,10 @@ def waiter_order_confirm():
             sql_connection.execute(
                 "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
-            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
             tableNum = sql_connection.fetchone()
-            temp_list = [name[0],tableNum[0], row[2], row[3]]
+            temp_list = [name[0], tableNum[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
@@ -602,7 +561,7 @@ def waiter_order_delivered():
 
         # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT orderID, itemID, qty, timestamp FROM orderDetails WHERE state=2 ORDER BY orderID ASC;")
+            "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=2 ORDER BY orderID ASC;")
         rows = sql_connection.fetchall()
 
         all_orders = {}
@@ -612,7 +571,8 @@ def waiter_order_delivered():
             sql_connection.execute(
                 "SELECT name FROM menu WHERE itemID=?", (row[1],))
             name = sql_connection.fetchone()
-            sql_connection.execute("SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
+            sql_connection.execute(
+                "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
             tableNum = sql_connection.fetchone()
             temp_list = [name[0], tableNum[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
@@ -644,12 +604,14 @@ def manage_accounts():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("SELECT userID, first_name, last_name, role FROM users")
+        sql_connection.execute(
+            "SELECT userID, first_name, last_name, role FROM users")
         rows = sql_connection.fetchall()
 
         db_manager.close()
 
         return render_template('managerAccounts.html', rows=rows)
+
     elif request.method == 'POST':
 
         firstName = request.form['firstName']
@@ -680,9 +642,56 @@ def manage_accounts_edit():
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
-        sql_connection.execute("UPDATE users SET role=? WHERE userID=?", (role, userID))
+        sql_connection.execute(
+            "UPDATE users SET role=? WHERE userID=?", (role, userID))
         db_manager.get_db().commit()
 
         db_manager.close()
 
         return redirect('/manageAccounts')
+
+
+@app.route('/assign_table', methods=['POST'])
+def assign_table():
+    waiter_id = request.form.get('waiter_id')
+    tableNum = request.form.get('tableNum')
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (tableNum,))
+    result = sql_connection.fetchone()
+    if result:
+        return 'Table', tableNum, 'is already assigned to waiter', (result[0])
+    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (tableNum, waiter_id))
+    db_manager.get_db().commit()
+    db_manager.close()
+
+    return 'Table', tableNum, 'has been assigned to waiter', waiter_id
+
+
+@app.route('/customerOrders')
+def customer_orders():
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    # Gets all the rows from menu.
+    sql_connection.execute(
+        "SELECT orderID, itemID, qty, order_time, state FROM orderDetails WHERE customerID=? ORDER BY orderID ASC;",
+        (session['user'][0], ))
+    rows = sql_connection.fetchall()
+
+    all_orders = {}
+    for row in rows:
+        if row[0] not in all_orders:
+            all_orders[row[0]] = []
+        sql_connection.execute(
+            "SELECT name FROM menu WHERE itemID=?", (row[1],))
+        name = sql_connection.fetchone()
+        temp_list = [name[0], row[2], row[3], row[4]]
+        all_orders[row[0]].append(temp_list)
+
+    db_manager.close()
+
+    return render_template('customerOrderTracking.html', all_orders=all_orders)
