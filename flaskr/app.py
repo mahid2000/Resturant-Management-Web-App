@@ -405,14 +405,14 @@ def get_orders_to_make():
         "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
     rows = sql_connection.fetchall()
 
-    all_orders = format_orders_in_dictionary(rows, sql_connection)
+    all_orders = format_kitchen_orders_in_dictionary(rows, sql_connection)
 
     db_manager.close()
 
     return all_orders
 
 
-def format_orders_in_dictionary(rows, sql_connection):
+def format_kitchen_orders_in_dictionary(rows, sql_connection):
     """Receives the orders to be made, and an sql cursor to fetch the name to add to a dictionary."""
 
     all_orders = {}
@@ -535,41 +535,7 @@ def waiter_order_confirm():
     """Shows the waiters the orders taken, and lets them confirm them."""
 
     if request.method == 'GET':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            """SELECT orderDetails.orderID,
-                      menu.name, 
-                      orders.tableNum,
-                      orderDetails.qty, 
-                      orderDetails.order_time
-               FROM orderDetails 
-               JOIN menu ON orderDetails.itemID=menu.itemID
-               JOIN orders ON orderDetails.orderID=orders.orderID
-               WHERE state=0
-               ORDER BY orderDetails.orderID;"""
-        )
-        rows = sql_connection.fetchall()
-        db_manager.close()
-
-        all_orders = {}
-        for row in rows:
-
-            order_id = row[0]
-            if order_id not in all_orders:
-                all_orders[order_id] = []
-
-            name = row[1]
-            table_num = row[2]
-            qty = row[3]
-            order_time = row[4]
-
-            all_orders[order_id].append([name, table_num, qty, order_time])
-
-        db_manager.close()
-
+        all_orders = get_waiter_orders('0')
         return render_template('waiterOrderConfirm.html', all_orders=all_orders)
 
     elif request.method == 'POST':
@@ -586,6 +552,45 @@ def waiter_order_confirm():
         db_manager.close()
 
         return redirect('/waiterOrders')
+
+
+def get_waiter_orders(state):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute(
+        """SELECT orderDetails.orderID,
+                  menu.name, 
+                  orders.tableNum,
+                  orderDetails.qty, 
+                  orderDetails.order_time
+           FROM orderDetails 
+           JOIN menu ON orderDetails.itemID=menu.itemID
+           JOIN orders ON orderDetails.orderID=orders.orderID
+           WHERE state=?
+           ORDER BY orderDetails.orderID;""", state)
+    rows = sql_connection.fetchall()
+    db_manager.close()
+
+    return format_waiter_orders_in_dictionary(rows)
+
+
+def format_waiter_orders_in_dictionary(rows):
+    all_orders = {}
+    for row in rows:
+
+        order_id = row[0]
+        if order_id not in all_orders:
+            all_orders[order_id] = []
+
+        name = row[1]
+        table_num = row[2]
+        qty = row[3]
+        order_time = row[4]
+
+        all_orders[order_id].append([name, table_num, qty, order_time])
+
+    return all_orders
 
 
 @app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
@@ -615,40 +620,9 @@ def waiter_order_delivered():
     """Shows the orders to be delivered, and allows them to be marked as such."""
 
     if request.method == 'GET':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            """SELECT orderDetails.orderID,
-                      menu.name, 
-                      orders.tableNum,
-	                  orderDetails.qty, 
-	                  orderDetails.order_time
-               FROM orderDetails 
-               JOIN menu ON orderDetails.itemID=menu.itemID
-               JOIN orders ON orderDetails.orderID=orders.orderID
-               WHERE state=2
-               ORDER BY orderDetails.orderID;"""
-        )
-        rows = sql_connection.fetchall()
-        db_manager.close()
-
-        all_orders = {}
-        for row in rows:
-
-            order_id = row[0]
-            if order_id not in all_orders:
-                all_orders[order_id] = []
-
-            name = row[1]
-            table_num = row[2]
-            qty = row[3]
-            order_time = row[4]
-
-            all_orders[order_id].append([name, table_num, qty, order_time])
-
+        all_orders = get_waiter_orders('2')
         return render_template('waiterOrderDeliver.html', all_orders=all_orders)
+
     elif request.method == 'POST':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
