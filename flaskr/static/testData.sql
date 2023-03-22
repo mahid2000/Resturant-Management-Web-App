@@ -3,35 +3,35 @@
 -- Mains
 INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Beef Tacos", 12.50, "Mains", 800, "Mi",""),
-    ("Pork Tacos", 12.50, "Mains", 800, "Mi",""),
-    ("Halloumi Tacos", 10.50, "Mains", 750, "Mi",""),
-    ("Chicken Enchiladas", 14.50, "Mains", 900, "G",""),
-    ("Pork Enchiladas", 14.50, "Mains", 900, "Mi",""),
-    ("Jackfruit Enchiladas", 14.50, "Mains", 900, "Mi","");
+    ("Beef Tacos", 12.50, "Mains", 800, "Mi","static/images/Beef Tacos.jpg"),
+    ("Pork Tacos", 12.50, "Mains", 800, "Mi","static/images/PorkTacos.jpg"),
+    ("Halloumi Tacos", 10.50, "Mains", 750, "Mi","static/images/Halloumi Tacos.jpg"),
+    ("Chicken Enchiladas", 14.50, "Mains", 900, "G","static/images/Chicken Enchiladas.jpg"),
+    ("Pork Enchiladas", 14.50, "Mains", 900, "Mi","static/images/Pork Enchiladas.jpg"),
+    ("Jackfruit Enchiladas", 14.50, "Mains", 900, "Mi","static/images/Jackfruit Enchiladas.jpg");
 
 -- Sides
 INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Plain Nachos", 5.50, "Sides", 350, "",""),
-    ("Cheesy Nachos", 6.50, "Sides", 400, "Mi","");
+    ("Plain Nachos", 5.50, "Sides", 350, "","static/images/Plain Nachos.jpg"),
+    ("Cheesy Nachos", 6.50, "Sides", 400, "Mi","static/images/Cheesy Nachos.jpg");
 
 -- Desserts
 INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Ice Cream Sundae", 5.50, "Desserts", 300, "Mi",""),
-    ("Chocolate Brownie", 5.50, "Desserts", 300, "Mi","");
+    ("Ice Cream Sundae", 5.50, "Desserts", 300, "Mi","static/images/Ice Cream Sundae.jpg"),
+    ("Chocolate Brownie", 5.50, "Desserts", 300, "Mi","static/images/Chocolate Brownie.jpg");
 
 -- Drinks
 INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Coca Cola", 3.50, "Drinks", 150, "",""),
-    ("Fanta", 3.50, "Drinks", 150, "",""),
-    ("Sprite", 3.50, "Drinks", 150, "",""),
-    ("Apple Juice", 3.50, "Drinks", 150, "",""),
-    ("Orange Juice", 3.50, "Drinks", 150, "",""),
-    ("Still Water", 3.50, "Drinks", 150, "",""),
-    ("Beer", 3.50, "Drinks", 150, "G","");
+    ("Coca Cola", 3.50, "Drinks", 150, "","static/images/Coca Cola.jpg"),
+    ("Fanta", 3.50, "Drinks", 150, "","static/images/Fanta.jpg"),
+    ("Sprite", 3.50, "Drinks", 150, "","static/images/Sprite.jpg"),
+    ("Apple Juice", 3.50, "Drinks", 150, "","static/images/Apple Juice.jpg"),
+    ("Orange Juice", 3.50, "Drinks", 150, "","static/images/Orange Juice.jpg"),
+    ("Still Water", 3.50, "Drinks", 150, "","static/images/Still Water.jpg"),
+    ("Beer", 3.50, "Drinks", 150, "G","static/images/Beer.jpg");
 
 
 -- Logins
