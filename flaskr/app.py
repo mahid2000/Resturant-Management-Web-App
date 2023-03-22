@@ -52,7 +52,7 @@ def home():
 @app.route('/call', methods=['GET', 'POST'])
 def call():
     if session.get('user')[3] != 1:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -86,8 +86,8 @@ def menu():
 def add_menu_item():
     """Render the page to add a menu item.
     Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
-    if session.get('user')[3] != 2:
-        return redirect('/home')
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         return render_template('addMenuItem.html', user=session.get('user'))
 
@@ -126,8 +126,8 @@ def add_item(menu_item):
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
     """Displays all menu items, and allows you to select and delete them."""
-    if session.get('user')[3] != 2:
-        return redirect('/home')
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         # Render the page to edit the menu.
         db_manager = DBManager(app)
@@ -312,7 +312,7 @@ def order():
 @app.route('/orderPayment', methods=['GET', 'POST'])
 def order_payment():
     if session.get('user')[3] != 1:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -346,7 +346,7 @@ def order_payment():
 @app.route('/orderConformation', methods=['GET', 'POST'])
 def order_conformation():
     if session.get('user')[3] != 1:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         return render_template('orderConformation.html')
     elif request.method == 'POST':
@@ -356,7 +356,7 @@ def order_conformation():
 @app.route('/kitchenOrders', methods=['GET', 'POST'])
 def kitchen_orders():
     if session.get('user')[3] != 3:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -490,7 +490,7 @@ def about():
 def waiter_order_confirm():
 
     if session.get('user')[3] != 2:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -538,7 +538,7 @@ def waiter_order_confirm():
 def waiter_order_cancel():
 
     if session.get('user')[3] != 2:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         return redirect('/waiterOrders')
     elif request.method == 'POST':
@@ -561,7 +561,7 @@ def waiter_order_cancel():
 def waiter_order_delivered():
 
     if session.get('user')[3] != 2:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     if request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -608,7 +608,7 @@ def waiter_order_delivered():
 def manage_accounts():
 
     if session.get('user')[3] != 4:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -643,7 +643,7 @@ def manage_accounts():
 def manage_accounts_edit():
 
     if session.get('user')[3] != 4:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
         return redirect('/manageAccounts')
     elif request.method == 'POST':
@@ -685,7 +685,7 @@ def assign_table():
 @app.route('/customerOrders')
 def customer_orders():
     if session.get('user')[3] != 1:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     else:
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()

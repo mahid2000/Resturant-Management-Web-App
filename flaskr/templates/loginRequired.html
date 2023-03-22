@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<title>Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/format.css') }}">
+<body>
+    <div id="home" class="css-content">
+        <div class="css-top css-hide-small">
+            <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
+                <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
+                <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
+                <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
+                <a href="{{ url_for('fetch_login') }}" class="css-bar-item css-button">LOGIN</a>
+            </div>
+        </div>
+
+        <div style="height:600px;"> <img src="static\dontlook.jpg" style="width:100%"
+                class="css-display-container css-grayscale-min background-size:cover">
+        </div>
+        <div class="css-display-middle css-center" style="width:100%">
+            <span class="css-text-white" style="font-size:80px">You have no permission to this page. Don't try to peek!</span>
+            <br><br><br>
+            <p><a href="home" class="css-button css-xxlarge css-black">Back to home page</a></p>
+        </div>
+    </div>
+</body>
+</html>
