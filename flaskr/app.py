@@ -618,33 +618,42 @@ def manage_accounts():
     displays all accounts and their current privilege level."""
 
     if request.method == 'GET':
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            "SELECT userID, first_name, last_name, role FROM users")
-        rows = sql_connection.fetchall()
-
-        db_manager.close()
-
-        return render_template('managerAccounts.html', rows=rows)
+        users = get_all_users()
+        return render_template('managerAccounts.html', rows=users)
 
     elif request.method == 'POST':
-
         first_name = request.form['firstName']
         last_name = request.form['lastName']
 
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
+        users = get_users_with_name(first_name, last_name)
 
-        sql_connection.execute("SELECT userID, first_name, last_name, role"
-                               " FROM users WHERE first_name=? AND last_name=?;", (first_name, last_name))
-        rows = sql_connection.fetchall()
+        return render_template('managerAccounts.html', rows=users)
 
-        db_manager.close()
 
-        return render_template('managerAccounts.html', rows=rows)
+def get_all_users():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute(
+        "SELECT userID, first_name, last_name, role FROM users")
+    users = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return users
+
+
+def get_users_with_name(first_name, last_name):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute("SELECT userID, first_name, last_name, role"
+                           " FROM users WHERE first_name=? AND last_name=?;", (first_name, last_name))
+    users = sql_connection.fetchall()
+
+    db_manager.close()
+
+    return users
 
 
 @app.route('/manageAccountsEdit', methods=['GET', 'POST'])
