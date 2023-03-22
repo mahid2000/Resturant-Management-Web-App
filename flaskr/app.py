@@ -5,7 +5,9 @@ from flask import Flask, render_template, redirect, request, session, url_for
 from flaskr.init_db import DBManager
 from flaskr.menu_item_model import MenuItemModel
 from flaskr.user_account_model import UserAccountModel
+from werkzeug.utils import secure_filename
 
+UPLOAD_FOLDER = 'static/images'
 publicKey, privateKey = rsa.newkeys(512)
 
 
@@ -31,6 +33,7 @@ def create_app():
 
 
 app = create_app()
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -90,11 +93,21 @@ def add_menu_item():
     elif request.method == 'POST':
 
         try:
-            menu_item = MenuItemModel(request.form['name'],
+            image = request.files['image']
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            # Get the menu item name, replace spaces with underscores, and use it as the image file name
+            name = request.form['name']
+            image_location = os.path.join(app.config['UPLOAD_FOLDER'], f"{name.replace(' ', '_')}.jpg")
+            os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), image_location)
+
+            menu_item = MenuItemModel(name,
                                       request.form['price'],
                                       request.form['category'],
                                       request.form['calories'],
-                                      request.form.getlist('options'))
+                                      request.form.getlist('options'),
+                                      image_location)
             add_item(menu_item)
         except Exception as ex:
             return render_template('addMenuItem.html', error=str(ex), user=session.get('user'))
@@ -108,15 +121,14 @@ def add_item(menu_item):
     sql_connection = db_manager.get_connection()
 
     # Add an item to the menu table.
-    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
-                           " VALUES (?, ?, ?, ?, ?)",
+    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens, image_location)"
+                           " VALUES (?, ?, ?, ?, ?, ?)",
                            (menu_item.name, menu_item.price, menu_item.category, menu_item.calories,
-                            menu_item.allergens))
+                            menu_item.allergens, menu_item.image_location))
 
     db_manager.get_db().commit()
     db_manager.close()
 
-    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
