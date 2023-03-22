@@ -711,22 +711,38 @@ def customer_orders():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    # Gets all the rows from menu.
-    sql_connection.execute(
-        "SELECT orderID, itemID, qty, order_time, state FROM orderDetails WHERE customerID=? ORDER BY orderID ASC;",
-        (session['user'][0], ))
-    rows = sql_connection.fetchall()
-
-    all_orders = {}
-    for row in rows:
-        if row[0] not in all_orders:
-            all_orders[row[0]] = []
-        sql_connection.execute(
-            "SELECT name FROM menu WHERE itemID=?", (row[1],))
-        name = sql_connection.fetchone()
-        temp_list = [name[0], row[2], row[3], row[4]]
-        all_orders[row[0]].append(temp_list)
-
+    sql_connection.execute("""SELECT orderDetails.orderID, 
+                                     menu.name,
+                                     orderDetails.qty, 
+                                     orderDetails.order_time, 
+                                     orderDetails.state,
+                                     orderDetails.itemID
+                               FROM orderDetails
+                               JOIN menu ON orderDetails.itemID=menu.itemID
+                               WHERE customerID=?
+                               ORDER BY orderID;""", (session['user'][0], ))
+    orders = sql_connection.fetchall()
     db_manager.close()
 
+    all_orders = format_customer_orders_as_dictionary(orders)
+
     return render_template('customerOrderTracking.html', all_orders=all_orders)
+
+
+def format_customer_orders_as_dictionary(orders):
+    all_orders = {}
+
+    for order in orders:
+
+        order_num = order[0]
+        name = order[1]
+        qty = order[2]
+        order_time = order[3]
+        state = order[4]
+
+        if order_num not in all_orders:
+            all_orders[order_num] = []
+
+        all_orders[order_num].append([name, qty, order_time, state])
+
+    return all_orders
