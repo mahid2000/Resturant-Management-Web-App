@@ -662,24 +662,29 @@ def manage_accounts_edit():
 
     if request.method == 'GET':
         return redirect('/manageAccounts')
-    elif request.method == 'POST':
 
+    elif request.method == 'POST':
         user_id = request.form['userID']
         role = request.form['role']
 
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute(
-            "UPDATE users SET role=? WHERE userID=?", (role, user_id))
-        db_manager.get_db().commit()
-
-        db_manager.close()
+        update_user(user_id, role)
 
         return redirect('/manageAccounts')
 
 
-# TODO: I don't think this method/page exists. This method might be able to be deleted.
+def update_user(user_id, role):
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute(
+        "UPDATE users SET role=? WHERE userID=?", (role, user_id))
+    db_manager.get_db().commit()
+
+    db_manager.close()
+
+    return redirect('/manageAccounts')
+
+
 @app.route('/assign_table', methods=['POST'])
 def assign_table():
     waiter_id = request.form.get('waiter_id')
