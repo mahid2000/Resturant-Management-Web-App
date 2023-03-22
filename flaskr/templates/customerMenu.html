@@ -123,7 +123,7 @@
           <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
           <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
           <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
-              food[5] }}</span></p>
+              food[5] }}</span></p>  
           <hr>
           {% endif %}
           {% endfor %}
@@ -133,10 +133,10 @@
           {% for food in foods %}
           {% if food[3] == "Sides" %}
           <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+          <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
           <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
               food[5] }}</span></p>
           <hr>
-          <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
           {% endif %}
           {% endfor %}
         </div>
@@ -146,10 +146,10 @@
         {% for food in foods %}
         {% if food[3] == "Desserts" %}
         <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+        <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
         <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
             food[5] }}</span></p>
         <hr>
-        <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
         {% endif %}
         {% endfor %}
       </div>
@@ -158,10 +158,10 @@
         {% for food in foods %}
         {% if food[3] == "Drinks" %}
         <h1><b>{{ food[1] }}</b> <span class="css-right css-tag css-dark-grey css-round">£{{ food[2] }}</span></h1>
+        <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
         <p class="css-text-grey">{{ food[4] }}kcal <span class="css-right css-tag css-amber css-round">Allergens: {{
             food[5] }}</span></p>
         <hr>
-        <img src="{{ food[6] }}" alt="{{ food[1] }} image" class="food-image">
         {% endif %}
         {% endfor %}
       </div>
