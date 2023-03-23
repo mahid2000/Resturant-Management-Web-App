@@ -724,7 +724,8 @@ def call_waiter():
         waiter_name = user[1]
         db_manager.close()
         assign_table(table, waiter_id)
-        return render_template('calling.html', confirm=True, row=waiter_name)
+        print(waiter_name)
+        return render_template('calling.html', confirm=True, row=user)
     return render_template('calling.html', confirm=False)
 
 

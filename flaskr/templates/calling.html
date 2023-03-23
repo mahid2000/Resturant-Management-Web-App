@@ -2,7 +2,7 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
 		<title>Calling</title>
 	</head>
 	<body>
@@ -31,9 +31,7 @@
             </form>
         {% else %}
             <p style="font-size: 64px; font-weight: bold">Your Waiter Today Is ...</p>
-            {% for row in rows %}
-                <p style="font-size: 48px; font-weight: bold; color: goldenrod;">{{ row }}</p>
-            {% endfor %}
+            <p style="font-size: 64px; font-weight: bold">{{ row[1] }}</p>
         {% endif %}
 
     </main>
