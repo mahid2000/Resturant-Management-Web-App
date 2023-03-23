@@ -96,24 +96,40 @@ def add_menu_item():
 
     elif request.method == 'POST':
 
+        filename = ""
         try:
-            image = request.files['image']
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            # Get the menu item name, replace spaces with underscores, and use it as the image file name
             name = request.form['name']
+            price = request.form['price']
+            calories = request.form['calories']
+
+            MenuItemModel.validate_name(name)
+            MenuItemModel.validate_price(price)
+            MenuItemModel.validate_calories(calories)
+
+            image = request.files['image']
+
+            if not image or image.filename == '':
+                raise ValueError("An image must be provided")
+
+            filename = secure_filename(image.filename)
+
             image_location = os.path.join(app.config['UPLOAD_FOLDER'], f"{name.replace(' ', '_')}.jpg")
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), image_location)
 
             menu_item = MenuItemModel(name,
-                                      request.form['price'],
+                                      price,
                                       request.form['category'],
-                                      request.form['calories'],
+                                      calories,
                                       request.form.getlist('options'),
                                       image_location)
             add_item(menu_item)
         except Exception as ex:
+
+            # Delete the saved image if an exception occurs
+            if filename and os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
             return render_template('addMenuItem.html', error=str(ex), user=session.get('user'))
 
         return redirect('/custMenu')
