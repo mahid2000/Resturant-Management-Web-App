@@ -12,13 +12,14 @@
     <!-- Navigation bar -->
     <div class="navbar">
         <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('custMenu') }}">MENU</a>
+        <a href="{{ url_for('cust_menu') }}">MENU</a>
 
         <!-- Waiter additional buttons -->
         {% if user[3] == 2 %}
         <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
         <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
         <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+        <a href="{{ url_for('calling_confirm') }}" class="css-bar-item css-button">TABLES</a>
 
         <!-- Kitchen staff additional buttons -->
         {% elif user[3] == 3 %}
@@ -46,7 +47,7 @@
 
         <div class="body">
             <!-- Back to custMenu page in this page -->
-            <a class="button" href="{{ url_for('custMenu') }}">
+            <a class="button" href="{{ url_for('cust_menu') }}">
                 < BACK TO MENU</a>
 
                 <!-- Content -->

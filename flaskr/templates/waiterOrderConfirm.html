@@ -12,10 +12,11 @@
     <!-- Navigation bar -->
     <div class="navbar">
         <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('custMenu') }}">MENU</a>
+        <a href="{{ url_for('cust_menu') }}">MENU</a>
         <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
         <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
         <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+        <a href="{{ url_for('calling_confirm') }}" class="css-bar-item css-button">TABLES</a>
         <a href="{{ url_for('about') }}">ABOUT</a>
         <a href="{{ url_for('logout') }}">LOGOUT</a>
     </div>

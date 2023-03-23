@@ -37,7 +37,7 @@
             <div class="css-bar css-xlarge css-black css-opacity css-hover-opacity-off" id="myNavbar">
 
                 <a href="{{ url_for('home') }}" class="css-bar-item css-button">HOME</a>
-                <a href="{{ url_for('custMenu') }}" class="css-bar-item css-button">MENU</a>
+                <a href="{{ url_for('cust_menu') }}" class="css-bar-item css-button">MENU</a>
 
                 <!-- Additional buttons for no login credentials -->
                 {% if user[3] == 0 %}
@@ -60,6 +60,7 @@
                 <a href="{{ url_for('waiter_order_confirm') }}" class="css-bar-item css-button">MANAGE ORDERS</a>
                 <a href="{{ url_for('add_menu_item') }}" class="css-bar-item css-button">ADD MENU ITEM</a>
                 <a href="{{ url_for('edit_menu_item') }}" class="css-bar-item css-button">EDIT MENU ITEM</a>
+                <a href="{{ url_for('calling_confirm') }}" class="css-bar-item css-button">TABLES</a>
                 <a href="{{ url_for('about') }}" class="css-bar-item css-button">ABOUT</a>
                 <a href="{{ url_for('logout') }}" class="css-bar-item css-button">LOGOUT</a>
 

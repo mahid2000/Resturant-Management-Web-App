@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Waiter Order confirmation page -->
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/extraStyle.css') }}">
+    <title>Calling Tables</title>
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">HOME</a>
+        <a href="{{ url_for('cust_menu') }}">MENU</a>
+        <a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a>
+        <a href="{{ url_for('add_menu_item') }}">ADD MENU ITEM</a>
+        <a href="{{ url_for('edit_menu_item') }}">EDIT MENU ITEM</a>
+        <a href="{{ url_for('calling_confirm') }}" class="css-bar-item css-button">TABLES</a>
+        <a href="{{ url_for('about') }}">ABOUT</a>
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+
+    <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+            <p>TABLE CALLED - WAITER</p>
+        </div>
+
+        <!-- Content -->
+        <div class="body">
+            {% for row in rows %}
+                <form  action="{{ url_for('calling_confirm') }}" method="POST">
+                    <p>Table </p>
+                    <p>{{ row[1] }}</p>
+                    <p> Is calling</p>
+                    <input type="hidden" name="table_num" value="{{ row[0] }}">
+                    <input type="submit" value="Answer">
+                </form>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Oaxaca Group</p>
+    </div>
+
+    <!-- End content -->
+</body>
+
+</html>
