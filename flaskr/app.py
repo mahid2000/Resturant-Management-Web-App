@@ -256,7 +256,7 @@ def logout():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if session.get('user')[3] != 1:
-        return redirect('/home')
+        return render_template('loginRequired.html')
     elif request.method == 'GET':
 
         db_manager = DBManager(app)
