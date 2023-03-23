@@ -168,6 +168,7 @@ def add_item(menu_item):
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
+    """Displays all menu items, and allows you to select and delete them."""
 
     if session.get('user')[3] <= 1:
         return render_template('loginRequired.html')
