@@ -740,7 +740,7 @@ def calling_confirm():
 
 
 def ans_call():
-    print("please have worked")
+    print("Bebug ans_call() test")
     table_num = request.form['table_num']
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
