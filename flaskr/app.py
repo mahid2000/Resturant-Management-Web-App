@@ -52,7 +52,9 @@ def home():
 @app.route('/call', methods=['GET', 'POST'])
 def call():
     """Assigns a waiter to a customer table, should they need help."""
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -99,7 +101,9 @@ def get_menu():
 def add_menu_item():
     """Render the page to add a menu item.
     Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
-    if request.method == 'GET':
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return render_template('addMenuItem.html', user=session.get('user'))
 
     elif request.method == 'POST':
@@ -138,27 +142,27 @@ def add_item(menu_item):
 def edit_menu_item():
     """Displays all menu items, and allows you to select and delete them."""
 
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
+
     if request.method == 'GET':
-
         rows = get_menu()
-
         return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
 
     elif request.method == 'POST':
-
         item_id = request.form['itemID']
         delete_item(item_id)
-
         return redirect('/editMenuItem')
 
 
 def delete_item(item):
     """Delete a menu item from the database."""
+    print(f"item: {item}")
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    sql_connection.execute("DELETE FROM menu WHERE itemID = ?", item)
+    sql_connection.execute("DELETE FROM menu WHERE itemID=?;", (item,))
     db_manager.get_db().commit()
 
     db_manager.close()
@@ -266,13 +270,14 @@ def logout():
 def order():
     """Takes the details of a customer's order."""
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
 
+    if request.method == 'GET':
         rows = get_menu()
         return render_template('order.html', rows=rows, user=session.get('user'))
 
     if request.method == 'POST':
-
         table_number = int(request.form['tableNumber'])
         setup_order(table_number)
 
@@ -332,6 +337,9 @@ def take_order():
 def order_payment():
     """Summarises the customer's order, provides a total cost, and requests payment details."""
 
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+
     if request.method == 'GET':
         rows, total_price = summarise_order()
         return render_template('orderPayment.html', rows=rows, totalPrice=total_price)
@@ -374,6 +382,9 @@ def calculate_total_price(order_details):
 def order_confirmation():
     """Tells the customer their order has been confirmed."""
 
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+
     if request.method == 'GET':
         return render_template('orderConfirmation.html')
 
@@ -385,13 +396,14 @@ def order_confirmation():
 def kitchen_orders():
     """Displays the orders that kitchen staff need to work on."""
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 3:
+        return render_template('loginRequired.html')
 
+    if request.method == 'GET':
         all_orders = get_orders_to_make()
         return render_template('kitchenOrders.html', all_orders=all_orders)
 
     elif request.method == 'POST':
-
         order_id = request.form['orderID']
         update_state_to('2', order_id)  # mark order as 'ready to deliver'
 
@@ -438,6 +450,7 @@ def format_kitchen_orders_in_dictionary(rows, sql_connection):
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
+
     if request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -524,8 +537,12 @@ def about():
 def waiter_order_confirm():
     """Shows the waiters the orders taken, and lets them confirm them."""
 
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
+
     if request.method == 'GET':
         all_orders = get_waiter_orders('0')
+
         return render_template('waiterOrderConfirm.html', all_orders=all_orders)
 
     elif request.method == 'POST':
@@ -581,7 +598,9 @@ def format_waiter_orders_in_dictionary(rows):
 def waiter_order_cancel():
     """Cancels the selected order."""
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return redirect('/waiterOrders')
 
     elif request.method == 'POST':
@@ -595,6 +614,8 @@ def waiter_order_cancel():
 def waiter_order_delivered():
     """Shows the orders to be delivered, and allows them to be marked as such."""
 
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
     if request.method == 'GET':
         all_orders = get_waiter_orders('2')
         return render_template('waiterOrderDeliver.html', all_orders=all_orders)
@@ -623,6 +644,9 @@ def update_state_to(state, order_id):
 def manage_accounts():
     """Managers can change the admin level of accounts here to hire or fire kitchen staff, waiters, and managers. This
     displays all accounts and their current privilege level."""
+
+    if session.get('user')[3] != 4:
+        return render_template('loginRequired.html')
 
     if request.method == 'GET':
         users = get_all_users()
@@ -671,7 +695,9 @@ def get_users_with_name(first_name, last_name):
 def manage_accounts_edit():
     """Allows managers to edit the admin level of an account."""
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 4:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return redirect('/manageAccounts')
 
     elif request.method == 'POST':
@@ -698,30 +724,12 @@ def update_user(user_id, role):
     return redirect('/manageAccounts')
 
 
-@app.route('/assign_table', methods=['POST'])
-def assign_table():
-    """Assign a waiter to a table."""
-
-    waiter_id = request.form.get('waiter_id')
-    table_num = request.form.get('tableNum')
-
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    sql_connection.execute('SELECT waiter_id FROM table_assignments WHERE table_id=?', (table_num,))
-    result = sql_connection.fetchone()
-    if result:
-        return 'Table', table_num, 'is already assigned to waiter', (result[0])
-    sql_connection.execute('INSERT INTO table_assignments (table_id, waiter_id) VALUES (?, ?)', (table_num, waiter_id))
-    db_manager.get_db().commit()
-    db_manager.close()
-
-    return 'Table', table_num, 'has been assigned to waiter', waiter_id
-
-
 @app.route('/customerOrders')
 def customer_orders():
     """Shows a customer the details of their orders, along with their current statuses."""
+
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
@@ -763,3 +771,64 @@ def format_customer_orders_as_dictionary(orders):
         all_orders[order_num].append([name, qty, order_time, state])
 
     return all_orders
+
+
+@app.route('/assign_table', methods=['POST'])
+def assign_table(table_num, waiter_id):
+    """Assign a waiter to a table."""
+
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+
+    sql_connection.execute('SELECT waiter_id FROM tableAssignments WHERE tableNum=?', (table_num,))
+    result = sql_connection.fetchone()
+    if result:
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)',
+                               (table_num, result[0], 1))
+    else:
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)',
+                               (table_num, waiter_id, 1))
+    db_manager.get_db().commit()
+    db_manager.close()
+
+
+@app.route('/calling', methods=['GET', 'POST'])
+def call_waiter():
+    if request.method == 'POST':
+        table = request.form['table_num']
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
+        sql_connection.execute("SELECT * FROM users"
+                               + " WHERE  role = 2"
+                               + " ORDER BY RANDOM()"
+                               + "  LIMIT 1;")
+        user = sql_connection.fetchone()
+        waiter_id = user[0]
+        waiter_name = user[1]
+        db_manager.close()
+        assign_table(table, waiter_id)
+        return render_template('calling.html', confirm=True, row=waiter_name)
+    return render_template('calling.html', confirm=False)
+
+
+@app.route('/called', methods=['GET', 'POST'])
+def calling_confirm():
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    sql_connection.execute("SELECT * FROM tableAssignments WHERE waiter_id=?;",
+                           (session['user'][0], ))
+    rows = sql_connection.fetchall()
+    db_manager.close()
+    return render_template('waiterCalled.html', rows=rows)
+
+
+def ans_call():
+    print("Bebug ans_call() test")
+    table_num = request.form['table_num']
+    db_manager = DBManager(app)
+    sql_connection = db_manager.get_connection()
+    sql_connection.execute(
+        "DELETE FROM tableAssignments WHERE waiter_id=? AND tableNum=?;",
+        (session['user'][0], table_num))
+    db_manager.get_db().commit()
+    db_manager.close()

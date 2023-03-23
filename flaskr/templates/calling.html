@@ -6,26 +6,36 @@
 		<title>Calling</title>
 	</head>
 	<body>
-        <div class="navbar">
-            <a href="{{ url_for('home') }}">HOME</a>
-            <a href="{{ url_for('cust_menu') }}">MENU</a>
-            <a href="{{ url_for('call') }}">CALL WAITER</a>
-            <a href="{{ url_for('order') }}">ORDER</a>
-            <a href="{{ url_for('customer_orders') }}">MY ORDERS</a>
-            <a href="{{ url_for('about') }}">ABOUT</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
-        </div>
-        <div class="main">
-            <div class="header">
-                <p>CALLING</p>
-            </div>
-            <div class="body" style="height: auto">
-                <p style="font-size: 64px; font-weight: bold">Your Waiter Today Is ...</p>
-                {% for row in rows %}
-                    <p style="font-size: 48px; font-weight: bold; color: goldenrod;">{{ row[0] }} {{ row[1] }}</p>
-                {% endfor %}
-            </div>
-        </div>
+    <header>
+        <h1>Restaurant Name</h1>
+        <h2>Calling</h2>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('cust_menu') }}">Menu</a></li>
+                <li><a href="{{ url_for('call') }}">Call Waiter</a></li>
+                <li><a href="{{ url_for('order') }}">Order</a></li>
+                <li><a href="{{ url_for('customer_orders') }}">My Orders</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <main>
+        {% if not confirm %}
+             <form action ="calling" method="POST">
+                <p>Please add your table Number: </p>
+                <input type="number" name="table_num" min="1" max="100" value="0">
+                <input onclick="call_waiter()" type="submit" value="Call">
+            </form>
+        {% else %}
+            <p style="font-size: 64px; font-weight: bold">Your Waiter Today Is ...</p>
+            {% for row in rows %}
+                <p style="font-size: 48px; font-weight: bold; color: goldenrod;">{{ row }}</p>
+            {% endfor %}
+        {% endif %}
+
+    </main>
 	</body>
 </html>
-
