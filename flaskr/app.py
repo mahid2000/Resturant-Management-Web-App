@@ -452,7 +452,7 @@ def get_orders_to_make():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    # Gets all the rows from menu.  <-- No it fucking doesn't?
+    # Gets all the rows from menu. 
     sql_connection.execute(
         "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
     rows = sql_connection.fetchall()
