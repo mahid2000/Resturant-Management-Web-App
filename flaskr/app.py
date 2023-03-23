@@ -51,7 +51,9 @@ def home():
 
 @app.route('/call', methods=['GET', 'POST'])
 def call():
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
@@ -72,33 +74,21 @@ def call():
         return render_template('calling.html', rows=rows)
 
 
-@app.route('/menu', methods=['GET', 'POST'])
+@app.route('/menuFilter', methods=['GET', 'POST'])
 def menu():
-    """Render the menu page. Get menu items from the database."""
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Gets all the rows from menu or apply the filter if made.
-    if not request.form:
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-    else:
-        if request.method == 'GET':
-            return render_template('menu.html')
-        elif request.method == 'POST':
-            rows = filter_menu()
-
-    db_manager.close()
-
-    # Passes the rows of the table to the pages .html file.
-    return render_template('menu.html', rows=rows, user=session.get('user'))
+    """Filters the menu page. Get menu items from the database."""
+    if request.method == 'POST':
+        rows = filter_menu()
+        return render_template('order.html', rows=rows, user=session.get('user'))
 
 
 @app.route('/addMenuItem', methods=['GET', 'POST'])
 def add_menu_item():
     """Render the page to add a menu item.
     Collects item info from an HTML form, checks the data is valid, and adds it to the database."""
-    if request.method == 'GET':
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return render_template('addMenuItem.html', user=session.get('user'))
 
     elif request.method == 'POST':
@@ -130,13 +120,15 @@ def add_item(menu_item):
     db_manager.get_db().commit()
     db_manager.close()
 
-    return redirect('/menu')
+    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
     """Displays all menu items, and allows you to select and delete them."""
-    if request.method == 'GET':
+    if session.get('user')[3] <= 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         # Render the page to edit the menu.
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -263,8 +255,9 @@ def logout():
 
 @app.route('/order', methods=['GET', 'POST'])
 def order():
-
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -318,8 +311,9 @@ def order():
 
 @app.route('/orderPayment', methods=['GET', 'POST'])
 def order_payment():
-
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -338,7 +332,7 @@ def order_payment():
         rows = []
         totalPrice = 0
         for i in range(0, len(menuRows)):
-            price = menuRows[i][1] * orderRows[i][1]
+            price = menuRows[i][1] * int(orderRows[i][1])
             row = [menuRows[i][0], orderRows[i][1], price]
             rows.append(row)
             totalPrice += price
@@ -351,8 +345,9 @@ def order_payment():
 
 @app.route('/orderConformation', methods=['GET', 'POST'])
 def order_conformation():
-
-    if request.method == 'GET':
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return render_template('orderConformation.html')
     elif request.method == 'POST':
         return redirect('/home')
@@ -360,8 +355,9 @@ def order_conformation():
 
 @app.route('/kitchenOrders', methods=['GET', 'POST'])
 def kitchen_orders():
-
-    if request.method == 'GET':
+    if session.get('user')[3] != 3:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -402,6 +398,7 @@ def kitchen_orders():
 
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
+
     if request.method == 'GET':
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -492,7 +489,9 @@ def about():
 @app.route('/waiterOrders', methods=['GET', 'POST'])
 def waiter_order_confirm():
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -538,7 +537,9 @@ def waiter_order_confirm():
 @app.route('/waiterOrdersCancel', methods=['GET', 'POST'])
 def waiter_order_cancel():
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return redirect('/waiterOrders')
     elif request.method == 'POST':
         db_manager = DBManager(app)
@@ -559,6 +560,8 @@ def waiter_order_cancel():
 @app.route('/waiterOrdersDelivered', methods=['GET', 'POST'])
 def waiter_order_delivered():
 
+    if session.get('user')[3] != 2:
+        return render_template('loginRequired.html')
     if request.method == 'GET':
 
         db_manager = DBManager(app)
@@ -604,7 +607,9 @@ def waiter_order_delivered():
 @app.route('/manageAccounts', methods=['GET', 'POST'])
 def manage_accounts():
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 4:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
@@ -637,7 +642,9 @@ def manage_accounts():
 @app.route('/manageAccountsEdit', methods=['GET', 'POST'])
 def manage_accounts_edit():
 
-    if request.method == 'GET':
+    if session.get('user')[3] != 4:
+        return render_template('loginRequired.html')
+    elif request.method == 'GET':
         return redirect('/manageAccounts')
     elif request.method == 'POST':
 
@@ -675,29 +682,31 @@ def assign_table(table_num, waiter_id):
 
 @app.route('/customerOrders')
 def customer_orders():
+    if session.get('user')[3] != 1:
+        return render_template('loginRequired.html')
+    else:
+        db_manager = DBManager(app)
+        sql_connection = db_manager.get_connection()
 
-    db_manager = DBManager(app)
-    sql_connection = db_manager.get_connection()
-
-    # Gets all the rows from menu.
-    sql_connection.execute(
-        "SELECT orderID, itemID, qty, order_time, state FROM orderDetails WHERE customerID=? ORDER BY orderID ASC;",
-        (session['user'][0], ))
-    rows = sql_connection.fetchall()
-
-    all_orders = {}
-    for row in rows:
-        if row[0] not in all_orders:
-            all_orders[row[0]] = []
+        # Gets all the rows from menu.
         sql_connection.execute(
-            "SELECT name FROM menu WHERE itemID=?", (row[1],))
-        name = sql_connection.fetchone()
-        temp_list = [name[0], row[2], row[3], row[4]]
-        all_orders[row[0]].append(temp_list)
+            "SELECT orderID, itemID, qty, order_time, state FROM orderDetails WHERE customerID=? ORDER BY orderID ASC;",
+            (session['user'][0], ))
+        rows = sql_connection.fetchall()
 
-    db_manager.close()
+        all_orders = {}
+        for row in rows:
+            if row[0] not in all_orders:
+                all_orders[row[0]] = []
+            sql_connection.execute(
+                "SELECT name FROM menu WHERE itemID=?", (row[1],))
+            name = sql_connection.fetchone()
+            temp_list = [name[0], row[2], row[3], row[4]]
+            all_orders[row[0]].append(temp_list)
 
-    return render_template('customerOrderTracking.html', all_orders=all_orders)
+        db_manager.close()
+
+        return render_template('customerOrderTracking.html', all_orders=all_orders)
 
 
 @app.route('/calling', methods=['GET', 'POST'])
