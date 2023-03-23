@@ -2,7 +2,7 @@
 <html lang = "en">
 	<head>
 		<meta charset = "UTF-8">
-		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/extraStyle.css') }}">
 		<title>Calling</title>
 	</head>
 	<body>
@@ -25,13 +25,13 @@
     <main>
         {% if not confirm %}
              <form action ="calling" method="POST">
-                <p>Please add your table Number: </p>
+                <p class="css-text-white" style="color:#FFFFFF">Please add your table Number: </p>
                 <input type="number" name="table_num" min="1" max="100" value="0">
                 <input onclick="call_waiter()" type="submit" value="Call">
             </form>
         {% else %}
-            <p style="font-size: 64px; font-weight: bold">Your Waiter Today Is ...</p>
-            <p style="font-size: 64px; font-weight: bold">{{ row[1] }}</p>
+            <p class="css-text-white" style="color:#FFFFFF">Your Waiter Today Is ...</p>
+            <p class="css-text-white" style="color:#FFFFFF">{{ row[1] }}</p>
         {% endif %}
 
     </main>

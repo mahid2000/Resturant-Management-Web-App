@@ -45,33 +45,8 @@ def index():
 
 @app.route('/home')
 def home():
-    #Render the home page.
+    """Render the home page."""
     return render_template('home.html', user=session.get('user'))
-
-
-@app.route('/call', methods=['GET', 'POST'])
-def call():
-    if session.get('user')[3] != 1:
-        return render_template('loginRequired.html')
-    elif request.method == 'GET':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                               + " VALUES (69, 'Mahid', 'Gondal', '###', 1)")
-
-        sql_connection.execute("INSERT INTO users (userID, first_name , last_name, password_hash , role)"
-                               + " VALUES (96, 'Jhon', 'Snow', '##1', 1)")
-
-        sql_connection.execute("SELECT first_name, last_name FROM users"
-                               + " WHERE  role = 2"
-                               + " ORDER BY RANDOM()"
-                               + "  LIMIT 1;")
-        rows = sql_connection.fetchall()
-
-        db_manager.close()
-
-        return render_template('calling.html', rows=rows)
 
 
 @app.route('/menuFilter', methods=['GET', 'POST'])
@@ -320,24 +295,24 @@ def order_payment():
 
         sql_connection.execute(
             "SELECT itemID, qty FROM orderDetails WHERE orderID=?", (session['order'][0],))
-        orderRows = sql_connection.fetchall()
+        order_rows = sql_connection.fetchall()
 
-        menuRows = []
-        for orderRow in orderRows:
+        menu_rows = []
+        for orderRow in order_rows:
             sql_connection.execute(
                 "SELECT name, price FROM menu WHERE itemID=?", (orderRow[0],))
-            menuRow = sql_connection.fetchone()
-            menuRows.append(menuRow)
+            menu_row = sql_connection.fetchone()
+            menu_rows.append(menu_row)
 
         rows = []
-        totalPrice = 0
-        for i in range(0, len(menuRows)):
-            price = menuRows[i][1] * int(orderRows[i][1])
-            row = [menuRows[i][0], orderRows[i][1], price]
+        total_price = 0
+        for i in range(0, len(menu_rows)):
+            price = menu_rows[i][1] * int(order_rows[i][1])
+            row = [menu_rows[i][0], order_rows[i][1], price]
             rows.append(row)
-            totalPrice += price
+            total_price += price
 
-        return render_template('orderPayment.html', rows=rows, totalPrice=totalPrice)
+        return render_template('orderPayment.html', rows=rows, totalPrice=total_price)
     elif request.method == 'POST':
         # This is where the payment information would be processed.
         return redirect('/orderConformation')
@@ -468,7 +443,7 @@ def filter_menu():
 
 
 @app.route('/custMenu')
-def custMenu():
+def cust_menu():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -510,8 +485,8 @@ def waiter_order_confirm():
             name = sql_connection.fetchone()
             sql_connection.execute(
                 "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
-            tableNum = sql_connection.fetchone()
-            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            table_num = sql_connection.fetchone()
+            temp_list = [name[0], table_num[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
@@ -581,8 +556,8 @@ def waiter_order_delivered():
             name = sql_connection.fetchone()
             sql_connection.execute(
                 "SELECT tableNum FROM orders WHERE orderID=?", (row[0],))
-            tableNum = sql_connection.fetchone()
-            temp_list = [name[0], tableNum[0], row[2], row[3]]
+            table_num = sql_connection.fetchone()
+            temp_list = [name[0], table_num[0], row[2], row[3]]
             all_orders[row[0]].append(temp_list)
 
         db_manager.close()
@@ -624,14 +599,14 @@ def manage_accounts():
 
     elif request.method == 'POST':
 
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
+        first_name = request.form['firstName']
+        last_name = request.form['lastName']
 
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
 
         sql_connection.execute("SELECT userID, first_name, last_name, role"
-                               " FROM users WHERE first_name=? AND last_name=?;", (firstName, lastName))
+                               " FROM users WHERE first_name=? AND last_name=?;", (first_name, last_name))
         rows = sql_connection.fetchall()
 
         db_manager.close()
@@ -672,12 +647,13 @@ def assign_table(table_num, waiter_id):
     sql_connection.execute('SELECT waiter_id FROM tableAssignments WHERE tableNum=?', (table_num,))
     result = sql_connection.fetchone()
     if result:
-        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (table_num, result[0], 1))
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)',
+                               (table_num, result[0], 1))
     else:
-        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (table_num, waiter_id, 1))
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)',
+                               (table_num, waiter_id, 1))
     db_manager.get_db().commit()
     db_manager.close()
-
 
 
 @app.route('/customerOrders')
@@ -750,3 +726,4 @@ def ans_call():
         (session['user'][0], table_num))
     db_manager.get_db().commit()
     db_manager.close()
+    calling_confirm()
