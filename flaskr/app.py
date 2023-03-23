@@ -489,16 +489,7 @@ def custMenu():
 
     db_manager.close()
 
-     # Create a new list that contains the original items from the tuple plus the image URL
-    new_foods = []
-    for food in foods:
-        food_image_url = url_for('static', filename=f"images/{food[1]}.jpg")
-        new_food = list(food)
-        new_food.append(food_image_url)
-        new_foods.append(new_food)
-
-    return render_template('customerMenu.html', foods=new_foods, user=session.get('user'))
-
+    return render_template('customerMenu.html', foods=foods, user=session.get('user'))
 
 
 @app.route('/about')
