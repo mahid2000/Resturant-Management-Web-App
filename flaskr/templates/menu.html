@@ -21,7 +21,7 @@
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 2 %}
                     <li><a href="{{ url_for('waiter_order_confirm') }}">MANAGE ORDERS</a></li>
-                    <li><a href="{{ url_for('callingConfirm') }}">TABLES</a></li>
+                    <li><a href="{{ url_for('calling_confirm') }}">TABLES</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% elif user[3] == 3 %}
                     <li><a href="{{ url_for('kitchen_orders') }}">Manage Orders</a></li>

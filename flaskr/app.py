@@ -657,18 +657,17 @@ def manage_accounts_edit():
 
 
 @app.route('/assign_table', methods=['POST'])
-def assign_table(tableNum, waiter_id):
+def assign_table(table_num, waiter_id):
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    sql_connection.execute('SELECT waiter_id FROM tableAssignments WHERE tableNum=?', (tableNum,))
+    sql_connection.execute('SELECT waiter_id FROM tableAssignments WHERE tableNum=?', (table_num,))
     result = sql_connection.fetchone()
     if result:
-        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, result[0], 1))
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (table_num, result[0], 1))
     else:
-        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (tableNum, waiter_id, 1))
-        print(tableNum, waiter_id)
+        sql_connection.execute('INSERT INTO tableAssignments (tableNum, waiter_id, called) VALUES (?, ?, ?)', (table_num, waiter_id, 1))
     db_manager.get_db().commit()
     db_manager.close()
 
@@ -702,9 +701,9 @@ def customer_orders():
 
 
 @app.route('/calling', methods=['GET', 'POST'])
-def callWaiter():
+def call_waiter():
     if request.method == 'POST':
-        table = request.form['tableNum']
+        table = request.form['table_num']
         db_manager = DBManager(app)
         sql_connection = db_manager.get_connection()
         sql_connection.execute("SELECT * FROM users"
@@ -715,29 +714,29 @@ def callWaiter():
         waiter_id = user[0]
         waiter_name = user[1]
         db_manager.close()
-        print(table, waiter_id)
         assign_table(table, waiter_id)
         return render_template('calling.html', confirm=True, row=waiter_name)
     return render_template('calling.html', confirm=False)
 
 
 @app.route('/called', methods=['GET', 'POST'])
-def callingConfirm():
+def calling_confirm():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     sql_connection.execute("SELECT * FROM tableAssignments WHERE waiter_id=?;",
-                           (session['user'][0]))
+                           (session['user'][0], ))
     rows = sql_connection.fetchall()
     db_manager.close()
-    print(rows)
-    return render_template('waiterCalled.html', rows=rows)
+    return render_template('waiter_called.html', rows=rows)
 
 
-def ansCall():
-    tableNum = request.form['id']
+def ans_call():
+    print("please have worked")
+    table_num = request.form['table_num']
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     sql_connection.execute(
         "DELETE FROM tableAssignments WHERE waiter_id=? AND tableNum=?;",
-        (session['user'][0], tableNum))
+        (session['user'][0], table_num))
+    db_manager.get_db().commit()
     db_manager.close()
