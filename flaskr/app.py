@@ -166,50 +166,12 @@ def add_item(menu_item):
 
 
 
-import os
-
 @app.route('/editMenuItem', methods=['GET', 'POST'])
 def edit_menu_item():
-<<<<<<< HEAD
-    if session.get('user')[3] <= 1:
-        return render_template('loginRequired.html')
-    elif request.method == 'GET':
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        sql_connection.execute("SELECT * FROM menu;")
-        rows = sql_connection.fetchall()
-
-        db_manager.close()
-
-        return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
-
-    elif request.method == 'POST':
-
-        itemID = request.form['itemID']
-
-        db_manager = DBManager(app)
-        sql_connection = db_manager.get_connection()
-
-        # Get the image location for the menu item
-        sql_connection.execute("SELECT image_location FROM menu WHERE itemID = ?", (itemID, ))
-        image_location = sql_connection.fetchone()[0]
-
-        # Delete the menu item from the database
-        sql_connection.execute("DELETE FROM menu WHERE itemID = ?", (itemID, ))
-        db_manager.get_db().commit()
-
-        db_manager.close()
-
-        # Delete the image file associated with the menu item
-        if os.path.exists(image_location):
-            os.remove(image_location)
-=======
-    """Displays all menu items, and allows you to select and delete them."""
 
     if session.get('user')[3] <= 1:
         return render_template('loginRequired.html')
-
+    
     if request.method == 'GET':
         rows = get_menu()
         return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
@@ -218,9 +180,7 @@ def edit_menu_item():
         item_id = request.form['itemID']
         delete_item(item_id)
         return redirect('/editMenuItem')
->>>>>>> f235d0feeff918eb4af7f2d052cd63b4cd0afebb
 
-        return redirect('/editMenuItem')
 
 def delete_item(item):
     """Delete a menu item from the database."""
@@ -229,13 +189,21 @@ def delete_item(item):
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
+    # Get the image location for the menu item
+    sql_connection.execute("SELECT image_location FROM menu WHERE itemID=?;", (item,))
+    image_location = sql_connection.fetchone()[0]
+
+    # Delete the menu item from the database
     sql_connection.execute("DELETE FROM menu WHERE itemID=?;", (item,))
     db_manager.get_db().commit()
 
     db_manager.close()
 
-    return redirect('/editMenuItem')
+    # Delete the image file associated with the menu item
+    if os.path.exists(image_location):
+        os.remove(image_location)
 
+    return redirect('/editMenuItem')
 
 @app.route('/login', methods=['GET', 'POST'])
 def fetch_login():
