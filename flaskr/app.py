@@ -1,11 +1,13 @@
 import os
 import sys
 import rsa
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, url_for
 from flaskr.init_db import DBManager
 from flaskr.menu_item_model import MenuItemModel
 from flaskr.user_account_model import UserAccountModel
+from werkzeug.utils import secure_filename
 
+UPLOAD_FOLDER = 'static/images'
 publicKey, privateKey = rsa.newkeys(512)
 
 
@@ -31,6 +33,7 @@ def create_app():
 
 
 app = create_app()
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -108,14 +111,40 @@ def add_menu_item():
 
     elif request.method == 'POST':
 
+        filename = ""
         try:
-            menu_item = MenuItemModel(request.form['name'],
-                                      request.form['price'],
+            name = request.form['name']
+            price = request.form['price']
+            calories = request.form['calories']
+
+            MenuItemModel.validate_name(name)
+            MenuItemModel.validate_price(price)
+            MenuItemModel.validate_calories(calories)
+
+            image = request.files['image']
+
+            if not image or image.filename == '':
+                raise ValueError("An image must be provided")
+
+            filename = secure_filename(image.filename)
+
+            image_location = os.path.join(app.config['UPLOAD_FOLDER'], f"{name.replace(' ', '_')}.jpg")
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), image_location)
+
+            menu_item = MenuItemModel(name,
+                                      price,
                                       request.form['category'],
-                                      request.form['calories'],
-                                      request.form.getlist('options'))
+                                      calories,
+                                      request.form.getlist('options'),
+                                      image_location)
             add_item(menu_item)
         except Exception as ex:
+
+            # Delete the saved image if an exception occurs
+            if filename and os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
             return render_template('addMenuItem.html', error=str(ex), user=session.get('user'))
 
         return redirect('/custMenu')
@@ -127,15 +156,14 @@ def add_item(menu_item):
     sql_connection = db_manager.get_connection()
 
     # Add an item to the menu table.
-    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens)"
-                           " VALUES (?, ?, ?, ?, ?)",
+    sql_connection.execute("INSERT INTO menu (name, price, category, calories, allergens, image_location)"
+                           " VALUES (?, ?, ?, ?, ?, ?)",
                            (menu_item.name, menu_item.price, menu_item.category, menu_item.calories,
-                            menu_item.allergens))
+                            menu_item.allergens, menu_item.image_location))
 
     db_manager.get_db().commit()
     db_manager.close()
 
-    return redirect('/custMenu')
 
 
 @app.route('/editMenuItem', methods=['GET', 'POST'])
@@ -144,7 +172,7 @@ def edit_menu_item():
 
     if session.get('user')[3] <= 1:
         return render_template('loginRequired.html')
-
+    
     if request.method == 'GET':
         rows = get_menu()
         return render_template('/editMenuItem.html', rows=rows, user=session.get('user'))
@@ -162,13 +190,21 @@ def delete_item(item):
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
+    # Get the image location for the menu item
+    sql_connection.execute("SELECT image_location FROM menu WHERE itemID=?;", (item,))
+    image_location = sql_connection.fetchone()[0]
+
+    # Delete the menu item from the database
     sql_connection.execute("DELETE FROM menu WHERE itemID=?;", (item,))
     db_manager.get_db().commit()
 
     db_manager.close()
 
-    return redirect('/editMenuItem')
+    # Delete the image file associated with the menu item
+    if os.path.exists(image_location):
+        os.remove(image_location)
 
+    return redirect('/editMenuItem')
 
 @app.route('/login', methods=['GET', 'POST'])
 def fetch_login():

@@ -2,7 +2,7 @@ import re
 
 
 class MenuItemModel:
-    def __init__(self, name, price, category, calories, allergen):
+    def __init__(self, name, price, category, calories, allergen, image_location):
         self.validate_name(name)
         self.validate_price(price)
         self.validate_calories(calories)
@@ -12,6 +12,7 @@ class MenuItemModel:
         self.category = category
         self.calories = calories
         self.allergens = self.format_allergens(allergen)
+        self.image_location = image_location
 
     @staticmethod
     def validate_name(name):

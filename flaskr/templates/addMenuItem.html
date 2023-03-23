@@ -46,7 +46,7 @@
             <a class="button" href="{{ url_for('cust_menu') }}">
                 < BACK TO MENU</a>
 
-                    <form action="{{ url_for('add_menu_item') }}" method="POST">
+                <form action="{{ url_for('add_menu_item') }}" method="POST" enctype="multipart/form-data">
 
                         <div class="addmenu-grid">
                             <div class="addmenu-grid-item">
@@ -63,6 +63,10 @@
                                     <option value="Desserts">Desserts</option>
                                     <option value="Drinks">Drinks</option>
                                 </select><br>
+
+                        <label for="image">Upload Image:</label>
+                        <input type="file" name="image" accept="image/*"><br>
+                        
                             </div>
                             <div class="addmenu-grid-item">
                                 <label style="font-weight: bold">Allergens:</label>

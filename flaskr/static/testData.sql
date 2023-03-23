@@ -1,37 +1,37 @@
 -- Menu Table
 
 -- Mains
-INSERT INTO menu (name, price, category, calories, allergens)
+INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Beef Tacos", 12.50, "Mains", 800, "Mi"),
-    ("Pork Tacos", 12.50, "Mains", 800, "Mi"),
-    ("Halloumi Tacos", 10.50, "Mains", 750, "Mi"),
-    ("Chicken Enchiladas", 14.50, "Mains", 900, "G"),
-    ("Pork Enchiladas", 14.50, "Mains", 900, "Mi"),
-    ("Jackfruit Enchiladas", 14.50, "Mains", 900, "Mi");
+    ("Beef Tacos", 12.50, "Mains", 800, "Mi","static/images/Beef_Tacos.jpg"),
+    ("Pork Tacos", 12.50, "Mains", 800, "Mi","static/images/Pork_Tacos.jpg"),
+    ("Halloumi Tacos", 10.50, "Mains", 750, "Mi","static/images/Halloumi_Tacos.jpg"),
+    ("Chicken Enchiladas", 14.50, "Mains", 900, "G","static/images/Chicken_Enchiladas.jpg"),
+    ("Pork Enchiladas", 14.50, "Mains", 900, "Mi","static/images/Pork_Enchiladas.jpg"),
+    ("Jackfruit Enchiladas", 14.50, "Mains", 900, "Mi","static/images/Jackfruit_Enchiladas.jpg");
 
 -- Sides
-INSERT INTO menu (name, price, category, calories, allergens)
+INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Plain Nachos", 5.50, "Sides", 350, ""),
-    ("Cheesy Nachos", 6.50, "Sides", 400, "Mi");
+    ("Plain Nachos", 5.50, "Sides", 350, "","static/images/Plain_Nachos.jpg"),
+    ("Cheesy Nachos", 6.50, "Sides", 400, "Mi","static/images/Cheesy_Nachos.jpg");
 
 -- Desserts
-INSERT INTO menu (name, price, category, calories, allergens)
+INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Ice Cream Sundae", 5.50, "Desserts", 300, "Mi"),
-    ("Chocolate Brownie", 5.50, "Desserts", 300, "Mi");
+    ("Ice Cream Sundae", 5.50, "Desserts", 300, "Mi","static/images/Ice_Cream_Sundae.jpg"),
+    ("Chocolate Brownie", 5.50, "Desserts", 300, "Mi","static/images/Chocolate_Brownie.jpg");
 
 -- Drinks
-INSERT INTO menu (name, price, category, calories, allergens)
+INSERT INTO menu (name, price, category, calories, allergens, image_location)
 VALUES
-    ("Coca Cola", 3.50, "Drinks", 150, ""),
-    ("Fanta", 3.50, "Drinks", 150, ""),
-    ("Sprite", 3.50, "Drinks", 150, ""),
-    ("Apple Juice", 3.50, "Drinks", 150, ""),
-    ("Orange Juice", 3.50, "Drinks", 150, ""),
-    ("Still Water", 3.50, "Drinks", 150, ""),
-    ("Beer", 3.50, "Drinks", 150, "G");
+    ("Coca Cola", 3.50, "Drinks", 150, "","static/images/Coca_Cola.jpg"),
+    ("Fanta", 3.50, "Drinks", 150, "","static/images/Fanta.jpg"),
+    ("Sprite", 3.50, "Drinks", 150, "","static/images/Sprite.jpg"),
+    ("Apple Juice", 3.50, "Drinks", 150, "","static/images/Apple_Juice.jpg"),
+    ("Orange Juice", 3.50, "Drinks", 150, "","static/images/Orange_Juice.jpg"),
+    ("Still Water", 3.50, "Drinks", 150, "","static/images/Still_Water.jpg"),
+    ("Beer", 3.50, "Drinks", 150, "G","static/images/Beer.jpg");
 
 
 -- Logins

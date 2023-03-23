@@ -11,8 +11,9 @@ Install the packages and library for the project by running \
 `pip install -r requirements.txt`.
 
 ### Running The Project
-Once you have installed the package requirements, the project can be run with the command \
-`flask --app flaskr/app run`
+Once you have installed the package requirements, the project can be run with the commands \
+`cd flaskr`
+`flask --app app run`
 
 ##### Example Logins
 Our restaurant system uses the same login portal for customers and staff. The following are some logins to see the functionality at different levels of admin. \
