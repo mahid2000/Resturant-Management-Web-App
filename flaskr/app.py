@@ -343,6 +343,8 @@ def order_payment():
 
 
 def summarise_order():
+    """Fetches a customer's order, and returns the contents with the total price to pay."""
+
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -358,6 +360,8 @@ def summarise_order():
 
 
 def calculate_total_price(order_details):
+    """Calculates the total price for a given order."""
+
     total_price = 0
     for item in order_details:
         price = item[2]
@@ -432,7 +436,6 @@ def format_kitchen_orders_in_dictionary(rows, sql_connection):
     return all_orders
 
 
-# TODO: I'm fairly sure this never gets used, and also wouldn't work if it was...
 @app.route('/updateOrderStatus', methods=['GET'])
 def update_order_status():
     if request.method == 'GET':
@@ -450,7 +453,7 @@ def update_order_status():
 
 
 def filter_menu():
-    """Filters the menu by allergens, price, or calories."""
+    """Filters the menu by allergens, price, or calories, or orders by price or calories."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
     # Initial SQL command Built up over filtering
@@ -533,6 +536,7 @@ def waiter_order_confirm():
 
 
 def get_waiter_orders(state):
+    """Gets all the orders of a given state."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -554,6 +558,8 @@ def get_waiter_orders(state):
 
 
 def format_waiter_orders_in_dictionary(rows):
+    """Receives the orders taken, then formats them in a dictionary with the information that the waiters need.
+    Returns the dictionary."""
     all_orders = {}
     for row in rows:
 
@@ -601,6 +607,7 @@ def waiter_order_delivered():
 
 
 def update_state_to(state, order_id):
+    """Receives an order ID, and the state to update that order to."""
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -631,6 +638,8 @@ def manage_accounts():
 
 
 def get_all_users():
+    """Returns all the users registered with the system."""
+
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -644,6 +653,8 @@ def get_all_users():
 
 
 def get_users_with_name(first_name, last_name):
+    """Returns all the users registered with the system matching a specific first and last name."""
+
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -673,6 +684,8 @@ def manage_accounts_edit():
 
 
 def update_user(user_id, role):
+    """Update the role of a user with a given user_ID to a specified role."""
+
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
@@ -687,6 +700,8 @@ def update_user(user_id, role):
 
 @app.route('/assign_table', methods=['POST'])
 def assign_table():
+    """Assign a waiter to a table."""
+
     waiter_id = request.form.get('waiter_id')
     table_num = request.form.get('tableNum')
 
@@ -730,6 +745,8 @@ def customer_orders():
 
 
 def format_customer_orders_as_dictionary(orders):
+    """Format a list of orders into a dictionary with the information that customers would need to see."""
+
     all_orders = {}
 
     for order in orders:
