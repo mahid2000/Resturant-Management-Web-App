@@ -12,7 +12,7 @@
     <!-- Navigation bar -->
     <div class="navbar">
         <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('custMenu') }}">MENU</a>
+        <a href="{{ url_for('cust_menu') }}">MENU</a>
 
         <!-- Waiter additional buttons -->
         {% if user[3] == 2 %}
@@ -47,7 +47,7 @@
 
         <div class="body">
             <!-- Back to custMenu page in this page -->
-            <a class="button" href="{{ url_for('custMenu') }}">
+            <a class="button" href="{{ url_for('cust_menu') }}">
                 < BACK TO MENU</a>
 
                 <!-- Content -->

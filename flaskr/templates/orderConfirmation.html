@@ -13,7 +13,7 @@
     <!-- Navigation bar -->
     <div class="navbar">
         <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('custMenu') }}">MENU</a>
+        <a href="{{ url_for('cust_menu') }}">MENU</a>
         <a href="{{ url_for('call') }}">CALL WAITER</a>
         <a href="{{ url_for('order') }}">ORDER</a>
         <a href="{{ url_for('customer_orders') }}">MY ORDERS</a>
@@ -31,7 +31,7 @@
         <div class="body" style="height: auto">
             <h1>Your order has been placed!</h1>
             <h2>A waiter will be along soon to confirm your order.</h2>
-            <form action="{{ url_for('order_conformation') }}" method="POST">
+            <form action="{{ url_for('order_confirmation') }}" method="POST">
                 <input class="addmenu-submit text-size-16px" type="submit" value="Press here to return to home page.">
             </form>
         </div>
