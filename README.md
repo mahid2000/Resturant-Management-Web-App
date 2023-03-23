@@ -15,8 +15,10 @@ Once you have installed the package requirements, the project can be run with th
 `flask --app flaskr/app run`
 
 ##### Example Logins
-Our restaurant system uses the same login portal for customers and staff. The following are some logins to see the functionality at different levels of admin. \
+Our restaurant system uses the same login portal for customers and staff. The following are some logins to see the functionality at different levels of admin. 
+
 Customer: 
+* Feel free to create your own account!
 
 Waiters: 
 * Melissa Wilson, Waiter1!

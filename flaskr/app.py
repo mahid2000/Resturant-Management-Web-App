@@ -157,7 +157,6 @@ def edit_menu_item():
 
 def delete_item(item):
     """Delete a menu item from the database."""
-    print(f"item: {item}")
 
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
@@ -416,7 +415,6 @@ def get_orders_to_make():
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
 
-    # Gets all the rows from menu.  <-- No it fucking doesn't?
     sql_connection.execute(
         "SELECT orderID, itemID, qty, order_time FROM orderDetails WHERE state=1 ORDER BY orderID ASC;")
     rows = sql_connection.fetchall()
@@ -823,7 +821,6 @@ def calling_confirm():
 
 
 def ans_call():
-    print("Bebug ans_call() test")
     table_num = request.form['table_num']
     db_manager = DBManager(app)
     sql_connection = db_manager.get_connection()
