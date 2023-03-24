@@ -34,3 +34,8 @@ Manager/Owner:
 * Isabelle Davies, Manager1!
 * Paul Grant, Manager2!
 * Tony Atkinson, Owner10!
+
+<br>
+
+### Documentation
+A PDF document of the compiled doc comments is in the extras directory.
