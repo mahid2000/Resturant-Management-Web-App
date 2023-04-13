@@ -1,8 +1,6 @@
 # Team Project
 
-This repository has been created to store your Team Project.
-
-You may edit it as you like, but please do not remove the default topics or the project members list. These need to stay as currently defined in order for your lecturer to be able to find and mark your work.
+Team Members: Mahid Gondal, Ansell Archie, Oliver Brown, King Chu, Alexia Coburn, Jahanzeb Ditta, Shamir Begum Jahan, Yan Lam and Abdirahman Nuh Mahmud.
 
 <br>
 
@@ -33,3 +31,4 @@ Manager/Owner:
 * Isabelle Davies, Manager1!
 * Paul Grant, Manager2!
 * Tony Atkinson, Owner10!
+
